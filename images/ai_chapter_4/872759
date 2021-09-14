@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+
+<html class="theme">
+
+<head>
+    <meta charset="utf-8">
+    
+    <meta name="description" content="Cmd Markdown 编辑阅读器，支持实时同步预览，区分写作和阅读模式，支持在线存储，分享文稿网址。">
+    <meta name="author" content="Jiawei Zhang">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    <title>机器学习与人工智能技术分享-目录 - 作业部落 Cmd Markdown 编辑阅读器</title>
+
+
+    <link href="https://www.zybuluo.com/static/img/favicon.png" type="image/x-icon" rel="icon">
+
+    <link href="https://www.zybuluo.com/static/assets/1bc053c8.base.lib.min.css" rel="stylesheet" media="screen">
+
+
+    
+    <!-- id="prettify-style" will be used to get the link element below and change href to change prettify code, so it can't be in beginmin/endmin block. -->
+    <link id="prettify-style" href="https://www.zybuluo.com/static/editor/libs/google-code-prettify/prettify-cmd.css" type="text/css" rel="stylesheet">
+    <!--
+    <link id="mermaid-style" href="https://www.zybuluo.com/static/editor/libs/mermaid/mermaid.forest.css" type="text/css" rel="stylesheet">
+    -->
+    <link href="https://www.zybuluo.com/static/assets/mdeditor/45c7d56d.layout.min.css" rel="stylesheet" media="screen">
+
+
+    
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461741-1', 'zybuluo.com');
+      ga('send', 'pageview');
+    </script>
+</head>
+
+<body class="theme">
+
+    <div id="global-prompt-alert" class="hide alert alert-warning">
+        <span id="global-prompt-message"></span>
+        <a id="close-global-prompt-alert" href="">[关闭]</a>
+    </div>
+
+    <!-- zybuluo's body -->
+    
+
+
+
+
+
+
+
+<!-- mdeditor's body -->
+
+
+
+
+
+
+<div id="editor-reader-full" class="editor-reader-full-shown" style="position: static;">
+    <div id="reader-full-topInfo" class="reader-full-topInfo-shown">
+        <span>
+            <code>@vivounicorn</code>
+        </span>
+        <code><span class="article-updated-date">2021-09-08T08:01:43.000000Z</span></code>
+        <code><span>字数 </span><span class="article-characters">3808</span></code>
+        <code><span>阅读 </span><span class="article-read">5612</span></code>
+    </div>
+    <div id="wmd-preview" class="wmd-preview wmd-preview-full-reader"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="vjrq" id="机器学习与人工智能技术分享-目录">机器学习与人工智能技术分享-目录</h1><p data-anchor-id="dfy0"><code>目录</code></p><hr><p></p><center data-anchor-id="tu5x"> <img src="http://static.zybuluo.com/vivounicorn/87513svc4mp54e2kiyrmhubs/image_1ben4gmqc1l38cpd11e61b97uvs9.png" width="215" height="200"><img src="http://static.zybuluo.com/vivounicorn/nzsqv54rcb9t0du9lfxb5429/image_1ben4qcc01pn16mp7m3149c1dubm.png" width="200" height="200"> <br>
+</center><p></p><div class="md-section-divider"></div><h3 data-anchor-id="q1yp" id="1-一些基本概念"><a href="https://www.zybuluo.com/vivounicorn/note/798607" target="_blank">1. 一些基本概念</a></h3><p data-anchor-id="v6or">　　<a href="https://www.zybuluo.com/vivounicorn/note/798607#11-%E7%94%9F%E6%88%90%E5%BC%8F%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%A4%E5%88%AB%E5%BC%8F%E6%A8%A1%E5%9E%8B" target="_blank">1.1 生成式模型与判别式模型</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798607#12-%E5%8F%82%E6%95%B0%E5%AD%A6%E4%B9%A0%E4%B8%8E%E9%9D%9E%E5%8F%82%E5%AD%A6%E4%B9%A0" target="_blank">1.2 参数学习与非参学习</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798607#121-%E5%8F%82%E6%95%B0%E5%AD%A6%E4%B9%A0" target="_blank">1.2.1 参数学习</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798607#122-%E9%9D%9E%E5%8F%82%E5%AD%A6%E4%B9%A0" target="_blank">1.2.2 非参学习</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798607#13-%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E9%9D%9E%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E4%B8%8E%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0" target="_blank">1.3 监督学习、非监督学习与强化学习</a></p><div class="md-section-divider"></div><h3 data-anchor-id="gw19" id="2-建模方法回顾"><a href="https://www.zybuluo.com/vivounicorn/note/798611" target="_blank">2. 建模方法回顾</a></h3><p data-anchor-id="q4wu">　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#20-%E5%81%8F%E5%B7%AE%E4%B8%8E%E6%96%B9%E5%B7%AE" target="_blank">2.0 偏差与方差</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#21-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-linear-regression" target="_blank">2.1 线性回归-Linear Regression</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#211-%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86" target="_blank">2.1.1 模型原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#212-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0" target="_blank">2.1.2 损失函数</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#22-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA-support-vector-machine" target="_blank">2.2 支持向量机-Support Vector Machine</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#221-%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86" target="_blank">2.2.1 模型原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#222-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0" target="_blank">2.2.2 损失函数</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#223-%E6%A0%B8%E6%96%B9%E6%B3%95" target="_blank">2.2.3 核方法</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#23-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92-logistic-regression" target="_blank">2.3 逻辑回归-Logistic Regression</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#231-%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86" target="_blank">2.3.1 模型原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#232-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0" target="_blank">2.3.2 损失函数</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#24-bagging-and-boosting%E6%A1%86%E6%9E%B6" target="_blank">2.4 Bagging and Boosting框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#241-bagging%E6%A1%86%E6%9E%B6" target="_blank">2.4.1 Bagging框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#242-boosting%E6%A1%86%E6%9E%B6" target="_blank">2.4.2 Boosting框架</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#25-additive-tree-%E6%A8%A1%E5%9E%8B" target="_blank">2.5 Additive Tree 模型</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#251-random-forests" target="_blank">2.5.1 Random Forests</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#252-adaboost-with-trees" target="_blank">2.5.2 AdaBoost with trees</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#253-gradient-boosting-decision-tree" target="_blank">2.5.3 Gradient Boosting Decision Tree</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#254-%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90" target="_blank">2.5.4 简单的例子</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#255-catboost" target="_blank">2.5.5 CatBoost</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#26-%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-neural-network" target="_blank">2.6 人工神经网络-Neural Network</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#261-%E7%A5%9E%E7%BB%8F%E5%85%83" target="_blank">2.6.1 神经元</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#262-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E5%B8%B8%E7%94%A8%E7%BB%93%E6%9E%84" target="_blank">2.6.2 神经网络的常用结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798611#263-%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%BE%8B%E5%AD%90" target="_blank">2.6.3 一个简单的神经网络例子</a></p><div class="md-section-divider"></div><h3 data-anchor-id="4i7z" id="3-机器学习中的统一框架"><a href="https://www.zybuluo.com/vivounicorn/note/798616" target="_blank">3. 机器学习中的统一框架</a></h3><p data-anchor-id="syfi">　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#31-%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0" target="_blank">3.1 目标函数</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#311-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0" target="_blank">3.1.1 损失函数</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#312-%E6%AD%A3%E5%88%99%E5%8C%96%E9%A1%B9" target="_blank">3.1.2 正则化项</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#313-l2-%E6%AD%A3%E5%88%99" target="_blank">3.1.3 L2 正则</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#314-l1-%E6%AD%A3%E5%88%99" target="_blank">3.1.4 L1 正则</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#315-%E6%AD%A3%E5%88%99%E5%8C%96%E7%9A%84%E5%87%A0%E4%BD%95%E8%A7%A3%E9%87%8A" target="_blank">3.1.5 正则化的几何解释</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#316-dropout%E6%AD%A3%E5%88%99%E5%8C%96%E4%B8%8E%E6%95%B0%E6%8D%AE%E6%89%A9%E5%85%85" target="_blank">3.1.6 Dropout正则化与数据扩充</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#32-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A1%86%E6%9E%B6" target="_blank">3.2 神经网络框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#321-linear-regression" target="_blank">3.2.1 Linear Regression</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#322-logistic-regression" target="_blank">3.2.2 Logistic Regression</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#323-support-vector-machine" target="_blank">3.2.3 Support Vector Machine</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#324-bootstrap-neural-networks" target="_blank">3.2.4 Bootstrap Neural Networks</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/798616#325-boosting-neural-network" target="_blank">3.2.5 Boosting Neural Network</a></p><div class="md-section-divider"></div><h3 data-anchor-id="rkki" id="4-最优化原理"><a href="https://www.zybuluo.com/vivounicorn/note/446478" target="_blank">4. 最优化原理</a></h3><p data-anchor-id="42wg">　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#41-%E6%B3%B0%E5%8B%92%E5%AE%9A%E7%90%86" target="_blank">4.1 泰勒定理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#411-%E6%B3%B0%E5%8B%92%E5%B1%95%E5%BC%80%E5%BC%8F" target="_blank">4.1.1 泰勒展开式</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#412-%E6%B3%B0%E5%8B%92%E4%B8%AD%E5%80%BC%E5%AE%9A%E7%90%86" target="_blank">4.1.2 泰勒中值定理</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#42-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95" target="_blank">4.2 梯度下降法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#421-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" target="_blank">4.2.1 基本原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#422-%E8%BF%AD%E4%BB%A3%E6%A1%86%E6%9E%B6" target="_blank">4.2.2 迭代框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#423-%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D" target="_blank">4.2.3 批量梯度下降</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#424-%E9%9A%8F%E6%9C%BA%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D" target="_blank">4.2.4 随机梯度下降</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#425-%E5%B0%8F%E6%89%B9%E9%87%8F%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D" target="_blank">4.2.5 小批量梯度下降</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#426-%E7%89%9B%E9%A1%BF%E6%B3%95" target="_blank">4.2.6 牛顿法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#427-momentum" target="_blank">4.2.7 Momentum</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#428-adagrad" target="_blank">4.2.8 AdaGrad</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#429-adadelta" target="_blank">4.2.9 AdaDelta</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#4210-adam" target="_blank">4.2.10 Adam</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#43-%E5%B9%B6%E8%A1%8Csgd" target="_blank">4.3 并行SGD</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#431-allreduce" target="_blank">4.3.1 AllReduce</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#432-%E5%8F%82%E6%95%B0%E6%9C%8D%E5%8A%A1%E5%99%A8parameter-server" target="_blank">4.3.2 参数服务器(Parameter Server)</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#44-%E4%BA%8C%E9%98%B6%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95" target="_blank">4.4 二阶优化方法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#441-%E6%A6%82%E8%A7%88" target="_blank">4.4.1 概览</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#442-%E7%89%9B%E9%A1%BF%E6%B3%95newton-method" target="_blank">4.4.2 牛顿法(Newton Method)</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#443-%E6%8B%9F%E7%89%9B%E9%A1%BF%E6%B3%95quasi-newton-method" target="_blank">4.4.3 拟牛顿法(Quasi-Newton Method)</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#45-owl-qn%E7%AE%97%E6%B3%95" target="_blank">4.5 OWL-QN算法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#451-bfgs%E7%AE%97%E6%B3%95%E5%9B%9E%E9%A1%BE" target="_blank">4.5.1 BFGS算法回顾</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#452-l-bfgs%E7%AE%97%E6%B3%95" target="_blank">4.5.2 L-BFGS算法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/446478#453-owl-qn%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86" target="_blank">4.5.3 OWL-QN算法原理</a></p><div class="md-section-divider"></div><h3 data-anchor-id="d6cr" id="5-深度神经网络"><a href="https://www.zybuluo.com/vivounicorn/note/872587" target="_blank">5. 深度神经网络</a></h3><p data-anchor-id="wa6d">　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#51-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD" target="_blank">5.1 反向传播</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#52-%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E6%BC%94%E5%8C%96%E5%8F%B2" target="_blank">5.2 卷积网络结构演化史</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#53-cnn%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" target="_blank">5.3 CNN基本原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#531-sigmoid%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0" target="_blank">5.3.1 Sigmoid激活函数</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#532-%E8%BE%93%E5%85%A5%E5%B1%82" target="_blank">5.3.2 输入层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#533-%E5%8D%B7%E7%A7%AF%E5%B1%82" target="_blank">5.3.3 卷积层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#534-zero-padding" target="_blank">5.3.4 Zero-Padding</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#535-%E9%87%87%E6%A0%B7%E5%B1%82pooling" target="_blank">5.3.5 采样层(pooling)</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#536-%E5%85%A8%E8%BF%9E%E6%8E%A5%E6%A0%B7%E5%B1%82" target="_blank">5.3.6 全连接样层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#537-%E5%8F%82%E6%95%B0%E6%B1%82%E8%A7%A3" target="_blank">5.3.7 参数求解</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#538-cnn%E5%9C%A8nlp%E9%A2%86%E5%9F%9F%E5%BA%94%E7%94%A8%E5%AE%9E%E4%BE%8B" target="_blank">5.3.8 CNN在NLP领域应用实例</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#54-lenet-5" target="_blank">5.4 LeNet-5</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#541-%E8%BE%93%E5%85%A5%E5%B1%82" target="_blank">5.4.1 输入层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#542-c1%E5%8D%B7%E7%A7%AF%E5%B1%82" target="_blank">5.4.2 C1卷积层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#543-s2%E4%B8%8B%E9%87%87%E6%A0%B7%E5%B1%82" target="_blank">5.4.3 S2下采样层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#544-c3%E5%8D%B7%E7%A7%AF%E5%B1%82" target="_blank">5.4.4 C3卷积层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#545-s4%E4%B8%8B%E9%87%87%E6%A0%B7%E5%B1%82" target="_blank">5.4.5 S4下采样层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#546-c5%E5%8D%B7%E7%A7%AF%E5%B1%82" target="_blank">5.4.6 C5卷积层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#547-f6%E5%85%A8%E8%BF%9E%E6%8E%A5%E5%B1%82" target="_blank">5.4.7 F6全连接层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#548-%E8%BE%93%E5%87%BA%E5%B1%82" target="_blank">5.4.8 输出层</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#549-lenet-5%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.4.9 LeNet-5代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#55-alexnet" target="_blank">5.5 AlexNet</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#551-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90" target="_blank">5.5.1 网络结构分析</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#552-relu%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0" target="_blank">5.5.2 ReLu激活函数</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#553-local-response-normalization" target="_blank">5.5.3 Local Response Normalization</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#554-overlapping-pooling" target="_blank">5.5.4 Overlapping Pooling</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#555-dropout" target="_blank">5.5.5 Dropout</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#556-%E6%95%B0%E6%8D%AE%E6%89%A9%E5%85%85" target="_blank">5.5.6 数据扩充</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#557-%E5%A4%9Agpu%E8%AE%AD%E7%BB%83" target="_blank">5.5.7 多GPU训练</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#558-alexnet%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.5.8 AlexNet代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#56-vgg" target="_blank">5.6 VGG</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#561-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84" target="_blank">5.6.1 网络结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#562-vgg%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.6.2 VGG代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#57-msranet" target="_blank">5.7 MSRANet</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#58-highway-networks" target="_blank">5.8 Highway Networks</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#59-residual-networks" target="_blank">5.9 Residual Networks</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#591-resnet%E4%BA%A7%E7%94%9F%E7%9A%84%E5%8A%A8%E6%9C%BA" target="_blank">5.9.1 ResNet产生的动机</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#592-%E6%81%92%E7%AD%89%E6%98%A0%E5%B0%84" target="_blank">5.9.2 恒等映射</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#593-%E6%A8%A1%E5%9E%8B%E9%9B%86%E6%88%90%E8%A7%92%E5%BA%A6%E7%9C%8B%E6%AE%8B%E5%B7%AE%E7%BD%91%E7%BB%9C" target="_blank">5.9.3 模型集成角度看残差网络</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#594-%E6%AE%8B%E5%B7%AE%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84%E7%9F%AD%E8%B7%AF%E5%BE%84" target="_blank">5.9.4 残差网络中的短路径</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#595-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.9.5 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#510-maxout-networks" target="_blank">5.10 Maxout Networks</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#511-network-in-network" target="_blank">5.11 Network in Network</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5111-nin%E5%8D%B7%E7%A7%AF%E5%B1%82mlp-convolution" target="_blank">5.11.1 NIN卷积层(MLP Convolution)</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5112-nin%E6%8A%BD%E6%A0%B7%E5%B1%82global-average-pooling" target="_blank">5.11.2 NIN抽样层(Global Average Pooling)</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#512-googlenet-inception-v1" target="_blank">5.12 GoogLeNet Inception V1</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5121-%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83" target="_blank">5.12.1 一些思考</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5122-googlenet%E7%BB%93%E6%9E%84" target="_blank">5.12.2 GoogLeNet结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5123-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.12.3 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#513-googlenet-inception-v2" target="_blank">5.13 GoogLeNet Inception V2</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5131-%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83" target="_blank">5.13.1 一些思考</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5132-bn%E5%8E%9F%E7%90%86" target="_blank">5.13.2 BN原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5133-%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%AD%E7%9A%84bn" target="_blank">5.13.3 卷积神经网络中的BN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5134-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.13.4 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#514-googlenet-inception-v3" target="_blank">5.14 GoogLeNet Inception V3</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5141-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%87%86%E5%88%99" target="_blank">5.14.1 网络结构设计的准则</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5142-%E5%B9%B3%E6%BB%91%E6%A0%B7%E6%9C%AC%E6%A0%87%E6%B3%A8" target="_blank">5.14.2 平滑样本标注</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5143-%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84" target="_blank">5.14.3 网络结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5144-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.14.4 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#515-googlenet-inception-v4resnet-v1v2" target="_blank">5.15 GoogLeNet Inception V4/ResNet V1/V2</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5151-googlenet-inception-v4%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84" target="_blank">5.15.1 GoogLeNet Inception V4网络结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5152-googlenet-inception-resnet%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84" target="_blank">5.15.2 GoogLeNet Inception ResNet网络结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5153-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.15.3 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#516-%E6%A8%A1%E5%9E%8B%E5%8F%AF%E8%A7%86%E5%8C%96" target="_blank">5.16 模型可视化</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5161-%E4%B8%80%E4%BA%9B%E8%AF%B4%E6%98%8E" target="_blank">5.16.1 一些说明</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872587#5162-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">5.16.2 代码实践</a></p><div class="md-section-divider"></div><h3 data-anchor-id="udfp" id="6-循环神经网络"><a href="https://www.zybuluo.com/vivounicorn/note/1449858" target="_blank">6. 循环神经网络</a></h3><p data-anchor-id="tq2c">　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#61-rnn" target="_blank">6.1 RNN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#611-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" target="_blank">6.1.1 基本原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#612-bptt-%E5%8E%9F%E7%90%86" target="_blank">6.1.2 BPTT 原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#613-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">6.1.3 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#62-%E6%B7%B7%E6%B2%8C%E7%90%86%E8%AE%BA" target="_blank">6.2 混沌理论</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#621-%E4%B8%80%E7%BB%B4%E6%98%A0%E5%B0%84" target="_blank">6.2.1 一维映射</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#622-%E4%BA%8C%E7%BB%B4%E6%98%A0%E5%B0%84" target="_blank">6.2.2 二维映射</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#623-%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84" target="_blank">6.2.3 线性映射</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#624-%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84" target="_blank">6.2.4 非线性映射</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#625-%E6%B7%B7%E6%B2%8C%E7%9A%84%E6%BC%94%E5%8C%96%E5%8F%8A%E7%BB%93%E6%9E%84" target="_blank">6.2.5 混沌的演化及结构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#626-rnn%E9%95%BF%E4%BE%9D%E8%B5%96%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98" target="_blank">6.2.6 RNN长依赖学习问题</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858" target="_blank">6.3 LSTM</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#631-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" target="_blank">6.3.1 基本原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1449858#632-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">6.3.2 代码实践</a> <br>
+　　6.4 Sequence to Sequence应用</p><div class="md-section-divider"></div><h3 data-anchor-id="cflx" id="7-对抗神经网络待填坑">7. 对抗神经网络(待填坑)</h3><p data-anchor-id="onpu">　　7.1 GANs <br>
+　　7.2 Wasserstein GAN <br>
+　　7.3 代码实践</p><div class="md-section-divider"></div><h3 data-anchor-id="dtkk" id="8-目标检测">8. <a href="https://www.zybuluo.com/vivounicorn/note/872593" target="_blank">目标检测</a></h3><p data-anchor-id="3dxz">　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#81-selective-search" target="_blank">8.1 Selective Search</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#811-%E5%90%AF%E5%8F%91%E5%BC%8F%E7%94%9F%E6%88%90%E8%AE%BE%E8%AE%A1%E5%87%86%E5%88%99" target="_blank">8.1.1 启发式生成设计准则</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#812-selective-search" target="_blank">8.1.2 Selective Search</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#813-%E4%BD%BF%E7%94%A8selective-search%E5%81%9A%E7%9B%AE%E6%A0%87%E8%AF%86%E5%88%AB" target="_blank">8.1.3 使用Selective Search做目标识别</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#814-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.1.4 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#82-overfeat" target="_blank">8.2 OverFeat</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#821-overfeat%E5%88%86%E7%B1%BB%E4%BB%BB%E5%8A%A1" target="_blank">8.2.1 OverFeat分类任务</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#822-overfeat%E5%AE%9A%E4%BD%8D%E4%BB%BB%E5%8A%A1" target="_blank">8.2.2 OverFeat定位任务</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#823-overfeat%E6%A3%80%E6%B5%8B%E4%BB%BB%E5%8A%A1" target="_blank">8.2.3 OverFeat检测任务</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#824-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.2.4 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#83-r-cnn" target="_blank">8.3 R-CNN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#831-iou" target="_blank">8.3.1 IoU</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#832-nms" target="_blank">8.3.2 NMS</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#833-map" target="_blank">8.3.3 mAP</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#834-r-cnn%E5%8E%9F%E7%90%86" target="_blank">8.3.4 R-CNN原理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#835-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.3.5 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#84-spp-net" target="_blank">8.4 SPP-Net</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#841-%E9%97%AE%E9%A2%98%E5%9B%9E%E9%A1%BE" target="_blank">8.4.1 问题回顾</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#842-spp%E8%AF%A6%E8%A7%A3" target="_blank">8.4.2 SPP详解</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#843-%E6%84%9F%E5%8F%97%E9%87%8Ereceptive-field" target="_blank">8.4.3 感受野(Receptive Field)</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#844-feature-map%E4%B8%8E%E5%8E%9F%E5%9B%BE%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB%E8%BD%AC%E6%8D%A2" target="_blank">8.4.4 feature map与原图对应关系转换</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#845-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.4.5 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#85-fast-r-cnn" target="_blank">8.5 Fast R-CNN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#851-%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0" target="_blank">8.5.1 算法概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#852-%E8%AE%AD%E7%BB%83%E9%98%B6%E6%AE%B5" target="_blank">8.5.2 训练阶段</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#853-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.5.3 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#86-faster-r-cnn" target="_blank">8.6 Faster R-CNN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#861-%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0" target="_blank">8.6.1 算法概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#862-rpn" target="_blank">8.6.2 RPN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#863-anchor" target="_blank">8.6.3 Anchor</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#864-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.6.4 代码实践</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#865-faster-r-cnn%E8%AE%AD%E7%BB%83%E6%B5%81%E7%A8%8B" target="_blank">8.6.5 Faster R-CNN训练流程</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#866-faster-r-cnn-with-caffe" target="_blank">8.6.6 Faster R-CNN with Caffe</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#87-r-fcn" target="_blank">8.7 R-FCN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#871-%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0" target="_blank">8.7.1 算法概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#872-position-sentitive-roi-pooling" target="_blank">8.7.2 position-sentitive RoI pooling</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#873-%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83" target="_blank">8.7.3 模型训练</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#874-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.7.4 代码实践</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#88-densenet" target="_blank">8.8 DenseNet</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#881-%E5%85%B3%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%B7%B1%E5%BA%A6" target="_blank">8.8.1 关于神经网络的深度</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#882-densenet%E6%80%9D%E8%B7%AF" target="_blank">8.8.2 DenseNet思路</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872593#883-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">8.8.3 代码实践</a> <br>
+　　8.9 Mask R-CNN <br>
+　　8.10 YOLO <br>
+　　8.11 SSD <br>
+　　8.12 YOLO 9000</p><div class="md-section-divider"></div><h3 data-anchor-id="0qer" id="9-语义分割"><a href="https://www.zybuluo.com/vivounicorn/note/872814" target="_blank">9. 语义分割</a></h3><p data-anchor-id="f3fn">　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#91-fcn" target="_blank">9.1 FCN</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#911-%E7%AE%97%E6%B3%95%E6%A6%82%E8%BF%B0" target="_blank">9.1.1 算法概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#912-11%E5%8D%B7%E7%A7%AF%E5%9B%9E%E9%A1%BE" target="_blank">9.1.2 1×1卷积回顾</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#913-%E5%85%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C" target="_blank">9.1.3 全卷积网络</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#914-nyquistshannon%E9%87%87%E6%A0%B7%E5%AE%9A%E7%90%86" target="_blank">9.1.4 Nyquist–Shannon采样定理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#915-%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AFtransposed-convolution" target="_blank">9.1.5 转置卷积(Transposed Convolution)</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872814#916-%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5" target="_blank">9.1.6 代码实践</a> <br>
+　　9.2 FCN-CRF <br>
+　　9.3 SegNet <br>
+　　9.4 UberNet</p><div class="md-section-divider"></div><h3 data-anchor-id="nsi6" id="10-物体跟踪待填坑">10. 物体跟踪(待填坑)</h3><p data-anchor-id="jchg">　　10.1 卡尔曼滤波器 <br>
+　　10.2 CamShift <br>
+　　10.3 DLT <br>
+　　10.4 SO-DLT <br>
+　　10.5 FCNT <br>
+　　10.6 MDNet <br>
+　　10.7 RTT <br>
+　　10.8 DeepTracking</p><div class="md-section-divider"></div><h3 data-anchor-id="j2rf" id="11-ocr"><a href="https://www.zybuluo.com/vivounicorn/note/1301495" target="_blank">11. OCR</a></h3><p data-anchor-id="ze4a">　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#131-%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86" target="_blank">11.1 背景知识</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#132-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86" target="_blank">11.2 数据预处理</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#1321-%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2" target="_blank">11.2.1 图像滤波</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#1322-%E5%8E%BB%E6%A8%A1%E7%B3%8A%E5%8E%BB%E6%B0%B4%E5%8D%B0" target="_blank">11.2.2 去模糊、去水印</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#1323-%E5%9B%BE%E7%89%87%E8%A7%92%E5%BA%A6%E8%AF%86%E5%88%AB" target="_blank">11.2.3 图片角度识别</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#133-%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%96%87%E5%AD%97ocr" target="_blank">11.3 基于神经网络的文字OCR</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#1331-%E8%A1%8C%E6%A3%80%E6%B5%8B%E6%A8%A1%E5%9E%8B%E7%AE%97%E6%B3%95%E6%80%9D%E8%B7%AF" target="_blank">11.3.1 行检测模型算法思路</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1301495#1332-%E8%A1%8C%E8%AF%86%E5%88%AB%E6%A8%A1%E5%9E%8B%E7%AE%97%E6%B3%95%E6%80%9D%E8%B7%AF" target="_blank">11.3.2 行识别模型算法思路</a></p><div class="md-section-divider"></div><h3 data-anchor-id="lhr5" id="12-机器学习框架"><a href="https://www.zybuluo.com/vivounicorn/note/1691221" target="_blank">12. 机器学习框架</a></h3><p data-anchor-id="j7xc">　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#141-%E9%80%9A%E7%94%A8%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6" target="_blank">12.1 通用机器学习框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#1411-%E5%85%B8%E5%9E%8B%E5%9C%BA%E6%99%AF%E6%B5%85%E6%9E%90" target="_blank">12.1.1 典型场景浅析</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#1412-%E7%B3%BB%E7%BB%9F%E6%B5%81%E7%A8%8B" target="_blank">12.1.2 系统流程</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#1413-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84" target="_blank">12.1.3 系统架构</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#142-nni-automl%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D" target="_blank">12.2 NNI AutoML框架介绍</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#1421-automl%E7%BB%BC%E8%BF%B0" target="_blank">12.2.1 AutoML综述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1691221#1422-nni%E6%A1%86%E6%9E%B6%E4%BB%8B%E7%BB%8D" target="_blank">12.2.2 NNI框架介绍</a></p><div class="md-section-divider"></div><h3 data-anchor-id="3of5" id="13-adas自动驾驶"><a href="https://www.zybuluo.com/vivounicorn/note/872699" target="_blank">13. ADAS&amp;自动驾驶</a></h3><p data-anchor-id="0xp0">　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#151-openpilot" target="_blank">13.1 Openpilot</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1511-%E9%A1%B9%E7%9B%AE%E7%AE%80%E4%BB%8B" target="_blank">13.1.1 项目简介</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1512-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5" target="_blank">13.1.2 基本概念</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1513-%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84" target="_blank">13.1.3 系统架构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1514-%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84" target="_blank">13.1.4 软件架构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1515-%E6%B1%BD%E8%BD%A6%E5%9F%BA%E7%A1%80%E7%BB%84%E5%BB%BA" target="_blank">13.1.5 汽车基础组件</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1516-%E5%85%AC%E5%85%B1%E7%BB%84%E4%BB%B6" target="_blank">13.1.6 公共组件</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1517-%E6%89%8B%E6%9C%BA%E7%BB%84%E4%BB%B6" target="_blank">13.1.7 手机组件</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1518-%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E7%BB%84%E4%BB%B6" target="_blank">13.1.8 自动驾驶组件</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1519-%E6%80%BB%E7%BB%93" target="_blank">13.1.9 总结</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#152-%E5%9F%BA%E4%BA%8E%E8%A7%86%E8%A7%89%E7%9A%84%E8%BD%A6%E9%81%93%E6%A3%80%E6%B5%8B" target="_blank">13.2 基于视觉的车道检测</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1521-%E4%BC%A0%E7%BB%9F%E8%BD%A6%E9%81%93%E6%A3%80%E6%B5%8B%E6%96%B9%E6%B3%95" target="_blank">13.2.1 传统车道检测方法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1522-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%A5%97%E8%B7%AF" target="_blank">13.2.2 深度学习套路</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/872699#1523-vanishing-point-guided-network" target="_blank">13.2.3 Vanishing Point Guided Network</a></p><div class="md-section-divider"></div><h3 data-anchor-id="jkt8" id="14-金融风控应用"><a href="https://www.zybuluo.com/vivounicorn/note/1131060" target="_blank">14. 金融风控应用</a></h3><p data-anchor-id="kxvt">　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#171-%E9%A3%8E%E6%8E%A7%E6%A6%82%E8%BF%B0" target="_blank">14.1 风控概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1711-%E9%A3%8E%E6%8E%A7%E5%9C%A8%E8%A1%8C%E4%B8%9A%E4%B8%8A%E7%9A%84%E5%8C%BA%E5%88%AB" target="_blank">14.1.1 风控在行业上的区别</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1712-%E9%A3%8E%E6%8E%A7%E5%AE%A1%E6%89%B9%E6%B5%81%E7%A8%8B%E9%80%BB%E8%BE%91%E6%A1%86%E6%9E%B6" target="_blank">14.1.2 风控审批流程逻辑框架</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1713-%E9%A3%8E%E6%8E%A7%E6%98%AF%E9%9C%80%E8%A6%81%E5%8A%A8%E6%80%81%E9%97%AD%E7%8E%AF%E7%9A%84" target="_blank">14.1.3 风控是需要动态闭环的</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1714-%E6%95%B0%E6%8D%AE%E6%98%AF%E9%A3%8E%E6%8E%A7%E7%9A%84%E6%A0%B8%E5%BF%83" target="_blank">14.1.4 数据是风控的核心</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1715-%E8%9E%8D%E8%B5%84%E7%A7%9F%E8%B5%81%E4%B8%9A%E5%8A%A1%E9%9C%80%E8%A6%81%E4%BB%A5%E9%A3%8E%E9%99%A9%E4%B8%BA%E4%B8%AD%E5%BF%83%E8%80%83%E8%99%91%E6%94%B6%E7%9B%8A%E5%92%8C%E4%BA%A7%E5%93%81%E5%8F%91%E5%B1%95%E7%AD%96%E7%95%A5" target="_blank">14.1.5 融资租赁业务需要以风险为中心考虑收益和产品发展策略</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1716-%E9%A3%8E%E9%99%A9%E6%94%BF%E7%AD%96%E6%98%AF%E5%88%86%E5%B1%82%E7%BA%A7%E8%81%94%E7%9A%84" target="_blank">14.1.6 风险政策是分层级联的</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1717-%E9%A3%8E%E6%8E%A7%E6%98%AF%E4%BB%A5%E8%8B%A5%E5%B9%B2%E5%81%87%E8%AE%BE%E4%B8%BA%E5%89%8D%E6%8F%90%E7%9A%84" target="_blank">14.1.7 风控是以若干假设为前提的</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1718-%E9%A3%8E%E6%8E%A7%E6%98%AF%E4%B8%AA%E6%9C%80%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98" target="_blank">14.1.8 风控是个最优化问题</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1719-%E9%A3%8E%E6%8E%A7%E6%98%AF%E5%9C%A8%E4%B8%8D%E5%81%9C%E7%9A%84%E5%81%9A%E5%AE%9E%E9%AA%8C" target="_blank">14.1.9 风控是在不停的做实验</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#17110-%E4%BF%9D%E8%AF%81%E9%A3%8E%E6%8E%A7%E5%AE%9E%E9%AA%8C%E7%9A%84%E7%BD%AE%E4%BF%A1%E5%BA%A6%E5%9C%A8%E4%BA%8E%E6%AD%A3%E7%A1%AE%E5%88%86%E5%89%B2%E6%B5%81%E9%87%8F" target="_blank">14.1.10 保证风控实验的置信度在于正确分割流量</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#17111-%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%E5%9C%A8%E9%A3%8E%E6%8E%A7%E4%B8%AD%E6%98%AF%E8%87%B3%E5%85%B3%E9%87%8D%E8%A6%81%E7%9A%84" target="_blank">14.1.11 评价指标在风控中是至关重要的</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#17112-%E6%9C%89%E6%95%88%E7%9B%91%E6%8E%A7%E5%AF%B9%E9%A3%8E%E6%8E%A7%E4%B8%9A%E5%8A%A1%E4%BF%9D%E9%A9%BE%E6%8A%A4%E8%88%AA" target="_blank">14.1.12 有效监控对风控业务保驾护航</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#172-%E9%A3%8E%E6%8E%A7%E5%B9%B3%E5%8F%B0%E6%9E%B6%E6%9E%84" target="_blank">14.2 风控平台架构</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1721-%E9%A3%8E%E6%8E%A7%E7%B3%BB%E7%BB%9F%E5%8F%91%E5%B1%95%E6%A6%82%E8%BF%B0" target="_blank">14.2.1 风控系统发展概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1722-%E9%A3%8E%E6%8E%A7%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84" target="_blank">14.2.2 风控系统架构</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#173-%E9%A3%8E%E6%8E%A7%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95" target="_blank">14.3 风控建模方法</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1731-%E5%BB%BA%E6%A8%A1%E6%A6%82%E8%BF%B0" target="_blank">14.3.1 建模概述</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1732-%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90%E4%B8%8E%E7%9B%AE%E6%A0%87%E5%AE%9A%E4%B9%89" target="_blank">14.3.2 需求分析与目标定义</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1733-%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87" target="_blank">14.3.3 数据准备</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1734-%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8" target="_blank">14.3.4 数据标注</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1735-%E6%8B%92%E7%BB%9D%E6%8E%A8%E6%96%AD" target="_blank">14.3.5 拒绝推断</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1736-%E9%A3%8E%E6%8E%A7%E5%BB%BA%E6%A8%A1" target="_blank">14.3.6 风控建模</a> <br>
+　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#174-%E9%A3%8E%E6%8E%A7%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7" target="_blank">14.4 风控模型监控</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1741-%E7%A6%BB%E7%BA%BF%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7" target="_blank">14.4.1 离线模型监控</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1742-%E5%9C%A8%E7%BA%BF%E6%A8%A1%E5%9E%8B%E7%9B%91%E6%8E%A7" target="_blank">14.4.2 在线模型监控</a> <br>
+　　　　<a href="https://www.zybuluo.com/vivounicorn/note/1131060#1743-%E4%B8%9A%E5%8A%A1%E7%9B%91%E6%8E%A7" target="_blank">14.4.3 业务监控</a></p><div class="md-section-divider"></div><h3 data-anchor-id="5vtd" id="15-强化学习待填坑">15. 强化学习(待填坑)</h3><div class="md-section-divider"></div><h3 data-anchor-id="3o9t" id="16-bot待填坑">16. BOT(待填坑)</h3></div>
+    <div class="remark-icons">
+    </div>
+</div>
+
+<!--in page preview buttons. -->
+<div class="in-page-preview-buttons in-page-preview-buttons-full-reader">
+    <ul>
+        <li class="in-page-button dropdown" id="preview-toc-button" title="内容目录 Ctrl+Alt+O">
+            <span class="dropdown-toggle icon-list" data-toggle="dropdown"></span>
+            <div id="toc-list" class="dropdown-menu theme pull-right"> <!-- Add theme means this element will be changed when apply theme color. -->
+                <h3>内容目录</h3>
+                <hr>
+                <div class="table-of-contents"></div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div id="reader-full-toolbar" class="reader-full-toolbar-shown" style="padding-top: 0;">
+    <ul id="reader-full-toolbar-home" class="preview-button-row">
+        <li class="preview-button-full-reader" id="preview-editor-button" title="撰写文本 Ctrl+Alt+M">
+            <span class="icon-pencil"></span>
+        </li>
+    </ul>
+    <ul id="preview-button-row" class="preview-button-row">
+        <li class="preview-button-full-reader dropdown" id="preview-list-button" title="文本列表 Ctrl+Alt+F">
+            <span class="dropdown-toggle icon-reorder" data-toggle="dropdown"></span>
+            <ul id="file-list" class="dropdown-menu theme-black pull-right" role="menu">
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="ADAS">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">ADAS</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T09:25:01.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872699" title="【已发布】 2021-09-08T08:19:49.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872699">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="ATM">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">ATM</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:17:09.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798611" title="【已发布】 2020-03-29T09:08:16.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798611">机器学习与人工智能技术分享-第二章 建模方法回顾</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="Bagging">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">Bagging</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:21:44.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798616" title="【已发布】 2018-10-06T07:12:13.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798616">机器学习与人工智能技术分享-第三章 机器学习中的统一框架</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="Boosting">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">Boosting</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:21:44.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798616" title="【已发布】 2018-10-06T07:12:13.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798616">机器学习与人工智能技术分享-第三章 机器学习中的统一框架</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="CNN">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">CNN</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:27:55.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872587" title="【已发布】 2020-03-24T07:23:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872587">机器学习与人工智能技术分享-第五章 深度神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="LR">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">LR</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:17:09.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798611" title="【已发布】 2020-03-29T09:08:16.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798611">机器学习与人工智能技术分享-第二章 建模方法回顾</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="LSTM">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">LSTM</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2019-06-19T09:44:41.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1449858" title="【已发布】 2020-11-06T10:08:41.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1449858">机器学习与人工智能技术分享-第六章 循环神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="OCR">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">OCR</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2019-04-09T09:33:53.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1301495" title="【已发布】 2021-09-08T07:53:08.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1301495">机器学习与人工智能技术分享-第十一章 OCR</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="RNN">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">RNN</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2019-06-19T09:44:41.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1449858" title="【已发布】 2020-11-06T10:08:41.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1449858">机器学习与人工智能技术分享-第六章 循环神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="SVM">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">SVM</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:17:09.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798611" title="【已发布】 2020-03-29T09:08:16.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798611">机器学习与人工智能技术分享-第二章 建模方法回顾</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="中文版">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">中文版</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-04-27T07:11:52.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/446479" title="【已发布】 2017-09-04T09:55:55.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="446479">机器学习与人工智能技术分享(未完待续)</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="基本概念">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">基本概念</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:13:06.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798607" title="【已发布】 2021-09-08T08:03:05.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798607">机器学习与人工智能技术分享-第一章 基本概念</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="最优化">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">最优化</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:25:24.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/446478" title="【已发布】 2021-07-27T09:35:21.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="446478">机器学习与人工智能技术分享-第四章 最优化原理</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="机器学习">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">机器学习</span></span>
+                            <span class="tag-count pull-right">13</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2020-04-19T11:50:11.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1691221" title="【已发布】 2021-09-08T08:20:52.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1691221">机器学习与人工智能技术分享-第十二章 机器学习框架</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2019-06-19T09:44:41.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1449858" title="【已发布】 2020-11-06T10:08:41.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1449858">机器学习与人工智能技术分享-第六章 循环神经网络</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2019-04-09T09:33:53.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1301495" title="【已发布】 2021-09-08T07:53:08.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1301495">机器学习与人工智能技术分享-第十一章 OCR</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2018-06-04T05:51:51.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1131060" title="【已发布】 2021-09-08T08:21:21.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1131060">机器学习与人工智能技术分享-第十四章 金融风控</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T10:36:31.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872814" title="【已发布】 2018-10-06T07:10:48.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872814">机器学习与人工智能技术分享-第九章 语义分割</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T09:25:01.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872699" title="【已发布】 2021-09-08T08:19:49.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872699">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:30:03.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872593" title="【已发布】 2020-03-24T07:34:58.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872593">机器学习与人工智能技术分享-第八章 目标检测与识别</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:27:55.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872587" title="【已发布】 2020-03-24T07:23:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872587">机器学习与人工智能技术分享-第五章 深度神经网络</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:25:24.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/446478" title="【已发布】 2021-07-27T09:35:21.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="446478">机器学习与人工智能技术分享-第四章 最优化原理</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:21:44.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798616" title="【已发布】 2018-10-06T07:12:13.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798616">机器学习与人工智能技术分享-第三章 机器学习中的统一框架</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:17:09.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798611" title="【已发布】 2020-03-29T09:08:16.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798611">机器学习与人工智能技术分享-第二章 建模方法回顾</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:13:06.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798607" title="【已发布】 2021-09-08T08:03:05.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798607">机器学习与人工智能技术分享-第一章 基本概念</span>
+        </a>
+    </li>
+
+                            
+    <li class="file-item item" file-created-date="2017-04-27T07:11:52.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/446479" title="【已发布】 2017-09-04T09:55:55.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="446479">机器学习与人工智能技术分享(未完待续)</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="机器学习框架">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">机器学习框架</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2020-04-19T11:50:11.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1691221" title="【已发布】 2021-09-08T08:20:52.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1691221">机器学习与人工智能技术分享-第十二章 机器学习框架</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="模型可视化">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">模型可视化</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:27:55.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872587" title="【已发布】 2020-03-24T07:23:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872587">机器学习与人工智能技术分享-第五章 深度神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="正则化">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">正则化</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:21:44.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798616" title="【已发布】 2018-10-06T07:12:13.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798616">机器学习与人工智能技术分享-第三章 机器学习中的统一框架</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="深度神经网络">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">深度神经网络</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:27:55.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872587" title="【已发布】 2020-03-24T07:23:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872587">机器学习与人工智能技术分享-第五章 深度神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="目录">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">目录</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T10:00:54.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872759" title="【已发布】 2021-09-08T08:01:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872759" class="whiter-on-black">机器学习与人工智能技术分享-目录</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="目标检测">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">目标检测</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:30:03.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872593" title="【已发布】 2020-03-24T07:34:58.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872593">机器学习与人工智能技术分享-第八章 目标检测与识别</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="目标识别">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">目标识别</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:30:03.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872593" title="【已发布】 2020-03-24T07:34:58.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872593">机器学习与人工智能技术分享-第八章 目标检测与识别</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第二章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第二章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:17:09.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/798611" title="【已发布】 2020-03-29T09:08:16.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="798611">机器学习与人工智能技术分享-第二章 建模方法回顾</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第五章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第五章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:27:55.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872587" title="【已发布】 2020-03-24T07:23:43.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872587">机器学习与人工智能技术分享-第五章 深度神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第八章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第八章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:30:03.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872593" title="【已发布】 2020-03-24T07:34:58.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872593">机器学习与人工智能技术分享-第八章 目标检测与识别</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第六章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第六章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2019-06-19T09:44:41.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1449858" title="【已发布】 2020-11-06T10:08:41.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1449858">机器学习与人工智能技术分享-第六章 循环神经网络</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第十三章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第十三章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T09:25:01.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872699" title="【已发布】 2021-09-08T08:19:49.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872699">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第十二章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第十二章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2020-04-19T11:50:11.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1691221" title="【已发布】 2021-09-08T08:20:52.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1691221">机器学习与人工智能技术分享-第十二章 机器学习框架</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="第四章">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">第四章</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T08:25:24.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/446478" title="【已发布】 2021-07-27T09:35:21.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="446478">机器学习与人工智能技术分享-第四章 最优化原理</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="自动驾驶">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">自动驾驶</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T09:25:01.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872699" title="【已发布】 2021-09-08T08:19:49.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872699">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="语义分割">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">语义分割</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2017-09-04T10:36:31.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/872814" title="【已发布】 2018-10-06T07:10:48.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="872814">机器学习与人工智能技术分享-第九章 语义分割</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+                    <li>
+                    <ul class="tag-list">
+                        <li class="tag-item item" tag-name="金融风控">
+                            <span class="pull-left"><i class="icon-tag"></i><span class="tag-name">金融风控</span></span>
+                            <span class="tag-count pull-right">1</span>
+                            <div class="clearfix"></div>
+                        </li>
+                            
+    <li class="file-item item" file-created-date="2018-06-04T05:51:51.000000Z">
+        <a tabindex="-1" href="https://www.zybuluo.com/vivounicorn/note/1131060" title="【已发布】 2021-09-08T08:21:21.000000Z">
+        <i class="icon-share-sign"></i>
+        <span id="1131060">机器学习与人工智能技术分享-第十四章 金融风控</span>
+        </a>
+    </li>
+
+                    </ul>
+                    </li>
+            </ul>
+            <ul id="file-list-topbar" class="dropdown-menu theme-black pull-right" role="menu">
+                <li id="search-file-bar">
+                    <i class="icon-search icon-large"></i>
+                    <input type="text" id="search-file-textbox" placeholder="搜索 vivounicorn 的文稿标题， * 显示全部">
+                    <i class="icon-level-down icon-rotate-90 icon-large"></i>
+                </li>
+                <li id="tag-file-bar">
+                    以下【标签】将用于标记这篇文稿：
+                </li>
+            </ul>
+        </li>
+        <li class="preview-button-full-reader" id="preview-theme-button" title="主题切换 Ctrl+Alt+Y">
+            <span class="icon-adjust"></span>
+        </li>
+        <li class="preview-button-full-reader" id="preview-fullscreen-button" title="全屏模式 F11">
+            <span class="icon-fullscreen"></span>
+        </li>
+        <li class="preview-button-full-reader wmd-spacer"></li>
+        <li class="preview-button-full-reader dropdown" id="preview-about-button" title="关于本站">
+            <span class="dropdown-toggle icon-info-sign" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="true"></span>
+            <ul id="about-menu" class="dropdown-menu theme-black pull-right" role="menu">
+                <li title="下载全平台客户端"><a tabindex="-1" href="https://www.zybuluo.com/cmd" target="_blank"><i class="icon-laptop"></i>下载客户端</a></li>
+                <li title="@ghosert"><a tabindex="-1" href="http://www.weibo.com/ghosert" target="_blank"><i class="icon-weibo"></i>关注开发者</a></li>
+                <li title=""><a tabindex="-1" href="https://github.com/ghosert/cmd-editor/issues" target="_blank"><i class="icon-github-alt"></i>报告问题，建议</a></li>
+                <li title="support@zybuluo.com"><a tabindex="-1" href="mailto:support@zybuluo.com" target="_blank"><i class="icon-envelope"></i>联系我们</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<ul id="reader-full-toolbar-tail" class="reader-full-toolbar-tail-shown">
+    <li class="preview-button-full-reader" id="preview-hidden-button" title="隐藏工具栏 Ctrl+Alt+I">
+        <span class="icon-chevron-sign-right"></span>
+    </li>
+</ul>
+
+
+
+
+
+
+<!-- side remark, hidden when loading. -->
+<div class="remark-list side-remark-hidden">
+    <div class="remark-items">
+    </div>
+    <div class="leave-remark unselectable"><span class='icon-plus-sign-alt'></span><span>添加新批注</span></div>
+    <div class="new-remark">
+        <!-- clone the template $('.new-remark-reply').html() to here.-->
+        <div class="remark-notice">在作者公开此批注前，只有你和作者可见。</div>
+    </div>
+</div>
+
+<!-- template for new remark/reply -->
+<div class="new-remark-reply side-remark-hidden">
+    <div class="remark-head"><a><img src="https://www.zybuluo.com/static/img/default-head.jpg"></a></div>
+    <div class="remark-author unselectable"></div>
+    <div class="remark-editor" contentEditable="true" spellcheck="false"></div>
+    <!-- this will be filled up by js.
+    <div class="inline-error">402/400</div> for new remark
+    <div class="inline-error">202/200</div> for new reply
+    -->
+    <div class="remark-footer unselectable">
+        <button class="remark-save btn-link">保存</button>
+        <button class="remark-cancel btn-link">取消</button>
+    </div>
+</div>
+
+<!-- template for .remark-item/.remark-reply -->
+<div class="remark-item-reply side-remark-hidden">
+    <div class="remark-head"><a><img src="https://www.zybuluo.com/static/img/default-head.jpg"></a></div>
+    <div class="remark-author unselectable"></div>
+    <div class="remark-delete-link unselectable"><span class="icon-remove"></span></div> <!--This is mainly for deleting remark-reply, shown when author/remark hovering on remark-reply.-->
+    <div class="remark-editor" contentEditable="true" spellcheck="false"></div>
+    <!-- this will be filled up by js.
+    <div class="inline-error">402/400</div> for new remark
+    <div class="inline-error">202/200</div> for new reply
+    -->
+    <div class="remark-footer unselectable">
+        <button class="remark-edit btn-link">修改</button>
+        <button class="remark-save btn-link">保存</button>
+        <button class="remark-cancel btn-link">取消</button>
+        <button class="remark-delete btn-link">删除</button>
+    </div>
+</div>
+
+<!-- template for remark-item-->
+<div class="remark-item side-remark-hidden" data-rand-id="" data-version-id="">
+    <div class="remark-published-link unselectable"><span class="icon-link icon-rotate-90"></span></div>
+    <ul class="remark-options theme unselectable">
+        <li class="remark-private"><span class="icon-eye-close"></span><span>私有</span></li>
+        <li class="remark-public"><span class="icon-group"></span><span>公开</span></li>
+        <li class="remark-delete"><span class="icon-remove"></span><span>删除</span></li>
+    </ul>
+
+    <!-- clone the template $('.remark-item-reply').html() to here.-->
+
+    <button class="remark-reply-view-more btn-link">查看更早的 5 条回复</button>
+    <div class="remark-replies">
+        <!--
+        <div class="remark-reply">
+            clone the template $('.remark-item-reply').html() to here.
+        </div>
+        -->
+    </div>
+
+    <div class="leave-reply unselectable"><span>回复批注</span></div>
+    <div class="new-reply">
+        <!-- clone the template $('.new-remark-reply').html() to here.-->
+    </div>
+</div>
+
+<!-- jiawzhang NOTICE: .remark-icons will be put to mdeditor.mako and user_note.mako, where next to .wmd-preview -->
+<!-- <div class="remark-icons"></div> -->
+
+<!-- template for remark-icon -->
+<div class="remark-icon unselectable side-remark-hidden remark-icon-empty" style="display: none;">
+    <span class="icon-stack">
+        <i class="glyph-comment"></i>
+        <span class="remark-count"></span>
+    </span>
+</div>
+
+
+<!-- canvas, hidden always, this is used to convert svg to canvas and then convert canvas to png. -->
+<canvas id="svg-canvas-image" class="editor-reader-hidden-always"></canvas>
+
+<!-- This is the image panel to hold enlarged image/svg. -->
+<div id="large-image-panel">
+    <img id="large-image"/>
+</div>
+
+
+    
+
+
+    <!-- Hidden Popup Modal -->
+    <div id="notification-popup-window" class="modal hide fade theme" tabindex="-1" role="dialog" aria-labelledby="notification-title" aria-hidden="true">
+        <div class="modal-header theme">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="notification-title">通知</h3>
+        </div>
+        <div class="modal-body theme">
+            <p></p>
+        </div>
+        <div class="modal-footer theme">
+            <button id="notification-cancel" class="btn" data-dismiss="modal" aria-hidden="true">取消</button>
+            <button id="notification-confirm" class="btn btn-primary">确认</button>
+        </div>
+    </div>
+
+    <!-- zybuluo's foot -->
+
+    <script src="https://www.zybuluo.com/static/assets/288313bb.base.lib.min.js"></script>
+
+    <script>
+        Namespace('com.zybuluo.base');
+        com.zybuluo.base.initData = {
+            globalPromptUrl: "https://www.zybuluo.com/global/prompt",
+        };
+    </script>
+
+    
+    <!--mathjax-->
+    <!--blacker: 1 below means font weight.-->
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]], processEscapes: true }, TeX: { equationNumbers: { autoNumber: "AMS" } }, messageStyle: "none", SVG: { blacker: 1 }});
+    </script>
+    <script src="https://www.zybuluo.com/static/editor/libs/mathJax.js"></script>
+    <!--mathjax source code is here: https://github.com/mathjax/MathJax.-->
+    <script src="https://www.zybuluo.com/static/MathJax/MathJax.js?config=TeX-AMS-MML_SVG"></script>
+
+    <script>
+        Namespace('com.zybuluo.mdeditor.layout');
+        com.zybuluo.mdeditor.layout.initData = {
+            // '' means not logged in, otherwise the logged in username, for mdeditor.mako, this value will be reset in render.js otherwise, for user_note.mako, it's rendered by server side.
+            loggedInUsername: '',
+            isPageOwner: 'False' === 'True' ? true : false,
+            loginComeFromUrl: 'https://www.zybuluo.com/login?return_to=https%3A%2F%2Fwww.zybuluo.com%2Fvivounicorn%2Fnote%2F872759',
+            noteRemarksUrl: "https://www.zybuluo.com/note/872759/remarks", 
+            newNoteRemarkUrl: "https://www.zybuluo.com/note/872759/remark/new", 
+            updateNoteRemarkUrl: "https://www.zybuluo.com/note/872759/remark/update", 
+            deleteNoteRemarkUrl: "https://www.zybuluo.com/note/872759/remark/delete", 
+            publishNoteRemarkUrl: "https://www.zybuluo.com/note/872759/remark/publish", 
+            newNoteRemarkReplyUrl: "https://www.zybuluo.com/note/872759/remark_reply/new", 
+            updateNoteRemarkReplyUrl: "https://www.zybuluo.com/note/872759/remark_reply/update", 
+            deleteNoteRemarkReplyUrl: "https://www.zybuluo.com/note/872759/remark_reply/delete", 
+        };
+
+        // BEGIN: pace.js configuration
+        window.paceOptions = {
+            // disable others, enable for ajax call only,
+            ajax: true,
+            document: false,
+            elements: false,
+            eventLag: false,
+        };
+        // jiawzhang NOTICE: to make sure pace.js is working for any ajax call especially the jquery ajax, add 'Pace.restart()' into jquery ajax call like '$.post'
+        // Originally, pace 0.5.6 doesn't support jquery ajax, see details in: https://github.com/HubSpot/pace/issues/29
+        // END: pace.js configuration
+
+    </script>
+
+    <script src="https://www.zybuluo.com/static/assets/mdeditor/7a70106e.layout.lib.min.js"></script>
+
+    <script src="https://www.zybuluo.com/static/assets/mdeditor/dc648f35.layout.min.js"></script>
+
+
+
+    
+
+    <!-- https://www.zybuluo.com/static/assets/mdeditor/user_note.lib.min.js -->
+    <!-- -->
+
+    <script>
+        Namespace('com.zybuluo.mdeditor.user_note');
+        com.zybuluo.mdeditor.user_note.initData = {
+            isLoggedIn: 'False',
+            mdeditorUrl: "https://www.zybuluo.com/mdeditor",
+            passwordPassed: 'True' === 'True' ? true : false,
+        };
+    </script>
+
+    <script src="https://www.zybuluo.com/static/assets/mdeditor/6cd3112e.user_note.min.js"></script>
+
+
+
+</body>
+</html>
+    
