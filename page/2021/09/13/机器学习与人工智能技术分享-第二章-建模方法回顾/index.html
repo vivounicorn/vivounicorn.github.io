@@ -21,15 +21,13 @@
     var CONFIG = {"hostname":"vivounicorn.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="2. 建模方法回顾 以通用的监督学习为例，基本包含4个部分: \[ \begin{array}{l} \text{1. Prediction:  }y_i&#x3D;f(x_i|w),~i&#x3D;1,2,.....\\ \text{2. Parameters:  }w&#x3D;\{w_i|i&#x3D;1,2,...,dim\}\\ \text{3. Objective function:  }obj(w)&#x3D;lo">
+  <meta name="description" content="2. 建模方法回顾 以通用的监督学习为例，基本包含4个部分: \[ \begin{array}{l} \text{1. Prediction:  }y_i&#x3D;f(x_i|w),~i&#x3D;1,2,.....\\ \text{2. Parameters:  }w&#x3D;\{w_i|i&#x3D;1,2,...,dim\}\\ \text{3. Objective function:  }obj(w)&#x3D;loss(w)+reg">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第二章 建模方法回顾">
 <meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95%E5%9B%9E%E9%A1%BE/index.html">
 <meta property="og:site_name" content="学习和思考，以心力提升认知">
-<meta property="og:description" content="2. 建模方法回顾 以通用的监督学习为例，基本包含4个部分: \[ \begin{array}{l} \text{1. Prediction:  }y_i&#x3D;f(x_i|w),~i&#x3D;1,2,.....\\ \text{2. Parameters:  }w&#x3D;\{w_i|i&#x3D;1,2,...,dim\}\\ \text{3. Objective function:  }obj(w)&#x3D;lo">
+<meta property="og:description" content="2. 建模方法回顾 以通用的监督学习为例，基本包含4个部分: \[ \begin{array}{l} \text{1. Prediction:  }y_i&#x3D;f(x_i|w),~i&#x3D;1,2,.....\\ \text{2. Parameters:  }w&#x3D;\{w_i|i&#x3D;1,2,...,dim\}\\ \text{3. Objective function:  }obj(w)&#x3D;loss(w)+reg">
 <meta property="og:locale">
-<meta property="og:image" content="https://vivounicorn.github.io/images/image_1ben4gmqc1l38cpd11e61b97uvs9.png">
-<meta property="og:image" content="https://vivounicorn.github.io/images/image_1ben4qcc01pn16mp7m3149c1dubm.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1aoqq68m81tb5rsd1k71llid5k13.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1aoqrsu9k1u936ff1gps16anac61g.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1aoif9nr11ft1j95hca71a1a9dm.png">
@@ -66,7 +64,7 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1ap7kod2dpkn1cqu1oksvmd3ms6t.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1ap87o3no141a1tnvid984h1vnv7n.png">
 <meta property="article:published_time" content="2021-09-13T08:55:54.000Z">
-<meta property="article:modified_time" content="2021-09-14T06:42:57.614Z">
+<meta property="article:modified_time" content="2021-09-14T08:26:44.093Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="Bagging">
@@ -78,7 +76,7 @@
 <meta property="article:tag" content="RF">
 <meta property="article:tag" content="GBDT">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://vivounicorn.github.io/images/image_1ben4gmqc1l38cpd11e61b97uvs9.png">
+<meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1aoqq68m81tb5rsd1k71llid5k13.png">
 
 <link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95%E5%9B%9E%E9%A1%BE/">
 
@@ -233,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 14:42:57" itemprop="dateModified" datetime="2021-09-14T14:42:57+08:00">2021-09-14</time>
+                <time title="Modified: 2021-09-14 16:26:44" itemprop="dateModified" datetime="2021-09-14T16:26:44+08:00">2021-09-14</time>
               </span>
 
           <br>
@@ -261,16 +259,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <div style="float:left;border:solid 1px 000;margin:2px;">
-<img src="https://vivounicorn.github.io/images/image_1ben4gmqc1l38cpd11e61b97uvs9.png"  width="200" height="260" >
-</div>
-<div style="float:right;border:solid 1px 000;margin:2px;">
-<img src="https://vivounicorn.github.io/images/image_1ben4qcc01pn16mp7m3149c1dubm.png" width="200" height="260" >
-</div>
-<div style="float:none;clear:both;">
-
-</div>
-<h1 id="建模方法回顾">2. 建模方法回顾</h1>
+        <h1 id="建模方法回顾">2. 建模方法回顾</h1>
 <p>以通用的监督学习为例，基本包含4个部分:</p>
 <p><span class="math display">\[
 \begin{array}{l}
