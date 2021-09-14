@@ -66,7 +66,7 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1ap7kod2dpkn1cqu1oksvmd3ms6t.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_2/image_1ap87o3no141a1tnvid984h1vnv7n.png">
 <meta property="article:published_time" content="2021-09-13T08:55:54.000Z">
-<meta property="article:modified_time" content="2021-09-14T06:00:57.051Z">
+<meta property="article:modified_time" content="2021-09-14T06:42:57.614Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="第二章">
 <meta property="article:tag" content="机器学习">
@@ -228,7 +228,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 14:00:57" itemprop="dateModified" datetime="2021-09-14T14:00:57+08:00">2021-09-14</time>
+                <time title="Modified: 2021-09-14 14:42:57" itemprop="dateModified" datetime="2021-09-14T14:42:57+08:00">2021-09-14</time>
               </span>
 
           <br>
@@ -294,9 +294,7 @@
 y=f(x)+\epsilon\\
 \epsilon \sim N(0,\sigma)
 \end{array}
-\]</span></p>
-</blockquote>
-<p>我们希望用 <span class="math inline">\(f^{e}(x)\)</span> 估计 <span class="math inline">\(f(x)\)</span>，如果使用基于square loss 的线性回归，则误差分析如下: &gt; <span class="math display">\[
+\]</span> <span id="more"></span> 我们希望用 <span class="math inline">\(f^{e}(x)\)</span> 估计 <span class="math inline">\(f(x)\)</span>，如果使用基于square loss 的线性回归，则误差分析如下: <span class="math display">\[
 \begin{array}{l}
 Err(x)=E[(y-f^{e}(x))^2]\\
 ~~~~~~~~~~~~=E[(f(x)-f^{e}(x))^2]+\sigma_e^2\\
@@ -308,6 +306,7 @@ Err(x)=E[(y-f^{e}(x))^2]\\
 ~~~~~~~~~~~~=\underbrace{(E[f^{e}(x)]-f(x))^2}_{Bias^2}+\underbrace{E[(f^{e}(x)-E[f^{e}(x)])^2]}_{Variance}+\sigma_e^2\\
 \end{array}
 \]</span></p>
+</blockquote>
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_2/image_1aoqrsu9k1u936ff1gps16anac61g.png" width="400"/>
 </center>
