@@ -1380,6 +1380,7 @@ y=\frac{\gamma}{\sqrt{Var(x)+\epsilon}}\cdot x+(\beta-\frac{\gamma E(x)}{\sqrt{V
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1600,6 +1601,26 @@ y=\frac{\gamma}{\sqrt{Var(x)+\epsilon}}\cdot x+(\beta-\frac{\gamma E(x)}{\sqrt{V
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : '82d39e8c12ee1686cd1273ac191f4c75',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

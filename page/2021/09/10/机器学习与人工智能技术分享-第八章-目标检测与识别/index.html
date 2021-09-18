@@ -2248,6 +2248,7 @@ L(s,t_{x,y,w,h})=L_{cls}(s_{c^*})+\lambda [c^*&gt;0]L_{reg}(t,t^*)
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -2468,6 +2469,26 @@ L(s,t_{x,y,w,h})=L_{cls}(s_{c^*})+\lambda [c^*&gt;0]L_{reg}(t,t^*)
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : '95c3e49529d89cbf44cc5eff1eb7d258',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

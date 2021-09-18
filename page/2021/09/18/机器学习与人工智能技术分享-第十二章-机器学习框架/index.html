@@ -480,6 +480,7 @@ s.t.&amp;\quad&amp;没有或少做人工干预 \nonumber  \\
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -700,6 +701,26 @@ s.t.&amp;\quad&amp;没有或少做人工干预 \nonumber  \\
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : 'f1b694f843835957cb6c16475962c443',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

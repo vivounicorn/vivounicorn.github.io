@@ -488,6 +488,7 @@ identifier 标识了如何解析消息，dbc文件是标准的CAN消息格式，
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -708,6 +709,26 @@ identifier 标识了如何解析消息，dbc文件是标准的CAN消息格式，
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : 'b9afc10355b4cb07da63072c43782f53',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

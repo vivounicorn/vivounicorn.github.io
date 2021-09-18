@@ -1061,6 +1061,7 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1281,6 +1282,26 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : '476abd4481542ae595d28f5f59a588a6',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>

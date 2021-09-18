@@ -66,7 +66,7 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_14/best.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_14/normal.png">
 <meta property="article:published_time" content="2021-09-18T10:55:52.000Z">
-<meta property="article:modified_time" content="2021-09-18T11:43:24.003Z">
+<meta property="article:modified_time" content="2021-09-18T11:43:55.423Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="金融风控">
@@ -220,7 +220,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-09-18 18:55:52 / Modified: 19:43:24" itemprop="dateCreated datePublished" datetime="2021-09-18T18:55:52+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-18 18:55:52 / Modified: 19:43:55" itemprop="dateCreated datePublished" datetime="2021-09-18T18:55:52+08:00">2021-09-18</time>
             </span>
 
           <br>
@@ -654,7 +654,8 @@ Economic Value Added：全面评价企业经营者有效使用资本和为股东
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_14/ml.png" width="800" />
 </center>
-<p>与传统机器学习类似，数据及特征准备耗费80%以上建模时间(即使使用AutoML框架辅助特征发现)，而模型方面，由于对可解释性的强烈需求及实际建模效果，早期的baseline是Logistic Regression，现在的baseline是Additive Tree Models(如，各种版本GBDT模型、RF模型，详情可见《<a target="_blank" rel="noopener" href="https://www.zybuluo.com/vivounicorn/note/798611#25-additive-tree-%E6%A8%A1%E5%9E%8B">建模方法回顾-Additive Tree Models</a>》)。 需要说明的是，深度学习模型，诸如：</p>
+<p>与传统机器学习类似，数据及特征准备耗费80%以上建模时间(即使使用AutoML框架辅助特征发现)，而模型方面，由于对可解释性的强烈需求及实际建模效果，早期的baseline是Logistic Regression，现在的baseline是Additive Tree Models(如，各种版本GBDT模型、RF模型，详情可见《<a target="_blank" rel="noopener" href="https://www.zybuluo.com/vivounicorn/note/798611#25-additive-tree-%E6%A8%A1%E5%9E%8B">建模方法回顾-Additive Tree Models</a>》)。</p>
+<p>需要说明的是，深度学习模型，诸如：</p>
 <ul>
 <li><p><a target="_blank" rel="noopener" href="http://ir.ia.ac.cn/bitstream/173211/12337/1/A%20Convolutional%20Click%20Prediction%20Model.pdf">Convolutional Click Prediction Model</a></p></li>
 <li><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1601.02376.pdf">Factorization-supported Neural Network</a></p></li>
@@ -781,6 +782,7 @@ Economic Value Added：全面评价企业经营者有效使用资本和为股东
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1001,6 +1003,26 @@ Economic Value Added：全面评价企业经营者有效使用资本和为股东
     
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '1767e9acbde70e56ffa9',
+      clientSecret: 'daa5002dffeeb554fdf30254217420d1e92f86ba',
+      repo        : 'vivounicorn.github.io',
+      owner       : 'vivounicorn',
+      admin       : ['vivounicorn'],
+      id          : '850aba9110ef1280090f42a1bc71afe3',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
