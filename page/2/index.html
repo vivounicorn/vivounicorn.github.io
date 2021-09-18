@@ -151,6 +151,338 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张磊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习和思考，以心力提升认知">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第六章 循环神经网络与Transformers</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-18 15:15:54 / Modified: 16:14:10" itemprop="dateCreated datePublished" datetime="2021-09-18T15:15:54+08:00">2021-09-18</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>48k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>43 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="循环神经网络与transformers">6. 循环神经网络与Transformers</h1>
+<h2 id="rnn">6.1 RNN</h2>
+<h3 id="基本原理">6.1.1 基本原理</h3>
+<p>序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种：</p>
+<p>1、根据当前上下文语义预测接下来出现某个文本的概率；</p>
+<p>2、通过语言模型生成新的文本；</p>
+<p>3、文本的通用NLP任务，例如词性标注、文本分类等；</p>
+<p>4、机器翻译；</p>
+<p>5、文本表示及编码解码。</p>
+传统的神经网络并没有很好的解决这种序列问题，于是Recurrent Neural Networks这种网络被提了出来：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png" width="600"  />
+</center>
+<p>乍一看就是节点自带环路的网络，广义来看，可以在这个节点上展开，只是这种展开和输入的字数有关，比如输入为10个字，则展开10层。</p>
+<p>从一个角度看，不同于传统神经网络会假设所有输入及输出是相互独立的，RNN正相反，认为节点间天然有相关性；另一个角度是，认为RNN具有“记忆”能力，它能把历史上相关节点状态“全部”记住，但实际情况是，我们当前说的一句话和较久前说的话未必有很强的关系，如果“全部”记住，一没必要、二计算量巨大。</p>
+<h3 id="bptt-原理">6.1.2 BPTT 原理</h3>
+以最简单的RNN为例，说明背后算法原理：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9bnmgsa50b1ksr16kb18vg10gh50.png" width="450"  />
+</center>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张磊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习和思考，以心力提升认知">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第五章 深度神经网络</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-14 17:49:19" itemprop="dateCreated datePublished" datetime="2021-09-14T17:49:19+08:00">2021-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 15:06:49" itemprop="dateModified" datetime="2021-09-18T15:06:49+08:00">2021-09-18</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>109k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1:39</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="深度神经网络">5. 深度神经网络</h1>
+<p>深度学习是基于多层神经网络的一种对数据进行自动表征学习的框架，能使人逐步摆脱传统的人工特征提取过程，它的基础之一是distributed representation，读论文时注意以下概念区分：</p>
+<ul>
+<li><p>Distributional representation</p>
+<p>Distributional representation是基于某种分布假设和上下文共现的一类表示方法，比如，对于词的表示来说：有相似意义的词具有相似的分布。</p>
+<p>从技术上讲这类方法的缺点是：通常对存储敏感，在representation上也不高效，但是优点是：算法相对简单，甚至像LSA那样简单的线性分解就行。</p>
+<p>几类常见的Distributional representation模型：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent semantic analysis</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">Latent Dirichlet allocation</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Self-organizing_map">Self-organizing map</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Hyperspace_Analogue_to_Language">HAL</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Independent_component_analysis">Independent component analysis</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Random_indexing">Random indexing</a></p></li>
+</ul></li>
+<li><p>Distributed representation</p>
+<p>Distributed representation是对实体（比如：词、车系编号、微博用户id等等）稠密、低维、实数的向量表示，也就是常说的embedding，它不需要做分布假设，向量的每个维度代表实体在某个空间下的隐含特征。</p>
+<p>从技术上讲它的缺点是：计算代价较高，算法往往不简单直接，通常通过神经网络/深度神经网络实现，优点是：对原始信息的有效稠密压缩表示，不仅仅是考虑“共现”，还会考虑其他信息，比如：“时序”等。</p>
+<p>几类常见的Distributed representation模型：</p>
+<ul>
+<li><p>Collobert and Weston embeddings</p></li>
+<li><p>HLBL embeddings</p></li>
+</ul></li>
+</ul>
+<p>关于Distributional representation和Distributed representation以及几个相关概念，看论文<a target="_blank" rel="noopener" href="http://www.aclweb.org/anthology/P10-1040">Word representations: A simple and general method for semi-supervised learning</a>即可明了。</p>
+<h2 id="反向传播">5.1 反向传播</h2>
+反向传播是神经网络参数学习的必备工具，以经典的多层前向神经网络为例：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_5/image_1asuka9jl1u479sd1k7l64l11s2m.png" width="350"  />
+</center>
+整个网络可以认为是以下结构的重复，其中n代表处于第几层：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_5/image_1avm00h74gbiodp19bv1sbj19au1j.png" width="350"  />
+</center>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张磊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习和思考，以心力提升认知">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第四章 最优化原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-14 16:33:13" itemprop="dateCreated datePublished" datetime="2021-09-14T16:33:13+08:00">2021-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 15:06:43" itemprop="dateModified" datetime="2021-09-18T15:06:43+08:00">2021-09-18</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>31k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>28 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="最优化原理">4. 最优化原理</h1>
+<h2 id="泰勒定理">4.1 泰勒定理</h2>
+<p>满足一定条件的函数可以通过泰勒展开式对其做近似：</p>
+<h3 id="泰勒展开式">4.1.1 泰勒展开式</h3>
+<p>泰勒展开式原理如下，主要采用分部积分推导： <span class="math display">\[
+\begin{array}{l}
+f(x+\Delta x)=f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\
+=f(x)+((x+\Delta x) \nabla f(x+\Delta x)-xf(x))-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
+=f(x)+(x+\Delta x)(\nabla f(x)+\int_{x}^{x+\Delta x}\nabla^2f(t)dt)-x\nabla f(x)-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
+=f(x)+\nabla f(x)\Delta x +\int_{x}^{x+\Delta x}(x+\Delta x-t) \nabla^2f(t)dt\\
+......\\
+=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2
++
+...\frac{1}{n!}\nabla^nf(x)\Delta x^n  \\
++ \int_{x}^{x+\Delta x}\frac{\nabla^{n+1}f(t)}{n!}(x+\Delta x-t) dt
+\end{array}
+\]</span></p>
+<h3 id="泰勒中值定理">4.1.2 泰勒中值定理</h3>
+<p>需要注意泰勒中值定理是一个严格的等式： <span class="math display">\[
+\begin{array}{l}
+f(x+\Delta x)=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2
++
+...\frac{1}{n!}\nabla^nf(x)\Delta x^n \\
++\frac{1}{(n+1)!}\nabla^{n+1}f(\xi)\Delta x^{n+1} ,\text{where } \xi \in(0,\Delta x)
+\end{array}
+\]</span></p>
+<h2 id="梯度下降法">4.2 梯度下降法</h2>
+<h3 id="基本原理">4.2.1 基本原理</h3>
+<p>梯度下降是一种简单、好用、经典的使用一阶信息的最优化方法（意味着相对低廉的计算成本），其基本原理可以想象为一个下山问题，当下降方向与梯度方向一致时，目标函数的方向导数最大，即此时目标函数在当前起点位置的下降速度最快。
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%89%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%AD%E7%9A%84%E7%BB%9F%E4%B8%80%E6%A1%86%E6%9E%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -386,265 +718,10 @@ y=f(x)+\epsilon\\
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="张磊">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="学习和思考，以心力提升认知">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第一章 基本概念</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-13 14:44:00" itemprop="dateCreated datePublished" datetime="2021-09-13T14:44:00+08:00">2021-09-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 16:26:30" itemprop="dateModified" datetime="2021-09-14T16:26:30+08:00">2021-09-14</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>2.8k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>3 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="一些基本概念">1. 一些基本概念</h1>
-<h2 id="生成式模型与判别式模型">1.1 生成式模型与判别式模型</h2>
-<p>从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?</p>
-<ul>
-<li><p>生成式模型</p>
-<p>我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。</p></li>
-<li><p>判别式模型</p>
-<p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
-</ul>
-<p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
-<p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
-<p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
-<ul>
-<li><p><span class="math inline">\(p(x,y)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(2/5\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/5\)</span></td>
-<td><span class="math inline">\(2/5\)</span></td>
-</tr>
-</tbody>
-</table></li>
-<li><p><span class="math inline">\(p(y|x)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(y|x)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/3\)</span></td>
-<td><span class="math inline">\(2/3\)</span></td>
-</tr>
-</tbody>
-</table>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="张磊">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="学习和思考，以心力提升认知">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第八章 目标检测与识别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-10 14:25:42" itemprop="dateCreated datePublished" datetime="2021-09-10T14:25:42+08:00">2021-09-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 16:26:35" itemprop="dateModified" datetime="2021-09-14T16:26:35+08:00">2021-09-14</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>76k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1:09</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="目标检测与识别">8. 目标检测与识别</h1>
-目标检测的发展历程大致如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bg86igedlru9801vgh8f913g4m.png" width="800"  />
-</center>
-<h2 id="selective-search">8.1 Selective Search</h2>
-对于目标识别任务，比如判断一张图片中有没有车、是什么车，一般需要解决两个问题：目标检测、目标识别。而目标检测任务中通常需要先通过某种方法做图像分割，事先得到候选框；直观的做法是：给定窗口，对整张图片滑动扫描，结束后改变窗口大小重复上面步骤，缺点很明显：重复劳动耗费资源、精度和质量不高等等。 针对上面的问题，一种解决方案是借鉴启发式搜索的方法，充分利用人类的先验知识。J.R.R. Uijlings在《<a target="_blank" rel="noopener" href="https://www.koen.me/research/pub/uijlings-ijcv2013-draft.pdf">Selective Search for Object Recoginition</a>》提出一种方法：基于数据驱动，与具体类别无关的多种策略融合的启发式生成方法。图片包含各种丰富信息，例如：大小、形状、颜色、纹理、物体重叠关系等，如果只使用一种信息往往不能解决大部分问题，例如：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga5pfj1d621rq7i851vvprc19.png" width="500"/>
-</center>
-<p>左边的两只猫可以通过颜色区别而不是通过纹理，右面的变色龙却只能通过纹理区别而不是颜色。</p>
-<h3 id="启发式生成设计准则">8.1.1 启发式生成设计准则</h3>
-<p>所以概括来说：</p>
-<ul>
-<li>能够捕捉到各种尺度物体，大的、小的、边界清楚的、边界模糊的等等； 多尺度的例子： <img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga9sm381ben1hhu167411ng1h9f13.png" alt="多尺度例子" /></li>
-<li>策略多样性，采用多样的策略集合共同作用；</li>
-<li>计算快速，由于生成候选框只是检测第一步，所以计算上它决不能成为瓶颈。</li>
-</ul>
-<h3 id="selective-search-1">8.1.2 Selective Search</h3>
-<p>基于以上准则设计Selective Search算法：</p>
-<ul>
-<li><p>采用层次分组算法解决尺度问题</p>
-<p>引入图像分割中的自下而上分组思想，由于整个过程是层次的，在将整个图合并成一个大的区域的过程中会输出不同尺度的多个子区域。整个过程如下：</p>
-<p>1、利用《<a target="_blank" rel="noopener" href="https://cs.brown.edu/~pff/papers/seg-ijcv.pdf">Efficient Graph-Based Image Segmentation</a>》（基本思想：将图像中每个像素表示为图上的一个节点，用于连接不同节点的无向边都有一个权重，这个权重表示两个节点之间的不相似度，通过贪心算法利用最小生成树做图像分割）生成初始候选区域；</p>
-<p>2、采用贪心算法合并区域，计算任意两个领域的相似度，把达到阈值的合并，再计算新区域和其所有领域的相似度，循环迭代，直到整个图变成了一个区域，算法如下：</p>
-<center>
-<p><img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga9fgjm5ei1r9ks661milsvpm.png" width="800"/></p>
-</center>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -710,12 +787,12 @@ y=f(x)+\epsilon\\
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -751,12 +828,12 @@ y=f(x)+\epsilon\\
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">350k</span>
+    <span title="Symbols count total">417k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">5:18</span>
+    <span title="Reading time total">6:19</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
