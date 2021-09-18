@@ -24,7 +24,7 @@
   <meta name="description" content="6. 循环神经网络与Transformers 6.1 RNN 6.1.1 基本原理 序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种： 1、根据当前上下文语义预测">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第六章 循环神经网络与Transformers">
-<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/index.html">
+<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/index.html">
 <meta property="og:site_name" content="学习和思考，以心力提升认知">
 <meta property="og:description" content="6. 循环神经网络与Transformers 6.1 RNN 6.1.1 基本原理 序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种： 1、根据当前上下文语义预测">
 <meta property="og:locale">
@@ -70,8 +70,8 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdqc2sgvspaoa18uk1bqs1t87m.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdtm03k1r4l1mq342e14enu6t13.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1fbislg3d5m5221g4d15kl1rbc9.png">
-<meta property="article:published_time" content="2021-09-18T07:15:54.000Z">
-<meta property="article:modified_time" content="2021-09-18T08:14:10.942Z">
+<meta property="article:published_time" content="2021-09-05T12:15:54.000Z">
+<meta property="article:modified_time" content="2021-09-18T12:43:01.158Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="RNN">
@@ -80,7 +80,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png">
 
-<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
+<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
 
 
 <script id="page-configurations">
@@ -170,6 +170,16 @@
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -203,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -225,9 +235,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 15:15:54 / Modified: 16:14:10" itemprop="dateCreated datePublished" datetime="2021-09-18T15:15:54+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-05 20:15:54" itemprop="dateCreated datePublished" datetime="2021-09-05T20:15:54+08:00">2021-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:43:01" itemprop="dateModified" datetime="2021-09-18T20:43:01+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -268,6 +293,7 @@
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png" width="600"  />
 </center>
+<span id="more"></span>
 <p>乍一看就是节点自带环路的网络，广义来看，可以在这个节点上展开，只是这种展开和输入的字数有关，比如输入为10个字，则展开10层。</p>
 <p>从一个角度看，不同于传统神经网络会假设所有输入及输出是相互独立的，RNN正相反，认为节点间天然有相关性；另一个角度是，认为RNN具有“记忆”能力，它能把历史上相关节点状态“全部”记住，但实际情况是，我们当前说的一句话和较久前说的话未必有很强的关系，如果“全部”记住，一没必要、二计算量巨大。</p>
 <h3 id="bptt-原理">6.1.2 BPTT 原理</h3>
@@ -275,7 +301,6 @@
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9bnmgsa50b1ksr16kb18vg10gh50.png" width="450"  />
 </center>
-<span id="more"></span>
 <p>定义以下符号： <span class="math inline">\(x_i(t)\)</span>：输入层第<span class="math inline">\(i\)</span>个节点；</p>
 <p><span class="math inline">\(s_h(t-1)\)</span>：前一个状态的隐藏层第<span class="math inline">\(h\)</span>个节点；</p>
 <p><span class="math inline">\(s_j(t)\)</span>：当前状态的隐藏层第<span class="math inline">\(j\)</span>个节点；</p>
@@ -1090,12 +1115,12 @@ Output Gate <img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1f
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="机器学习与人工智能技术分享-第五章 深度神经网络">
+    <a href="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="机器学习与人工智能技术分享-第五章 深度神经网络">
       <i class="fa fa-chevron-left"></i> 机器学习与人工智能技术分享-第五章 深度神经网络
     </a></div>
       <div class="post-nav-item">
-    <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" rel="next" title="机器学习与人工智能技术分享-第九章 语义分割">
-      机器学习与人工智能技术分享-第九章 语义分割 <i class="fa fa-chevron-right"></i>
+    <a href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/" rel="next" title="机器学习与人工智能技术分享-第八章 目标检测与识别">
+      机器学习与人工智能技术分享-第八章 目标检测与识别 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -1174,9 +1199,17 @@ Output Gate <img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1f
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">31</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -1342,7 +1375,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'vivounicorn.github.io',
       owner       : 'vivounicorn',
       admin       : ['vivounicorn'],
-      id          : '21788e74eb8fe0abc824f1e2f771def7',
+      id          : 'b09b5dbb5c7af0e28fb39bf89d7d4894',
         language: 'zh-CN',
       distractionFreeMode: true
     });

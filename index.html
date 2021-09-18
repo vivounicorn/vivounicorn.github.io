@@ -119,6 +119,16 @@
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -151,7 +161,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -165,7 +175,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十四章 金融风控</a>
+            <a href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十四章 金融风控</a>
         </h2>
 
         <div class="post-meta">
@@ -174,9 +184,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 18:55:52 / Modified: 19:43:55" itemprop="dateCreated datePublished" datetime="2021-09-18T18:55:52+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-12 18:55:52" itemprop="dateCreated datePublished" datetime="2021-09-12T18:55:52+08:00">2021-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:41:40" itemprop="dateModified" datetime="2021-09-18T20:41:40+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -207,21 +232,10 @@
           <h1 id="金融风控应用">14. 金融风控应用</h1>
 <h2 id="风控概述">14.1 风控概述</h2>
 <h3 id="风控在行业上的区别">14.1.1 风控在行业上的区别</h3>
-不同行业的风控有不同的区别，大致区别如下图。其实大家也可以很直观的感觉到：比如，你去银行贷款，银行会让你提供各种材料，恨不得知道你祖宗八代的信息，而你去贷现金贷，恨不得提供个身份证号就给你放贷。不同业务场景下，面对的用户不同，风险不同，收益不同，在合适场景下做合适的事儿。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0arhlbdsbvghdlvnl1p70m.png" width="800" />
-</center>
-<h3 id="风控审批流程逻辑框架">14.1.2 风控审批流程逻辑框架</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0e8jr1fd2joe1gij0dad1g.png" width="800" />
-</center>
-风控是整个金融业务的核心之一，而贷前、贷中、贷后是风控切入的三个场景。风控很大的工作量就是在判断用户的还款能力（比如，授信流程）和还款意愿（比如，反欺诈流程），技术角度，目前纯基于模型去做的公司我认为没有，大部分都是规则辅以模型的方式，但这里面数据是重中之重，一般会借助于自有数据、第三方数据等。一般系统架构上会是这样：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1cf4ccn4i13sja8vj6iucb15q936.png" width="450" />
-</center>
+<p>不同行业的风控有不同的区别，大致区别如下图。其实大家也可以很直观的感觉到：比如，你去银行贷款，银行会让你提供各种材料，恨不得知道你祖宗八代的信息，而你去贷现金贷，恨不得提供个身份证号就给你放贷。不同业务场景下，面对的用户不同，风险不同，收益不同，在合适场景下做合适的事儿。
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/#more" rel="contents">
+              <a class="btn" href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -245,7 +259,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -259,7 +273,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</a>
+            <a href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十三章 ADAS与自动驾驶</a>
         </h2>
 
         <div class="post-meta">
@@ -268,9 +282,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 18:55:44 / Modified: 19:25:49" itemprop="dateCreated datePublished" datetime="2021-09-18T18:55:44+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-12 18:55:44" itemprop="dateCreated datePublished" datetime="2021-09-12T18:55:44+08:00">2021-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:41:53" itemprop="dateModified" datetime="2021-09-18T20:41:53+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -302,20 +331,9 @@
 <h2 id="openpilot">13.1 Openpilot</h2>
 <h3 id="项目简介">13.1.1 项目简介</h3>
 <p>Comma.ai是由天才黑客George Hotz（第一个破解iPhone、PS 3的人，相关介绍：https://www.bloomberg.com/features/2015-george-hotz-self-driving-car/）创立的专注自动驾驶的公司，目标是1000刀实现自动驾驶，但公司由于受到美国国家公路交通安全管理局的严格管制，于是“一怒之下”的把整个系统开源，取名openpilot，从功能上完全具备了目前特斯拉的autopilot具有的能力，主要表现在ACC和LKAS上。目前为止所有自动驾驶汽车都属于level 2，包括Waymo、Cruise、comma.ai、Ford、Tesla，特点是需要驾驶员坐在驾驶位且持续关注行车状态并随时接管汽车，实验室车辆在我看来也就Leve 2+，Level 3阶段，在特定路段驾驶员可以完全不用关注汽车行驶状态，目前没有厂商实现L3。openpilot目前主要能力是在6min内无需人的干预(但人需要盯着)控制本田和讴歌某几款车的加速、刹车、转向，从效果看，是我个人目前最看好的开源项目，且与我之前的构想一致：无需对汽车进行改造，无需昂贵的硬件设备，即插即用实现自动辅助驾驶。另外消费者不一定买同一品牌汽车，他们的数据也可以互相共享，从而降低自动驾驶造成的事故发生几率。</p>
-<h3 id="基本概念">13.1.2 基本概念</h3>
-1、CAN CAN总线：(Controller Area Network, CAN)即控制器局域网络，是由以研发和生产汽车电子产品著称的德国BOSCH公司开发的，并最终成为国际标准（ISO 11898），是国际上应用最广泛的现场总线之一。不仅用于汽车，也广泛运用于工业，商业等领域。<br />
-在汽车领域，CAN是用于连接电子控制单元[ECU]的多主串行总线标准（通讯总线）。CAN网络需要两个或多个节点进行通信。节点的复杂性可以从简单的I / O设备到具有CAN接口和复杂软件的嵌入式计算机。节点还可以是允许标准计算机通过USB或以太网端口与CAN网络上的设备进行通信的网关。所有节点通过两线总线相互连接。电线为120Ω额定双绞线。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_13/image_1bli60hpj1j04gi91abv186d16p59.png" width="400"  />
-</center>
-<p>2、LIN LIN总线：(Local Interconnect Network)本地互联网，是一种低成本的串行通讯网络，用于实现汽车中的分布式电子系统控制。LIN 的目标是为现有汽车网络(例如CAN 总线)提供辅助功能，因此LIN总线是一种辅助的总线网络。在不需要CAN 总线的带宽和多功能的场合，比如智能传感器和制动装置之间的通讯使用LIN 总线可大大节省成本。 在汽车电控系统中，数据交换主要经由CAN总线完成，LIN总线是其补充与完善，不仅仅是出于成本的考量，更是（当今通讯技术发展条件下）充分保证高速数据交互效率的完美结合。 3、NEO 一个开源机器人软件开发平台,目前和 Neo 适配的智能手机只有中国厂商一加生产的一加 3 手机，只有这部手机权限足够开放，而且相机和芯片 （高通骁龙820）都符合要求，且会利用该手机的GPS。硬件成本700刀。 4、panda 通用汽车接口软件，用来控制与CAN和LIN的通信。</p>
-<h3 id="系统架构">13.1.3 系统架构</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_13/image_1bli66io81lrn15221ut21mmi1vf3m.png" width="500"  />
-</center>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/#more" rel="contents">
+              <a class="btn" href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%89%E7%AB%A0-ADAS%E4%B8%8E%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -339,7 +357,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -353,7 +371,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十二章 机器学习框架</a>
+            <a href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十二章 机器学习框架</a>
         </h2>
 
         <div class="post-meta">
@@ -362,9 +380,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 18:55:35 / Modified: 19:13:06" itemprop="dateCreated datePublished" datetime="2021-09-18T18:55:35+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-12 18:55:35" itemprop="dateCreated datePublished" datetime="2021-09-12T18:55:35+08:00">2021-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:42:10" itemprop="dateModified" datetime="2021-09-18T20:42:10+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -400,24 +433,9 @@
 <li>面向C端的互联网场景 典型的有搜索、推荐、广告、风控，特点是：</li>
 </ul>
 <p>1、<strong>数据量巨大</strong>，每天的样本量在亿~百亿量级，甚至更高，这个规模对数据处理有极大地挑战，基本都需要分布式存储和计算系统的支持，例如：Hadoop、Spark平台。</p>
-<p>2、<strong>模型复杂、特征维度高、可解释性差</strong>，由于有丰富的数据(如：文本、图像、点击行为、浏览行为、下单行为等等)，所以在此基础上可以提取及交叉生成大量特征，例如，在计算广告中，广告本身的素材、广告的位置、广告的曝光量、广告的出价、用户的Demographic画像、用户的Geographic画像、用户的浏览路径、用户的点击行为、用户所处上下文、用户使用浏览器、广告+用户+上下文环境交叉产生的各种特征。机器学习本质上只揭示相关性不得出因果性，最终的模型每个特征会对这个相关性起到一定作用，所谓三个臭皮匠顶一个诸葛亮，所以理论上数据量越大、特征越丰富、反馈越及时，模型效果越好。当然，正是为了效果而使用了大量类似DNN的模型，导致可解释性变差。</p>
-<p>3、<strong>在线实时性、并发性要求高</strong>，包含两方面：模型效果的实时性和系统响应的实时性。当用户行为能更快的反馈到模型中时，模型出现好效果的概率越大，一方面模型可以实时学习，一方面特征可以实时改变，这样通过反馈数据可以迅速调整模型，就像人一样，正常来说都是吃一堑长一智，通过发生行为-&gt;得到结果-&gt;进行调整-&gt;发生行为......的不断循环而进步。成功的互联网产品流量较高且对用户体验要求很高，势必要求请求量很高时系统依然能保证实时性，所以系统返回结果到用户面前一般都是毫秒级的，这就需要一方面系统并发性要好，一方面特征处理速度要快，另一方面模型单机Inference速度要够快。</p>
-<p>4、<strong>离线模型训练时效性要求高</strong>，即使采用Online Learning，也需要离线模型的支持，一般为保证模型质量，每个模型每天至少训练一次，在特征维度和样本量这么高且实验模型数量可观的场景下(最典型的如：DNN，动辄上千万、上亿、上百亿的参数规模，学一次成本又高，产生的模型又大)，势必会影响模型训练时间，甚至量大了模型训练都跑不起来，而抽样又会破坏数据的真实分布，所以对离线大规模机器学习平台的要求就很高了。</p>
-<p>5、<strong>数据采集和处理速度要求高</strong>，前面也说了，内容给用户展示后势必会产生用户反馈，这个反馈日志要尽快的解析、存储和处理，并及时推给模型训练或特征更新使用，当然这里对日志丢失的容忍度相对较高。</p>
-<p>6、<strong>模型线上试错成本相对较低</strong>，以广告为例，利用E&amp;E算法，通过损失曝光机会进而损失部分收益来测算模型效果，但由于反馈时间短，可以很快的做调整。</p>
-<ul>
-<li>面向B端的场景</li>
-</ul>
-<p>对于大B端，一类是拥有和互联网C端类似场景的B端，数据量大、样本量大、实时性和并发性高，只是特征维度未必有那么高，但带来的系统挑战一点都不低，另一类是平台提供方，例如阿里云、腾讯云，更多的是通用工程层面和产品层面的挑战。 对于中小B端，一类会上云，利用平台方提供的IaaS、PaaS甚至SaaS，另一类会搭建自己的系统，典型的应用如面向汽车金融、融资租赁的风控平台，其特点是：</p>
-<p>1、<strong>数据量中等但单条数据价值高</strong>，例如，假设汽车融资租赁的客单价为7w，每年卖出100w辆车，以融后资产质量数据为例，原始标注数据量为百万级别，远远小于传统互联网数据量，但极端的看，每条数据是花了7w的成本付出验证出来的。</p>
-<p>2、<strong>模型相对复杂，特征维度一般，可解释性强</strong>，受限于数据量和场景，风控模型特征维度一般不高，但对可解释性要求很高，一方面风控业务向销售以及销售要向客户解释，另一方面风控业务要通过这种解释性反向影响风控政策或调整公司整体策略。</p>
-<p>3、<strong>比较重视外部合规数据合作</strong>，由于平台本身的数据量及场景限制，需要寻找外部数据合作，这种合作可以是数据粒度的也可以是模型粒度的，但一定要保证所有合作数据的授权、获取是合规的，以及用户隐私能够被很好的保护，近年来的联邦学习可能是未来一种主流合作模式。</p>
-<p>4、<strong>数据效果反馈滞后，对欺诈容忍度很低</strong>，金融资产总有个还款周期，例如典型的以“月”为周期，意味着资产被放出后过了1个月才能看到资产质量，如果发生欺诈，则第1~3个MOB就可能会批量出现问题，如果出现逾期也至少要等待1个月，所以客户真实反馈很滞后。</p>
-<p>5、<strong>模型试错成本高</strong>，由于客单价较高，采用传统E&amp;E算法的试错成本会很高，所以其实用性一般较差，只有小额现金贷勉强可以使用此类方法，所以离线模型训练时需要想各种办法尽量模拟真实场景，一类重要的方法是拒绝推断，另一类是订单回放对比。另外模型测试指标要求更高，以AUC为例，在计算广告场景，AUC达到0.8就可以放心上去试跑了，在汽车消费风控场景，AUC超过0.85都心中打鼓。</p>
-<p>6、<strong>系统实时性、并发性要求一般但稳定性要求更高</strong>，一方面业务单量没有那么大，并发性很低，另一方面由于使用外部数据，系统响应时间达到s级都很常见，但由于一个单子就影响到一个销售的业绩和前端竞争，所以稳定性很重要，要尽量保证系统不卡壳。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/#more" rel="contents">
+              <a class="btn" href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -441,7 +459,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -455,7 +473,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十一章 OCR</a>
+            <a href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第十一章 OCR</a>
         </h2>
 
         <div class="post-meta">
@@ -464,9 +482,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 17:46:04 / Modified: 18:48:33" itemprop="dateCreated datePublished" datetime="2021-09-18T17:46:04+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-11 17:46:04" itemprop="dateCreated datePublished" datetime="2021-09-11T17:46:04+08:00">2021-09-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:42:30" itemprop="dateModified" datetime="2021-09-18T20:42:30+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -496,46 +529,13 @@
       
           <h1 id="ocr">11. OCR</h1>
 <h2 id="背景知识">11.1 背景知识</h2>
-OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：
+<p>OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：</p>
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp69bqmg18b01ieval51a3f2urm.png" width="800" />
 </center>
-<ul>
-<li><p>图片预处理阶段会对光照、清晰度、角度等方面做算法处理，让进入后续流程的图片尽可能质量好；</p></li>
-<li><p>针对类似发票、报纸等有固定版面的业务场景，可以对位置、内容做处理，提高后续识别的准确率；</p></li>
-<li><p>文本行检测，用来定位图像中的文本行的位置、大小，是OCR的一个难点；</p></li>
-<li><p>文本识别，用来对定位好的文本行做文字分类，这里有两类方法：</p>
-<ul>
-<li>先对单字做切割然后再做单字分类，除去公共流程如预处理、版面分析等，基本流程为：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6aofnmqj4j98d3k17bv1erd9.png" width="800" />
-</center>
-单字分割的准确率是影响最终识别准确率的一个关键点，示例如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6au1aqne91bae1pag1njqufgm.png" width="800" />
-</center>
-一般训练数据通过自动的方式生成，需要考虑多种字体、大小等因素，最后的softmax分类数为常用字的个数。</li>
-<li>直接对一行文本做分类，免去了单字分割操作而直接对一行文本做识别，基本流程为：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6b75kt6t01k1sbuenhs1sne13.png" width="800" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6bjmif1gel1tbi7lt9ltmta1g.png" width="800" />
-</center>
-这类方法实际效果挺不错，同样训练数据也可以通过自动方式生成，具体算法在后面介绍。</li>
-</ul></li>
-<li><p>文字后处理，由于文本具有上下文语义关系，可以利用NLP技术对识别结果做修正，进一步提高识别准确率。</p></li>
-</ul>
-<h2 id="数据预处理">11.2 数据预处理</h2>
-<h3 id="图像滤波">11.2.1 图像滤波</h3>
-滤波本质上是在尽量保持原有图像细节（不破坏诸如边缘、轮廓等信息）的条件下对噪声尽可能抑制（提高图像视觉效果）的操作，完成这个操作，潜在的同时做了两件事：抽取了图像的某种特征和去除了某种噪声（类似的还有深度学习中的AutoEncoder架构），一般架构如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6imdo419lggv149d1tiom1e2a.png" width="400" />
-</center>
-<p>滤波是一个很复杂的课题，简单来说会有时空域滤波和频域滤波两大类，而转换时空与频率的工具就是(逆)傅里叶变换（Transformée de Fourier）:任何周期函数都可以表达为不同频率的正弦和或余弦和的形式，即傅里叶级数，其本质是不同空间的换基分解操作。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/#more" rel="contents">
+              <a class="btn" href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -559,7 +559,7 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -573,7 +573,7 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第九章 语义分割</a>
+            <a href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第九章 语义分割</a>
         </h2>
 
         <div class="post-meta">
@@ -582,9 +582,24 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 16:15:06 / Modified: 16:40:30" itemprop="dateCreated datePublished" datetime="2021-09-18T16:15:06+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-11 16:15:06" itemprop="dateCreated datePublished" datetime="2021-09-11T16:15:06+08:00">2021-09-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:42:46" itemprop="dateModified" datetime="2021-09-18T20:42:46+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -619,24 +634,9 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1blc5thhohau12itero1ige1v6dm.png" width="800"  />
 </center>
-<p>从左到右分别是：原图、ground truth图、训练2轮的模型预测图、训练5轮的模型预测图（ps：截止本文前，训练达到理想状态还差200多轮）。</p>
-<h3 id="算法概述">9.1.1 算法概述</h3>
-<p>CNN网络无疑是特征提取的利器，尤其在图像领域，回顾我们的做法：CNN做特征提取+全连接层做特征组合+分类/回归，为了能提高模型预测能力，需要通过多个全连接层（做笛卡尔积）做特征组合，这里是参数数量最多的地方，成为模型训练，尤其是inference时的最大瓶颈（所以模型压缩和剪枝算法会把第一把刀放在全连接层），而由于全连接层的存在，导致整个网络的输入必须是固定大小的：由于卷积和采样操作更本不关心输入大小如何，试想如果输入大小不一，不同图片到了全连接层时其输入节点数是不一样的，而网络的定义必须事先定义好，所以没法儿玩儿了，于是有了前面的SPP及RoI pooling来解决这个问题，FCN则是解决这个问题的另一个思路。</p>
-<p>总结该算法要解决的问题如下：</p>
-<p>1、取消网络对输入数据大小必须固定的限制；</p>
-<p>2、提高模型效果且加快其训练和inference速度。</p>
-相比于传统CNN，FCN把全连接层全部替换成卷积层，并在feature map(可以是其中任何一个)上<strong>做上采样</strong>，使其恢复到原始图片大小，这样不但保留了每个像素的空间信息，而且每个像素都会有一个分类预测。比如下图中pixelwise prediction那一层，小猫、小狗、电视、背景都会在像素级别做分类预测：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7ig9dqebe1n3v1jmb1o2g1gdim.png" width="500"  />
-</center>
-<h3 id="卷积回顾">9.1.2 1×1卷积回顾</h3>
-<p>前面我们在介绍各种经典识别网络中介绍了1×1卷积核，回顾下它的作用，尤其对多通道而言：</p>
-<p>1、每个1×1卷积核会有一个参数，利用它们可以做跨通道特征融合，即对多个通道的feature map做线性组合；</p>
-<p>2、具有降维或升维作用，如：在GoogleNet中它可以跟在pooling层后面做降维，也可以直接通过减少通道数做降维，大大减少了参数量；</p>
-<p>3、可以在不损失feature map信息的前提下利用后面的激活函数增加模型非线性表征能力，可以低成本的把网络变深。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/#more" rel="contents">
+              <a class="btn" href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -729,9 +729,17 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">31</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>

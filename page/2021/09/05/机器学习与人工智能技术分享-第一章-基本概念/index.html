@@ -24,7 +24,7 @@
   <meta name="description" content="1. 一些基本概念 1.1 生成式模型与判别式模型 从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?  生成式模型 我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。 判别式模型 我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第一章 基本概念">
-<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/index.html">
+<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/index.html">
 <meta property="og:site_name" content="学习和思考，以心力提升认知">
 <meta property="og:description" content="1. 一些基本概念 1.1 生成式模型与判别式模型 从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?  生成式模型 我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。 判别式模型 我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出">
 <meta property="og:locale">
@@ -32,8 +32,8 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjrioa912r21h0n1u571vh11go3m.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjski0i16221ae2rdd1789l3n13.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_1/image_1asju6357fv9q891abinifjkf2a.png">
-<meta property="article:published_time" content="2021-09-13T06:44:00.000Z">
-<meta property="article:modified_time" content="2021-09-14T08:26:30.012Z">
+<meta property="article:published_time" content="2021-09-05T06:03:49.000Z">
+<meta property="article:modified_time" content="2021-09-18T12:43:45.018Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="第一章">
@@ -41,7 +41,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjqpcau16kj17d5iupnob1rco9.png">
 
-<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
 
 
 <script id="page-configurations">
@@ -131,6 +131,16 @@
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -164,7 +174,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -187,15 +197,24 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-09-13 14:44:00" itemprop="dateCreated datePublished" datetime="2021-09-13T14:44:00+08:00">2021-09-13</time>
+              <time title="Created: 2021-09-05 14:03:49" itemprop="dateCreated datePublished" datetime="2021-09-05T14:03:49+08:00">2021-09-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 16:26:30" itemprop="dateModified" datetime="2021-09-14T16:26:30+08:00">2021-09-14</time>
+                <time title="Modified: 2021-09-18 20:43:45" itemprop="dateModified" datetime="2021-09-18T20:43:45+08:00">2021-09-18</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
 
           <br>
             <span class="post-meta-item" title="Symbols count in article">
@@ -231,6 +250,7 @@
 <li><p>判别式模型</p>
 <p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
 </ul>
+<span id="more"></span>
 <p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
 <p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
 <p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
@@ -278,10 +298,9 @@
 <td><span class="math inline">\(2/3\)</span></td>
 </tr>
 </tbody>
-</table>
-<span id="more"></span>
-<p>一些理论可看：<a target="_blank" rel="noopener" href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p></li>
+</table></li>
 </ul>
+<p>一些理论可看：<a target="_blank" rel="noopener" href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p>
 <ol type="1">
 <li><p>常见生成式模型</p>
 <ul>
@@ -400,12 +419,9 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/" rel="prev" title="机器学习与人工智能技术分享-第八章 目标检测与识别">
-      <i class="fa fa-chevron-left"></i> 机器学习与人工智能技术分享-第八章 目标检测与识别
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95%E5%9B%9E%E9%A1%BE/" rel="next" title="机器学习与人工智能技术分享-第二章 建模方法回顾">
+    <a href="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%8C%E7%AB%A0-%E5%BB%BA%E6%A8%A1%E6%96%B9%E6%B3%95%E5%9B%9E%E9%A1%BE/" rel="next" title="机器学习与人工智能技术分享-第二章 建模方法回顾">
       机器学习与人工智能技术分享-第二章 建模方法回顾 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -485,9 +501,17 @@
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">31</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -653,7 +677,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'vivounicorn.github.io',
       owner       : 'vivounicorn',
       admin       : ['vivounicorn'],
-      id          : '71782f2d7fd73781171d8df05a6b5174',
+      id          : '08abc4397ea1cc2dea7883fcc17233fb',
         language: 'zh-CN',
       distractionFreeMode: true
     });

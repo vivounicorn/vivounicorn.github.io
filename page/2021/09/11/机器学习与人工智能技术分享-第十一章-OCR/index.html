@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"vivounicorn.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="11. OCR 11.1 背景知识 OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：     图片预处理阶段会对光照、清晰度、角度等方面做算法处理，让进入后续流程的图片尽可能质量好； 针对类似发票、报纸等有固定版面的业务场景，可以对位置、内容做处理，提高后续识别的准确率； 文本行检测，用来定位图像中的文本行">
+  <meta name="description" content="11. OCR 11.1 背景知识 OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第十一章 OCR">
-<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/index.html">
+<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/index.html">
 <meta property="og:site_name" content="学习和思考，以心力提升认知">
-<meta property="og:description" content="11. OCR 11.1 背景知识 OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：     图片预处理阶段会对光照、清晰度、角度等方面做算法处理，让进入后续流程的图片尽可能质量好； 针对类似发票、报纸等有固定版面的业务场景，可以对位置、内容做处理，提高后续识别的准确率； 文本行检测，用来定位图像中的文本行">
+<meta property="og:description" content="11. OCR 11.1 背景知识 OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：">
 <meta property="og:locale">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp69bqmg18b01ieval51a3f2urm.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6aofnmqj4j98d3k17bv1erd9.png">
@@ -62,15 +62,15 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1d80mnljsf6u1nht10r1v9vtd47l.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1d80mtcpp1ung1qkn18iom68kq8i.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1d80n1jntf9jn80ja31p6e1ee49f.png">
-<meta property="article:published_time" content="2021-09-18T09:46:04.000Z">
-<meta property="article:modified_time" content="2021-09-18T10:48:33.375Z">
+<meta property="article:published_time" content="2021-09-11T09:46:04.000Z">
+<meta property="article:modified_time" content="2021-09-18T12:42:30.273Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="OCR">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp69bqmg18b01ieval51a3f2urm.png">
 
-<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
+<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
 
 
 <script id="page-configurations">
@@ -160,6 +160,16 @@
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -193,7 +203,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0-OCR/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -215,9 +225,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-09-18 17:46:04 / Modified: 18:48:33" itemprop="dateCreated datePublished" datetime="2021-09-18T17:46:04+08:00">2021-09-18</time>
+              <time title="Created: 2021-09-11 17:46:04" itemprop="dateCreated datePublished" datetime="2021-09-11T17:46:04+08:00">2021-09-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 20:42:30" itemprop="dateModified" datetime="2021-09-18T20:42:30+08:00">2021-09-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
             </span>
 
           <br>
@@ -247,10 +272,11 @@
       
         <h1 id="ocr">11. OCR</h1>
 <h2 id="背景知识">11.1 背景知识</h2>
-OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：
+<p>OCR是将各种带有文字的图像数据中的文本信息定位并识别成可编辑文本的技术。其核心技术包括：文本位置检测、文本内容识别等，OCR的一般过程是：</p>
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp69bqmg18b01ieval51a3f2urm.png" width="800" />
 </center>
+<span id="more"></span>
 <ul>
 <li><p>图片预处理阶段会对光照、清晰度、角度等方面做算法处理，让进入后续流程的图片尽可能质量好；</p></li>
 <li><p>针对类似发票、报纸等有固定版面的业务场景，可以对位置、内容做处理，提高后续识别的准确率；</p></li>
@@ -284,7 +310,6 @@ OCR是将各种带有文字的图像数据中的文本信息定位并识别成�
 <img src="https://vivounicorn.github.io/images/ai_chapter_11/image_1cp6imdo419lggv149d1tiom1e2a.png" width="400" />
 </center>
 <p>滤波是一个很复杂的课题，简单来说会有时空域滤波和频域滤波两大类，而转换时空与频率的工具就是(逆)傅里叶变换（Transformée de Fourier）:任何周期函数都可以表达为不同频率的正弦和或余弦和的形式，即傅里叶级数，其本质是不同空间的换基分解操作。</p>
-<span id="more"></span>
 <p>1、时空滤波</p>
 <p>基本思路是，用一个滤波器（又叫一个模版、窗口）在待处理图像上逐点移动，在每一个点做某种线性或者非线性函数操作（深度学习中的卷积操作是一种典型的滤波）。</p>
 <ul>
@@ -536,11 +561,11 @@ RNN类模型在文本相关场景里应用最广泛，本质是因为文本具�
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" rel="prev" title="机器学习与人工智能技术分享-第九章 语义分割">
+    <a href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" rel="prev" title="机器学习与人工智能技术分享-第九章 语义分割">
       <i class="fa fa-chevron-left"></i> 机器学习与人工智能技术分享-第九章 语义分割
     </a></div>
       <div class="post-nav-item">
-    <a href="/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" rel="next" title="机器学习与人工智能技术分享-第十二章 机器学习框架">
+    <a href="/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/" rel="next" title="机器学习与人工智能技术分享-第十二章 机器学习框架">
       机器学习与人工智能技术分享-第十二章 机器学习框架 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -620,9 +645,17 @@ RNN类模型在文本相关场景里应用最广泛，本质是因为文本具�
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">31</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -788,7 +821,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'vivounicorn.github.io',
       owner       : 'vivounicorn',
       admin       : ['vivounicorn'],
-      id          : 'b42da472a008b6d909493c4f68f9492f',
+      id          : '522e975426013e2a9201b6cc828ebff1',
         language: 'zh-CN',
       distractionFreeMode: true
     });

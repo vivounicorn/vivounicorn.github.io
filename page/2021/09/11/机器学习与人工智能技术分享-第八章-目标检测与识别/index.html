@@ -21,12 +21,12 @@
     var CONFIG = {"hostname":"vivounicorn.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="8. 目标检测与识别 目标检测的发展历程大致如下：    8.1 Selective Search 对于目标识别任务，比如判断一张图片中有没有车、是什么车，一般需要解决两个问题：目标检测、目标识别。而目标检测任务中通常需要先通过某种方法做图像分割，事先得到候选框；直观的做法是：给定窗口，对整张图片滑动扫描，结束后改变窗口大小重复上面步骤，缺点很明显：重复劳动耗费资源、精度和质量不高等等。 针对上面">
+  <meta name="description" content="8. 目标检测与识别 目标检测的发展历程大致如下：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第八章 目标检测与识别">
-<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/index.html">
+<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/index.html">
 <meta property="og:site_name" content="学习和思考，以心力提升认知">
-<meta property="og:description" content="8. 目标检测与识别 目标检测的发展历程大致如下：    8.1 Selective Search 对于目标识别任务，比如判断一张图片中有没有车、是什么车，一般需要解决两个问题：目标检测、目标识别。而目标检测任务中通常需要先通过某种方法做图像分割，事先得到候选框；直观的做法是：给定窗口，对整张图片滑动扫描，结束后改变窗口大小重复上面步骤，缺点很明显：重复劳动耗费资源、精度和质量不高等等。 针对上面">
+<meta property="og:description" content="8. 目标检测与识别 目标检测的发展历程大致如下：">
 <meta property="og:locale">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1bg86igedlru9801vgh8f913g4m.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga5pfj1d621rq7i851vvprc19.png">
@@ -93,8 +93,8 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1ck9q7n3n1mrnnh555lvddl087j.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1ckcktrsoqnj16k0103c1o78vbi80.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1ckckvl6c1jofn1i10ji1666cr58d.png">
-<meta property="article:published_time" content="2021-09-10T06:25:42.000Z">
-<meta property="article:modified_time" content="2021-09-14T08:26:35.169Z">
+<meta property="article:published_time" content="2021-09-11T06:25:42.000Z">
+<meta property="article:modified_time" content="2021-09-18T12:43:59.870Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="第八章">
@@ -103,7 +103,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_8/image_1bg86igedlru9801vgh8f913g4m.png">
 
-<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
+<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
 
 
 <script id="page-configurations">
@@ -193,6 +193,16 @@
     <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
@@ -226,7 +236,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -249,15 +259,24 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-09-10 14:25:42" itemprop="dateCreated datePublished" datetime="2021-09-10T14:25:42+08:00">2021-09-10</time>
+              <time title="Created: 2021-09-11 14:25:42" itemprop="dateCreated datePublished" datetime="2021-09-11T14:25:42+08:00">2021-09-11</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 16:26:35" itemprop="dateModified" datetime="2021-09-14T16:26:35+08:00">2021-09-14</time>
+                <time title="Modified: 2021-09-18 20:43:59" itemprop="dateModified" datetime="2021-09-18T20:43:59+08:00">2021-09-18</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+            </span>
 
           <br>
             <span class="post-meta-item" title="Symbols count in article">
@@ -289,6 +308,7 @@
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bg86igedlru9801vgh8f913g4m.png" width="800"  />
 </center>
+<span id="more"></span>
 <h2 id="selective-search">8.1 Selective Search</h2>
 对于目标识别任务，比如判断一张图片中有没有车、是什么车，一般需要解决两个问题：目标检测、目标识别。而目标检测任务中通常需要先通过某种方法做图像分割，事先得到候选框；直观的做法是：给定窗口，对整张图片滑动扫描，结束后改变窗口大小重复上面步骤，缺点很明显：重复劳动耗费资源、精度和质量不高等等。 针对上面的问题，一种解决方案是借鉴启发式搜索的方法，充分利用人类的先验知识。J.R.R. Uijlings在《<a target="_blank" rel="noopener" href="https://www.koen.me/research/pub/uijlings-ijcv2013-draft.pdf">Selective Search for Object Recoginition</a>》提出一种方法：基于数据驱动，与具体类别无关的多种策略融合的启发式生成方法。图片包含各种丰富信息，例如：大小、形状、颜色、纹理、物体重叠关系等，如果只使用一种信息往往不能解决大部分问题，例如：
 <center>
@@ -311,8 +331,7 @@
 <p>2、采用贪心算法合并区域，计算任意两个领域的相似度，把达到阈值的合并，再计算新区域和其所有领域的相似度，循环迭代，直到整个图变成了一个区域，算法如下：</p>
 <center>
 <p><img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga9fgjm5ei1r9ks661milsvpm.png" width="800"/></p>
-</center>
-<span id="more"></span></li>
+</center></li>
 <li><p>多样化策略</p>
 <p>三个方面：使用多种颜色空间、使用多种相似度计算方法、搜索起始区域不固定。</p>
 <p>1、颜色空间有很多种：RGB、HSV、Lab等等，不是论文重点；</p>
@@ -2231,10 +2250,13 @@ L(s,t_{x,y,w,h})=L_{cls}(s_{c^*})+\lambda [c^*&gt;0]L_{reg}(t,t^*)
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/page/2021/09/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" rel="next" title="机器学习与人工智能技术分享-第一章 基本概念">
-      机器学习与人工智能技术分享-第一章 基本概念 <i class="fa fa-chevron-right"></i>
+    <a href="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/" rel="prev" title="机器学习与人工智能技术分享-第六章 循环神经网络与Transformers">
+      <i class="fa fa-chevron-left"></i> 机器学习与人工智能技术分享-第六章 循环神经网络与Transformers
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/page/2021/09/11/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B9%9D%E7%AB%A0-%E8%AF%AD%E4%B9%89%E5%88%86%E5%89%B2/" rel="next" title="机器学习与人工智能技术分享-第九章 语义分割">
+      机器学习与人工智能技术分享-第九章 语义分割 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -2313,9 +2335,17 @@ L(s,t_{x,y,w,h})=L_{cls}(s_{c^*})+\lambda [c^*&gt;0]L_{reg}(t,t^*)
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
         <span class="site-state-item-count">31</span>
-        <span class="site-state-item-name">tags</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -2481,7 +2511,7 @@ NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
       repo        : 'vivounicorn.github.io',
       owner       : 'vivounicorn',
       admin       : ['vivounicorn'],
-      id          : '95c3e49529d89cbf44cc5eff1eb7d258',
+      id          : '0aeb106d57fbe7cfeb40964f89476bdc',
         language: 'zh-CN',
       distractionFreeMode: true
     });
