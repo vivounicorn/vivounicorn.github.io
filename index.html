@@ -151,6 +151,125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张磊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习和思考，以心力提升认知">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第五章 深度神经网络</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-14 17:49:19" itemprop="dateCreated datePublished" datetime="2021-09-14T17:49:19+08:00">2021-09-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-18 15:03:18" itemprop="dateModified" datetime="2021-09-18T15:03:18+08:00">2021-09-18</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>109k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>1:39</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="深度神经网络">5. 深度神经网络</h1>
+<p>深度学习是基于多层神经网络的一种对数据进行自动表征学习的框架，能使人逐步摆脱传统的人工特征提取过程，它的基础之一是distributed representation，读论文时注意以下概念区分：</p>
+<ul>
+<li><p>Distributional representation</p>
+<p>Distributional representation是基于某种分布假设和上下文共现的一类表示方法，比如，对于词的表示来说：有相似意义的词具有相似的分布。</p>
+<p>从技术上讲这类方法的缺点是：通常对存储敏感，在representation上也不高效，但是优点是：算法相对简单，甚至像LSA那样简单的线性分解就行。</p>
+<p>几类常见的Distributional representation模型：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Latent_semantic_analysis">Latent semantic analysis</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation">Latent Dirichlet allocation</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Self-organizing_map">Self-organizing map</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Hyperspace_Analogue_to_Language">HAL</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Independent_component_analysis">Independent component analysis</a></p></li>
+<li><p><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Random_indexing">Random indexing</a></p></li>
+</ul></li>
+<li><p>Distributed representation</p>
+<p>Distributed representation是对实体（比如：词、车系编号、微博用户id等等）稠密、低维、实数的向量表示，也就是常说的embedding，它不需要做分布假设，向量的每个维度代表实体在某个空间下的隐含特征。</p>
+<p>从技术上讲它的缺点是：计算代价较高，算法往往不简单直接，通常通过神经网络/深度神经网络实现，优点是：对原始信息的有效稠密压缩表示，不仅仅是考虑“共现”，还会考虑其他信息，比如：“时序”等。</p>
+<p>几类常见的Distributed representation模型：</p>
+<ul>
+<li><p>Collobert and Weston embeddings</p></li>
+<li><p>HLBL embeddings</p></li>
+</ul></li>
+</ul>
+<p>关于Distributional representation和Distributed representation以及几个相关概念，看论文<a target="_blank" rel="noopener" href="http://www.aclweb.org/anthology/P10-1040">Word representations: A simple and general method for semi-supervised learning</a>即可明了。</p>
+<h2 id="反向传播">5.1 反向传播</h2>
+反向传播是神经网络参数学习的必备工具，以经典的多层前向神经网络为例：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_5/image_1asuka9jl1u479sd1k7l64l11s2m.png" width="350"  />
+</center>
+整个网络可以认为是以下结构的重复，其中n代表处于第几层：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_5/image_1avm00h74gbiodp19bv1sbj19au1j.png" width="350"  />
+</center>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
     <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -636,121 +755,11 @@ y=f(x)+\epsilon\\
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="张磊">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="学习和思考，以心力提升认知">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/" class="post-title-link" itemprop="url">机器学习与人工智能技术分享-第八章 目标检测与识别</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-10 14:25:42" itemprop="dateCreated datePublished" datetime="2021-09-10T14:25:42+08:00">2021-09-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-14 16:26:35" itemprop="dateModified" datetime="2021-09-14T16:26:35+08:00">2021-09-14</time>
-              </span>
-
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>76k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>1:09</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="目标检测与识别">8. 目标检测与识别</h1>
-目标检测的发展历程大致如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bg86igedlru9801vgh8f913g4m.png" width="800"  />
-</center>
-<h2 id="selective-search">8.1 Selective Search</h2>
-对于目标识别任务，比如判断一张图片中有没有车、是什么车，一般需要解决两个问题：目标检测、目标识别。而目标检测任务中通常需要先通过某种方法做图像分割，事先得到候选框；直观的做法是：给定窗口，对整张图片滑动扫描，结束后改变窗口大小重复上面步骤，缺点很明显：重复劳动耗费资源、精度和质量不高等等。 针对上面的问题，一种解决方案是借鉴启发式搜索的方法，充分利用人类的先验知识。J.R.R. Uijlings在《<a target="_blank" rel="noopener" href="https://www.koen.me/research/pub/uijlings-ijcv2013-draft.pdf">Selective Search for Object Recoginition</a>》提出一种方法：基于数据驱动，与具体类别无关的多种策略融合的启发式生成方法。图片包含各种丰富信息，例如：大小、形状、颜色、纹理、物体重叠关系等，如果只使用一种信息往往不能解决大部分问题，例如：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga5pfj1d621rq7i851vvprc19.png" width="500"/>
-</center>
-<p>左边的两只猫可以通过颜色区别而不是通过纹理，右面的变色龙却只能通过纹理区别而不是颜色。</p>
-<h3 id="启发式生成设计准则">8.1.1 启发式生成设计准则</h3>
-<p>所以概括来说：</p>
-<ul>
-<li>能够捕捉到各种尺度物体，大的、小的、边界清楚的、边界模糊的等等； 多尺度的例子： <img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga9sm381ben1hhu167411ng1h9f13.png" alt="多尺度例子" /></li>
-<li>策略多样性，采用多样的策略集合共同作用；</li>
-<li>计算快速，由于生成候选框只是检测第一步，所以计算上它决不能成为瓶颈。</li>
-</ul>
-<h3 id="selective-search-1">8.1.2 Selective Search</h3>
-<p>基于以上准则设计Selective Search算法：</p>
-<ul>
-<li><p>采用层次分组算法解决尺度问题</p>
-<p>引入图像分割中的自下而上分组思想，由于整个过程是层次的，在将整个图合并成一个大的区域的过程中会输出不同尺度的多个子区域。整个过程如下：</p>
-<p>1、利用《<a target="_blank" rel="noopener" href="https://cs.brown.edu/~pff/papers/seg-ijcv.pdf">Efficient Graph-Based Image Segmentation</a>》（基本思想：将图像中每个像素表示为图上的一个节点，用于连接不同节点的无向边都有一个权重，这个权重表示两个节点之间的不相似度，通过贪心算法利用最小生成树做图像分割）生成初始候选区域；</p>
-<p>2、采用贪心算法合并区域，计算任意两个领域的相似度，把达到阈值的合并，再计算新区域和其所有领域的相似度，循环迭代，直到整个图变成了一个区域，算法如下：</p>
-<center>
-<p><img src="https://vivounicorn.github.io/images/ai_chapter_8/image_1bga9fgjm5ei1r9ks661milsvpm.png" width="800"/></p>
-</center>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/page/2021/09/10/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AB%E7%AB%A0-%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E4%B8%8E%E8%AF%86%E5%88%AB/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -815,12 +824,12 @@ y=f(x)+\epsilon\\
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">21</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
@@ -856,12 +865,12 @@ y=f(x)+\epsilon\\
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">172k</span>
+    <span title="Symbols count total">281k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">2:37</span>
+    <span title="Reading time total">4:15</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
