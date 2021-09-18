@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"vivounicorn.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="6. 循环神经网络与Transformers 6.1 RNN 6.1.1 基本原理 序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种： 1、根据当前上下文语义预测">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习与人工智能技术分享-第六章 循环神经网络与Transformers">
+<meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/index.html">
+<meta property="og:site_name" content="学习和思考，以心力提升认知">
+<meta property="og:description" content="6. 循环神经网络与Transformers 6.1 RNN 6.1.1 基本原理 序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种： 1、根据当前上下文语义预测">
+<meta property="og:locale">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9bnmgsa50b1ksr16kb18vg10gh50.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9h56nst1c125o31pdu1u351no75q.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9hecgavrti1hml4le1kbn1lli9.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ddpb4ckassq1l4b1evk1utu16e613.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ddpb61bnag91iu3ce8ivvrq41g.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eck5ab2i1k6en2p110u4ic1i801t.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1edgkmmg78npnk1cbq1vmpaq81e.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1echc1m1417va1si31n9l4uqo4813.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1echc0ujc1crhpl71tov2vt165im.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1echdls5q1f991o6f1bba1fb5bor1g.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ecm4fbi01ci51p1bgvj1opf1kag2a.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/2d">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/3d">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ed8qo1fid0m1rmk1qupdb0s1311.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/saddle.gif">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj5o3bpprf1te3jlc6c5qmb2v.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj6hipk4o5138gi491htcbi93c.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj6hu8vaf019av52n1d70h263p.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei0s9k6138i1ms215b1vut19lc9.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei1f9j81t94tbv1g3g1dn0jsv19.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei1hdcleacos17k51jt31td51m.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1een7h4n513ku1b6uq8e9sjk0h9.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eend2gj51ahg1c30e0id2113u9m.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eengrro49501c9ur94d581t541g.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eeniuive1ehfgojdr31s7t4302d.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eenjfahi1kov1bf4igd13rd10pk37.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef3r2gohi481di0af21v9vn859.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef93p7r11rsmv6aop414ud1aqs19.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef97as8ol8kr301q571g01l012c.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1eend2gj51ahg1c30e0id2113u9m.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/lstm-focus%5B0%5D.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/LSTM3-SimpleRNN%5B0%5D..png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/LSTM3-chain%5B0%5D..png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/forget-gate.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/input-gate.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/output.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/output-gate.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdpl8qlgg6q6l18gt1udq177i9.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdqc2sgvspaoa18uk1bqs1t87m.png">
+<meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdtm03k1r4l1mq342e14enu6t13.png">
+<meta property="article:published_time" content="2021-09-18T07:15:54.000Z">
+<meta property="article:modified_time" content="2021-09-18T08:09:47.651Z">
+<meta property="article:author" content="张磊">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="LSTM">
+<meta property="article:tag" content="第六章">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png">
+
+<link rel="canonical" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-Hans'
+  };
+</script>
+
+  <title>机器学习与人工智能技术分享-第六章 循环神经网络与Transformers | 学习和思考，以心力提升认知</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">学习和思考，以心力提升认知</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/18/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8ETransformers/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="张磊">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习和思考，以心力提升认知">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习与人工智能技术分享-第六章 循环神经网络与Transformers
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-18 15:15:54 / Modified: 16:09:47" itemprop="dateCreated datePublished" datetime="2021-09-18T15:15:54+08:00">2021-09-18</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>47k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>43 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="循环神经网络与transformers">6. 循环神经网络与Transformers</h1>
+<h2 id="rnn">6.1 RNN</h2>
+<h3 id="基本原理">6.1.1 基本原理</h3>
+<p>序列类问题是我们日常生活中常见的一类问题：我们读的文章，我们说话的语音等等，要么是在空间上的序列，要么是在时间的序列，序列的每个单元之间有前驱后继的语义或序列相关性，比如：当我们说，“这是我们伟大的××”，这里××是“祖国”的概率远远大于“板凳”，所以在NLP领域，应用大概可以分为几种：</p>
+<p>1、根据当前上下文语义预测接下来出现某个文本的概率；</p>
+<p>2、通过语言模型生成新的文本；</p>
+<p>3、文本的通用NLP任务，例如词性标注、文本分类等；</p>
+<p>4、机器翻译；</p>
+<p>5、文本表示及编码解码。</p>
+传统的神经网络并没有很好的解决这种序列问题，于是Recurrent Neural Networks这种网络被提了出来：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d8hvg8ee5bq1msr2ng13sb1cls1m.png" width="600"  />
+</center>
+<p>乍一看就是节点自带环路的网络，广义来看，可以在这个节点上展开，只是这种展开和输入的字数有关，比如输入为10个字，则展开10层。</p>
+<p>从一个角度看，不同于传统神经网络会假设所有输入及输出是相互独立的，RNN正相反，认为节点间天然有相关性；另一个角度是，认为RNN具有“记忆”能力，它能把历史上相关节点状态“全部”记住，但实际情况是，我们当前说的一句话和较久前说的话未必有很强的关系，如果“全部”记住，一没必要、二计算量巨大。</p>
+<h3 id="bptt-原理">6.1.2 BPTT 原理</h3>
+以最简单的RNN为例，说明背后算法原理：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9bnmgsa50b1ksr16kb18vg10gh50.png" width="450"  />
+</center>
+<span id="more"></span>
+<p>定义以下符号： <span class="math inline">\(x_i(t)\)</span>：输入层第<span class="math inline">\(i\)</span>个节点；</p>
+<p><span class="math inline">\(s_h(t-1)\)</span>：前一个状态的隐藏层第<span class="math inline">\(h\)</span>个节点；</p>
+<p><span class="math inline">\(s_j(t)\)</span>：当前状态的隐藏层第<span class="math inline">\(j\)</span>个节点；</p>
+<p><span class="math inline">\(y_k(t)\)</span>：输出层第<span class="math inline">\(k\)</span>个节点；</p>
+<p><span class="math inline">\(V\)</span>：输入层到隐藏层权重矩阵；</p>
+<p><span class="math inline">\(U\)</span>：前一状态隐藏层到后一状态隐藏层权重矩阵；</p>
+<p><span class="math inline">\(W\)</span>：隐藏层到输出层权重矩阵;</p>
+<p><span class="math inline">\(f\)</span>：隐藏层激活函数；</p>
+<p><span class="math inline">\(g\)</span>：输出层激活函数。</p>
+<p>网络的前向传播关系为：</p>
+<ul>
+<li>输入层到隐藏层</li>
+</ul>
+<p><span class="math display">\[net_j(t)=\sum_{i=0}^nx_i(t)v_{ji}+\sum_{h=0}^m s_h(t-1)u_{jh}+b_j\]</span> <span class="math display">\[s_j(t)=f(net_j(t))\]</span> 常用的<span class="math inline">\(f\)</span>函数为Sigmoid类函数，如：<span class="math display">\[f(net)=\frac{1}{1+e^{-net}}\]</span></p>
+<ul>
+<li>隐藏层到输出层</li>
+</ul>
+<p><span class="math display">\[net_k(t)=\sum_{j=0}^ms_j(t)w_{kj}+b_k\]</span> <span class="math display">\[y_k(t)=g(net_k(t))\]</span></p>
+<p>常用的<span class="math inline">\(g\)</span>函数为指数族函数，如：</p>
+<p><span class="math display">\[g(net_k)=\frac{e^{net_k}}{\sum_pe^{net_p}}\]</span></p>
+<p>这里需要注意的一个关键点是：<span class="math inline">\(U\)</span>、<span class="math inline">\(V\)</span>、<span class="math inline">\(W\)</span>权重矩阵在不同时刻是共享的。</p>
+<p>网络的反向传播关系：</p>
+<p>只要网络的损失函数可微，那么任意一个前馈神经网络都可以通过误差反向传播（BP）做参数学习，BP本质是利用链式求导，使用梯度下降（GD）算法的最优化求解过程，而翻看前面第四章最优化原理，其求解就是给定目标函数，确定搜索步长和搜索方向的故事，GD的权重更新公式为（其中O为目标函数）： <span class="math display">\[\Delta w=-\eta \frac{\partial(O)}{\partial(w)} \]</span></p>
+<p>同样回看第四章，目标函数多种多样，比如常见的有: SSE：<span class="math display">\[O=\frac{1}{2}\sum_i\sum_j(\hat{y}_{ij}-y_{ij})^2\]</span> cross entropy:<span class="math display">\[O=\sum_i\sum_j\hat{y}_{ij}ln(y_{ij})+(1-\hat{y}_{ij})(1-lny_{ij})\]</span></p>
+<p>但不管哪种目标函数，一般总可以分为线性部分（变量的线性组合）和非线性部分（激活函数），显然求导过程中线性部分最简单，非线性部分最复杂，所以上述权重更新公式可以拆解为：</p>
+<p><span class="math display">\[\Delta w=-\eta \frac{\partial(O)}{\partial(net)}\frac{\partial(net)}{\partial(w)} \]</span> 显然：<span class="math inline">\(\frac{\partial(net)}{\partial(w)}\)</span>很容易计算，而<span class="math inline">\(\frac{\partial(O)}{\partial(net)}\)</span>比较难计算，定义： <span class="math inline">\(\delta=-\frac{\partial(O)}{\partial(net)}\)</span>为每个节点的误差向量，那么整个权重的更新核心考量就是怎么计算和传播<span class="math inline">\(\delta\)</span>。</p>
+<ul>
+<li>输出层任意一个节点<span class="math inline">\(k\)</span></li>
+</ul>
+<p><span class="math display">\[
+\delta_{pk}=\frac{\partial(O)}{\partial(y_{pk})}\frac{\partial(y_{pk})}{\partial(net_{pk})}=\frac{\partial(O)}{\partial(y_{pk})} g^{&#39;}(s_{pk})
+\]</span></p>
+<ul>
+<li>隐藏层任意一个节点<span class="math inline">\(j\)</span></li>
+</ul>
+<p><span class="math display">\[
+\delta_{pj}=-(\sum_k^m\frac{\partial(O)}{\partial(y_{pk})}\frac{\partial(y_{pk})}{\partial(net_{pk})}\frac{\partial(net_{pk})}{\partial(s_{pj})})\frac{\partial(s_{pj})}{\partial(net_{pj})}=\sum_k^m\delta_{pk}w_{kj}f^{&#39;}(s_{pj})
+\]</span></p>
+<p>基于以上推导得到：</p>
+<ul>
+<li>当前状态隐藏层到输出层权重更新公式</li>
+</ul>
+<p><span class="math display">\[\Delta w_{kj}=\eta \sum_p^m \delta_{pk}s_{pj} \]</span></p>
+<ul>
+<li>输入层到当前状态隐藏层权重更新公式</li>
+</ul>
+<p><span class="math display">\[\Delta v_{ji}=\eta \sum_p^n \delta_{pj}x_{pi} \]</span></p>
+<ul>
+<li>上一状态隐藏层到当前状态隐藏层权重更新公式</li>
+</ul>
+<p><span class="math display">\[\Delta u_{ji}=\eta \sum_p^m \delta_{pj}s_{ph}(t-1) \]</span></p>
+<ul>
+<li>任一隐层在某个时间状态下的误差</li>
+</ul>
+<p><strong>注意</strong>，有意思的来了：</p>
+<p>对RNN做展开后如图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9h56nst1c125o31pdu1u351no75q.png" width="450"  />
+</center>
+其中<span class="math inline">\(s\)</span>状态前后依赖，所以类似的逻辑，误差会按照时间向后传播，如图：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1d9hecgavrti1hml4le1kbn1lli9.png" width="450"  />
+</center>
+<p>于是误差反向传播公式变为：</p>
+<p><span class="math display">\[
+\delta_{pj}(t-1)=-(\sum_h^m\frac{\partial(O)}{\partial(y_{ph})}\frac{\partial(y_{pk})}{\partial(net_{pk})}\frac{\partial(net_{pk})}{\partial(s_{pj})})\frac{\partial(s_{pj})}{\partial(net_{pj})}=\sum_h^m\delta_{ph}(t)u_{hj}f^{&#39;}(s_{pj}(t-1))
+\]</span> 其中：<span class="math inline">\(h\)</span>是在<span class="math inline">\(t\)</span>时刻的任何一个隐层节点，<span class="math inline">\(j\)</span>是在<span class="math inline">\(t-1\)</span>时刻的任何一个隐层节点，高层的<span class="math inline">\(\delta\)</span>可以通过循环递归的计算出来，所有<span class="math inline">\(\delta\)</span>计算完毕后累加求和并应用在<span class="math inline">\(U\)</span>、<span class="math inline">\(V\)</span>的权重更新中。</p>
+<h3 id="代码实践">6.1.3 代码实践</h3>
+<p>问题描述：给定一个字符，生成（预测）之后的n个字符，并使得整个句子看上去有语义含义。</p>
+<p>1、训练数据生成如下图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ddpb4ckassq1l4b1evk1utu16e613.png" width="600"  />
+</center>
+2、过程说明如下图：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ddpb61bnag91iu3ce8ivvrq41g.png" width="600"  />
+</center>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RnnModeling</span>:</span></span><br><span class="line">    bert_len = <span class="number">768</span>                                                      <span class="comment"># length of bert nector.</span></span><br><span class="line">    txt_data_size = <span class="number">0</span>                                                   <span class="comment"># text data size of char level.</span></span><br><span class="line">    iteration = <span class="number">1000</span>                                                    <span class="comment"># iteration of training.</span></span><br><span class="line">    sequence_length = <span class="number">5</span>                                                 <span class="comment"># window of text context.</span></span><br><span class="line">    batch_size = <span class="number">0</span>                                                      <span class="comment"># training batch.</span></span><br><span class="line">    input_size = <span class="number">0</span>                                                      <span class="comment"># size of input layer.</span></span><br><span class="line">    hidden_size = <span class="number">100</span>                                                   <span class="comment"># size of hidden layer.</span></span><br><span class="line">    output_size = <span class="number">0</span>                                                     <span class="comment"># size of output layer.</span></span><br><span class="line">    learning_rate = <span class="number">0.001</span>                                               <span class="comment"># learning rate of optimization algorithm.</span></span><br><span class="line"></span><br><span class="line">    bert_path = <span class="string">&quot;&quot;</span>                                                      <span class="comment"># the path of bert model,you can download it through https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip.</span></span><br><span class="line">    word2vec_path = <span class="string">&quot;&quot;</span>                                                  <span class="comment"># the path of word2vec model,you can download the pre-train model from internet.</span></span><br><span class="line">    chars_set = []                                                      <span class="comment"># all chars in text data.</span></span><br><span class="line">    check_point_dir = <span class="string">&quot;&quot;</span>                                               <span class="comment"># path of check point.</span></span><br><span class="line"></span><br><span class="line">    char_to_int = &#123;&#125;                                                    <span class="comment"># char level encoding, char-&gt;int</span></span><br><span class="line">    int_to_char = &#123;&#125;                                                    <span class="comment"># char level decoding, int-&gt;char</span></span><br><span class="line">    char_encoded = &#123;&#125;                                                   <span class="comment"># one hot encoding</span></span><br><span class="line"></span><br><span class="line">    V = []                                                              <span class="comment"># weight matrix: from input to hidden.</span></span><br><span class="line">    U = []                                                              <span class="comment"># weight matrix: from hidden to hidden.</span></span><br><span class="line">    W = []                                                              <span class="comment"># weight matrix: from hidden to output.</span></span><br><span class="line"></span><br><span class="line">    b_h = []                                                            <span class="comment"># bias vector of hidden layer.</span></span><br><span class="line">    b_y = []                                                            <span class="comment"># bias vector of output layer.</span></span><br><span class="line">    h_prev = []                                                         <span class="comment"># previous hidden state.</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_fine_tuning_path</span>(<span class="params">self, bert_path=<span class="string">&quot;&quot;</span>, word2vec_path=<span class="string">&quot;&quot;</span>, check_point_dir=<span class="string">&quot;&quot;</span></span>):</span></span><br><span class="line">        self.bert_path = bert_path</span><br><span class="line">        self.word2vec_path = word2vec_path</span><br><span class="line">        self.check_point_dir = check_point_dir</span><br><span class="line">        <span class="keyword">if</span> word2vec_path != <span class="string">&quot;&quot;</span> <span class="keyword">and</span> <span class="keyword">not</span> os.path.exists(word2vec_path):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[Error] the path of word2vec is not exists.&quot;</span>)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> bert_path != <span class="string">&quot;&quot;</span> <span class="keyword">and</span> <span class="keyword">not</span> os.path.exists(bert_path):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[Error] the path of bert is not exists.&quot;</span>)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> check_point_dir != <span class="string">&quot;&quot;</span> <span class="keyword">and</span> <span class="keyword">not</span> os.path.exists(check_point_dir):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[Info] the path of check point is not exists, we&#x27;ll create make it.&quot;</span>)</span><br><span class="line">            os.makedirs(check_point_dir)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copy_model</span>(<span class="params">self, rnn</span>):</span></span><br><span class="line">        self.bert_len = rnn.bert_len</span><br><span class="line">        self.txt_data_size = rnn.bert_len</span><br><span class="line">        self.iteration = rnn.iteration</span><br><span class="line">        self.sequence_length = rnn.sequence_length</span><br><span class="line">        self.batch_size = rnn.batch_size</span><br><span class="line">        self.input_size = rnn.input_size</span><br><span class="line">        self.hidden_size = rnn.hidden_size</span><br><span class="line">        self.output_size = rnn.output_size</span><br><span class="line">        self.learning_rate = rnn.learning_rate</span><br><span class="line">        self.chars_set = rnn.chars_set</span><br><span class="line">        self.char_to_int = rnn.char_to_int</span><br><span class="line">        self.int_to_char = rnn.int_to_char</span><br><span class="line">        self.char_encoded = rnn.char_encoded</span><br><span class="line">        self.V = rnn.V</span><br><span class="line">        self.U = rnn.U</span><br><span class="line">        self.W = rnn.W</span><br><span class="line">        self.b_h = rnn.b_h</span><br><span class="line">        self.b_y = rnn.b_y</span><br><span class="line">        self.h_prev = rnn.h_prev</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">training_data_analysis</span>(<span class="params">self, txt_data, mode</span>):</span></span><br><span class="line">        self.txt_data_size = <span class="built_in">len</span>(txt_data)</span><br><span class="line">        chars = <span class="built_in">list</span>(<span class="built_in">set</span>(txt_data))</span><br><span class="line">        self.output_size = <span class="built_in">len</span>(chars)</span><br><span class="line">        self.char_to_int = <span class="built_in">dict</span>((c, i) <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(chars))</span><br><span class="line">        self.int_to_char = <span class="built_in">dict</span>((i, c) <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(chars))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> mode == <span class="string">&quot;one-hot&quot;</span>:</span><br><span class="line">            self.input_size = <span class="built_in">len</span>(chars)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(chars):</span><br><span class="line">                letter = [<span class="number">0</span> <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(chars))]</span><br><span class="line">                letter[self.char_to_int[c]] = <span class="number">1</span></span><br><span class="line">                self.char_encoded[c] = np.array(letter)</span><br><span class="line">        <span class="keyword">elif</span> mode == <span class="string">&quot;bert&quot;</span>:</span><br><span class="line">            self.input_size = self.bert_len</span><br><span class="line"></span><br><span class="line">            <span class="keyword">from</span> bert_serving.client <span class="keyword">import</span> BertClient</span><br><span class="line">            bc = BertClient(timeout=<span class="number">1000</span>)</span><br><span class="line">            <span class="comment"># start server: bert-serving-start -model_dir=D:\Github\bert\chinese_L-12_H-768_A-12 -num_worker=1</span></span><br><span class="line">            <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(chars):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> c.strip():</span><br><span class="line">                    self.char_encoded[c] = np.array(bc.encode([<span class="string">&#x27;&lt;S&gt;&#x27;</span>]))</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    self.char_encoded[c] = np.array(bc.encode([c]))</span><br><span class="line">                <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&#x27;[Debug] bert vector length: %d&#x27;</span> % (<span class="built_in">len</span>(self.char_encoded)))</span><br><span class="line">        <span class="keyword">elif</span> mode == <span class="string">&quot;w2v&quot;</span>:</span><br><span class="line">            <span class="keyword">import</span> gensim</span><br><span class="line">            model = gensim.models.KeyedVectors.load_word2vec_format(self.word2vec_path, binary=<span class="literal">False</span>)</span><br><span class="line">            self.input_size = model.vector_size</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(chars):</span><br><span class="line">                <span class="keyword">if</span> model.__contains__(c):</span><br><span class="line">                    self.char_encoded[c] = np.array(model[c])</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    self.char_encoded[c] = np.zeros((self.input_size, <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[Error] mode type error. it should be one-hot or bert or w2v.&quot;</span>)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">model_building</span>(<span class="params">self, itr, seq_len, lr, h_size</span>):</span></span><br><span class="line">        self.iteration = itr</span><br><span class="line">        self.sequence_length = seq_len</span><br><span class="line">        self.learning_rate = lr</span><br><span class="line">        self.batch_size = <span class="built_in">round</span>((self.txt_data_size / self.sequence_length) + <span class="number">0.5</span>)</span><br><span class="line">        self.hidden_size = h_size</span><br><span class="line"></span><br><span class="line">        self.V = np.random.randn(self.hidden_size, self.input_size) * <span class="number">0.01</span>              <span class="comment"># weight input -&gt; hidden.</span></span><br><span class="line">        self.U = np.random.randn(self.hidden_size, self.hidden_size) * <span class="number">0.01</span>             <span class="comment"># weight hidden -&gt; hidden</span></span><br><span class="line">        self.W = np.random.randn(self.output_size, self.hidden_size) * <span class="number">0.01</span>             <span class="comment"># weight hidden -&gt; output</span></span><br><span class="line"></span><br><span class="line">        self.b_h = np.zeros((self.hidden_size, <span class="number">1</span>))</span><br><span class="line">        self.b_y = np.zeros((self.output_size, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        self.h_prev = np.zeros((self.hidden_size, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forwardprop</span>(<span class="params">self, labeling, inputs, h_prev</span>):</span></span><br><span class="line">        x, s, y, p = &#123;&#125;, &#123;&#125;, &#123;&#125;, &#123;&#125;</span><br><span class="line">        s[-<span class="number">1</span>] = np.copy(h_prev)</span><br><span class="line">        loss = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(inputs)):                                                        <span class="comment"># t is a &quot;time step&quot;.</span></span><br><span class="line">            x[t] = self.char_encoded[inputs[t]].reshape(-<span class="number">1</span>, <span class="number">1</span>)                              <span class="comment"># input vector.</span></span><br><span class="line">            s[t] = np.tanh(np.dot(self.V, x[t]) + np.dot(self.U, s[t - <span class="number">1</span>]) + self.b_h)      <span class="comment"># hidden state. f(x(t)*V + s(t-1)*U + b), f=tanh.</span></span><br><span class="line">            y[t] = np.dot(self.W, s[t]) + self.b_y                                          <span class="comment"># f(s(t)*W + b), f=x.</span></span><br><span class="line">            p[t] = np.exp(y[t]) / np.<span class="built_in">sum</span>(np.exp(y[t]))                                      <span class="comment"># softmax. f(x)=exp(x)/sum(exp(x))</span></span><br><span class="line">            loss += -np.log(p[t][self.char_to_int[labeling[t]]])                            <span class="comment"># cross-entropy loss.</span></span><br><span class="line">        <span class="keyword">return</span> loss, p, s, x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backprop</span>(<span class="params">self, p, labeling, inputs, s, x</span>):</span></span><br><span class="line">        dV, dU, dW = np.zeros_like(self.V), np.zeros_like(self.U), np.zeros_like(self.W)    <span class="comment"># make all zero matrices.</span></span><br><span class="line">        dbh, dby = np.zeros_like(self.b_h), np.zeros_like(self.b_y)</span><br><span class="line">        delta_pj_1 = np.zeros_like(s[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># error reversed</span></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(<span class="built_in">len</span>(inputs))):</span><br><span class="line">            dy = np.copy(p[t])                                          <span class="comment"># &quot;dy&quot; means &quot;δpk&quot;</span></span><br><span class="line">            dy[self.char_to_int[labeling[t]]] -= <span class="number">1</span>                      <span class="comment"># when using cross entropy loss, δpk=d-y.</span></span><br><span class="line">            dW += np.dot(dy, s[t].T)                                    <span class="comment"># dw/η=δpk * s(t)</span></span><br><span class="line">            dby += dy</span><br><span class="line">            delta_pk_w = np.dot(self.W.T, dy) + delta_pj_1              <span class="comment"># δpk * w.</span></span><br><span class="line">            delta_pj = (<span class="number">1</span> - s[t] * s[t]) * delta_pk_w                   <span class="comment"># δpj = δpk * w * f&#x27;(x); f(x)=tanh; f&#x27;(x)= tanh&#x27;(x) = 1-tanh^2(x)</span></span><br><span class="line">            dbh += delta_pj</span><br><span class="line">            dV += np.dot(delta_pj, x[t].T)                              <span class="comment"># dv/η = δpj * x(t)</span></span><br><span class="line">            dU += np.dot(delta_pj, s[t - <span class="number">1</span>].T)                          <span class="comment"># du/η = δpj * s(t-1)</span></span><br><span class="line">            delta_pj_1 = np.dot(self.U.T, delta_pj)                     <span class="comment"># δpj (t-1) = δpj * u</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> dparam <span class="keyword">in</span> [dV, dU, dW, dbh, dby]:</span><br><span class="line">            np.clip(dparam, -<span class="number">1</span>, <span class="number">1</span>, out=dparam)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dV, dU, dW, dbh, dby</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">model_reading</span>(<span class="params">self, model_read_path</span>):</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(model_read_path):</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;[Error] the model path %s is not exists.&quot;</span> % model_read_path)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        f = <span class="built_in">open</span>(model_read_path, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">        rnn = pickle.load(f)</span><br><span class="line">        ce = pickle.load(f)</span><br><span class="line">        rnn.char_encoded = ce</span><br><span class="line">        f.close()</span><br><span class="line">        self.copy_model(rnn)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">model_saving</span>(<span class="params">self, model_save_path</span>):</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(model_save_path):</span><br><span class="line">            os.system(<span class="string">r&quot;touch &#123;&#125;&quot;</span>.<span class="built_in">format</span>(model_save_path))</span><br><span class="line"></span><br><span class="line">        f = <span class="built_in">open</span>(model_save_path, <span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">        pickle.dump(self, f, protocol=-<span class="number">1</span>)</span><br><span class="line">        pickle.dump(self.char_encoded, f, protocol=-<span class="number">1</span>)</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">model_training</span>(<span class="params">self, txt_data, ischeck=<span class="literal">False</span></span>):</span></span><br><span class="line">        chk_path = self.check_point_dir + <span class="string">&quot;/final.p&quot;</span></span><br><span class="line">        <span class="keyword">if</span> ischeck <span class="keyword">and</span> os.path.exists(chk_path):</span><br><span class="line">            rnn.model_reading(chk_path)</span><br><span class="line"></span><br><span class="line">        mV, mU, mW = np.zeros_like(self.V), np.zeros_like(self.U), np.zeros_like(self.W)</span><br><span class="line">        mbh, mby = np.zeros_like(self.b_h), np.zeros_like(self.b_y)</span><br><span class="line">        loss = <span class="number">0.0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.iteration):</span><br><span class="line">            self.h_prev = np.zeros((self.hidden_size, <span class="number">1</span>))</span><br><span class="line">            data_pointer = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> b <span class="keyword">in</span> <span class="built_in">range</span>(self.batch_size):</span><br><span class="line">                inputs = [ch <span class="keyword">for</span> ch <span class="keyword">in</span> txt_data[data_pointer:data_pointer + self.sequence_length]]</span><br><span class="line">                targets = [ch <span class="keyword">for</span> ch <span class="keyword">in</span> txt_data[data_pointer + <span class="number">1</span>:data_pointer + self.sequence_length + <span class="number">1</span>]]</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (data_pointer + self.sequence_length + <span class="number">1</span> &gt;= <span class="built_in">len</span>(txt_data) <span class="keyword">and</span> b == self.batch_size - <span class="number">1</span>):</span><br><span class="line">                    targets.append(<span class="string">&#x27; &#x27;</span>)</span><br><span class="line"></span><br><span class="line">                loss, ps, hs, xs = self.forwardprop(targets, inputs, self.h_prev)</span><br><span class="line"></span><br><span class="line">                dV, dU, dW, dbh, dby = self.backprop(ps, targets, inputs, hs, xs)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">for</span> weight, g, his <span class="keyword">in</span> <span class="built_in">zip</span>([self.V, self.U, self.W, self.b_h, self.b_y],</span><br><span class="line">                                              [dV, dU, dW, dbh, dby],</span><br><span class="line">                                              [mV, mU, mW, mbh, mby]):</span><br><span class="line">                    his += g * g                                      <span class="comment"># RMSProp updata</span></span><br><span class="line">                    e = <span class="number">0.5</span> * his / (i + <span class="number">1</span>) + <span class="number">0.5</span> * g * g             <span class="comment"># RMSProp updata</span></span><br><span class="line">                    weight += -self.learning_rate * g / np.sqrt(e + <span class="number">1e-8</span>)   <span class="comment"># RMSProp update</span></span><br><span class="line"></span><br><span class="line">                data_pointer += self.sequence_length</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;[Debug] iteration %d, loss value: %f&#x27;</span> % (i, loss))</span><br><span class="line">                <span class="keyword">if</span> ischeck:</span><br><span class="line">                    self.model_saving(self.check_point_dir+<span class="string">&quot;/chk&quot;</span>+<span class="built_in">str</span>(i)+<span class="string">&quot;.p&quot;</span>)</span><br><span class="line">                    self.model_saving(chk_path)</span><br><span class="line"></span><br><span class="line">        self.model_saving(chk_path)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">model_inference</span>(<span class="params">self, test_char, length</span>):</span></span><br><span class="line">        x = self.char_encoded[test_char].reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">        idx = []</span><br><span class="line">        h = np.zeros((self.hidden_size,<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(length):</span><br><span class="line">            h = np.tanh(np.dot(self.V, x) + np.dot(self.U, h) + self.b_h)</span><br><span class="line">            y = np.dot(self.W, h) + self. b_y</span><br><span class="line">            p = np.exp(y) / np.<span class="built_in">sum</span>(np.exp(y))</span><br><span class="line">            ix = <span class="built_in">list</span>(p).index(<span class="built_in">max</span>(<span class="built_in">list</span>(p)))</span><br><span class="line">            x = self.char_encoded[self.int_to_char[ix]].reshape(-<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">            idx.append(ix)</span><br><span class="line">        txt = <span class="string">&#x27;&#x27;</span>.join(self.int_to_char[i] <span class="keyword">for</span> i <span class="keyword">in</span> idx)</span><br><span class="line">        <span class="built_in">print</span> (<span class="string">&#x27;[Debug] %s-%s&#x27;</span> % (test_char, txt))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self, txt_data, bert_path=<span class="string">&quot;&quot;</span>, word2vec_path=<span class="string">&quot;&quot;</span>, check_point_path=<span class="string">&quot;&quot;</span>, ischeck=<span class="literal">True</span>, model_type=<span class="string">&quot;bert&quot;</span>, \</span></span></span><br><span class="line"><span class="params"><span class="function">            itr=<span class="number">1000</span>, seq_len=<span class="number">10</span>, lr=<span class="number">0.001</span>, h_size=<span class="number">100</span></span>):</span></span><br><span class="line">        self.set_fine_tuning_path(bert_path, word2vec_path, check_point_path)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> ischeck:</span><br><span class="line">            self.training_data_analysis(txt_data, model_type)</span><br><span class="line">            self.model_building(itr, seq_len, lr, h_size)</span><br><span class="line"></span><br><span class="line">        self.model_training(txt_data, ischeck)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    txt_data = <span class="string">&quot;当地时间6月17日，第53届巴黎-布尔歇国际航空航天展览会（即巴黎航展）开幕。 开幕当天，法国总统马克龙亲自为法国、德国与西班牙三国联合研制的“新一代战斗机”（NGF）的全尺寸模型揭幕。法、德、西三国防长也出席了模型揭幕仪式，并在仪式后签署了三方合作协议，正式欢迎西班牙加入“新一代战机”的联合研制。NGF与美国的F-22、F-35、俄罗斯的苏-57以及中国的歼-20一样，同属第五代战斗机。&quot;</span></span><br><span class="line">    rnn = RnnModeling()</span><br><span class="line">    rnn.set_fine_tuning_path(check_point_dir=<span class="string">&quot;e://&quot;</span>, word2vec_path=<span class="string">&#x27;E:\\BaiduNetdiskDownload\\zhwiki\\zhwiki_2017_03.sg_50d.word2vec&#x27;</span>)</span><br><span class="line">    rnn.run(txt_data, ischeck=<span class="literal">False</span>, check_point_path=<span class="string">&quot;e://&quot;</span>)</span><br><span class="line">    rnn.model_inference(<span class="string">&#x27;法&#x27;</span>, <span class="number">10</span>)</span><br><span class="line">    rnn.model_inference(<span class="string">&#x27;巴&#x27;</span>, <span class="number">10</span>)</span><br><span class="line">    rnn.model_inference(<span class="string">&#x27;歼&#x27;</span>, <span class="number">10</span>)</span><br><span class="line">    rnn.model_inference(<span class="string">&#x27;新&#x27;</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p>训练及测试结果： <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[Debug] iteration 0, loss value: 28.059744</span><br><span class="line">[Debug] iteration 100, loss value: 2.966153</span><br><span class="line">[Debug] iteration 200, loss value: 1.247683</span><br><span class="line">[Debug] iteration 300, loss value: 0.931227</span><br><span class="line">[Debug] iteration 400, loss value: 0.848960</span><br><span class="line">[Debug] iteration 500, loss value: 0.812240</span><br><span class="line">[Debug] iteration 600, loss value: 0.791726</span><br><span class="line">[Debug] iteration 700, loss value: 0.779109</span><br><span class="line">[Debug] iteration 800, loss value: 0.770437</span><br><span class="line">[Debug] iteration 900, loss value: 0.764572</span><br><span class="line">[Debug] 法-国、德国与美国的F-</span><br><span class="line">[Debug] 巴-黎航展）开幕。 开幕</span><br><span class="line">[Debug] 歼--20一样，同属第五</span><br><span class="line">[Debug] 新-一代战斗机”（NGF</span><br></pre></td></tr></table></figure></p>
+<h2 id="混沌理论">6.2 混沌理论</h2>
+<p>关于混沌(Chaos)一词，西方和东方在哲学认知和神话传说上惊人的相似。例如古希腊神话中描述的：万物之初，先有混沌，是一个无边无际、空空如也的空间，在发生某种扰动后，诞生了大地之母Gaea等等，世界从此开始。中国古代神话中，天地未开之前，宇宙以混沌状模糊一团，盘古开天辟地后世界从此开始。</p>
+<p>而在现代自然科学中，混沌理论的发展反映了人们对客观世界认知一步步演化的过程。人类对自然规律的认知，也从确定性(Deterministic)认知主导逐步演进到概率性(Probabilistic)认知主导。</p>
+<ul>
+<li><p>经典力学与机械决定论</p>
+<p>牛顿1686年创立了基于万有引力定律和三大定律的古典力学，即：第一定律，在沒有被外力作用下的物体，会保持静止或匀速直线运动状态；第二定律，物体的加速度与物体所受外力的合力成成正比，与物体本身的质量成反比，且加速度方向与合力方向相同；第三定律，两个物体间的作用力和反作用力大小相等方向相反。牛顿的这种基于确定性认知的绝对时空观在很长一段时间占据主导位置，例如拉普拉斯甚至认为：没有什么是不确定的，宇宙的现在是由其过去决定的，只要给定初始条件，智者可以用一个公式概括整个宇宙，预测宇宙未来的发展。拉普拉斯对于概率论有着巨大的贡献，但他认为概率论只是对决定论的补充而已。</p></li>
+<li><p>三体问题</p>
+<p>在那个年代，虽然人们对太阳、地球、月亮的运动规律了解的比较清楚，但对三个天体在长时间运动过程中，状态是否保持稳定、能否永远稳定运行等相关问题却没有什么认知，即理论上认为确定性的事情，而事实上却无法用已知的数学模型表达，这个就是天体力学中的经典模型——三体问题。19世纪末，人们已经知道，在一般三体问题中每个天体在其他两个天体引力作用下的运动方程都可以表示成6个一阶常微分方程，这意味着总共需要求18个完全积分才能获得完整解析解，而理论上只能得到10个完全积分，即描述三个或三个以上天体运动的方程组不可积分，更不能得到解析解。 虽然后来欧拉和拉格朗日分别在给定约束条件下求得了限制性三体问题的5个特殊解，即著名的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8B%89%E6%A0%BC%E6%9C%97%E6%97%A5%E7%82%B9">拉格朗日点</a>，但通用三体问题依然无解。</p></li>
+<li><p>庞加莱的错误</p>
+<p>庞加莱(就是那个提出庞加莱猜想的庞加莱)在1887年参加瑞典国王发起的“太阳系是稳定的么”的竞赛中，对限定性三体问题发表了一篇论文，初稿出来后，一个名叫<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Lars_Edvard_Phragm%C3%A9n">弗拉格曼</a>的26岁年轻人发现了其中有不明确的部分，而庞加莱在修改过程中发现了原来的证明有错误，于是在深思熟虑后彻底抛弃了原来通过定量分析求解的方法，转而以定性分析求解并成功给出三体问题的定性解答，而那个错误是由于初始条件的微小误差导致最终结果的南辕北辙，这个观察清晰而定性的开辟了混沌理论。</p></li>
+<li><p>蝴蝶效应</p>
+<p>现代科学史中，真正意义上的混沌理论是MIT的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%88%B1%E5%BE%B7%E5%8D%8E%C2%B7%E8%AF%BA%E9%A1%BF%C2%B7%E6%B4%9B%E4%BC%A6%E8%8C%A8">洛伦茨</a>(Lorenz)提出的，在此之前人们原本以为，只要配上动力学公式和超级计算机，就能模拟出自然界的各种现象，1961年，洛伦茨用Royal McBee LGP-30计算机(16k内存，每秒60次乘法运算)做气象动力学模拟实验时，由于一个偶然的对初始值做四舍五入的处理，导致模拟结果大相径庭。基于这次实验，1963年，洛伦茨在《气象学报》发表了《確定性的非周期流》系列，以物理意义更加明确的数学模型表示和发展了混沌理论。</p>
+<center>
+<p><img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eck5ab2i1k6en2p110u4ic1i801t.png" width="350"  /> 洛伦茨系统</p>
+</center></li>
+</ul>
+<p>简单看一个关于流体热力传导的问题：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1edgkmmg78npnk1cbq1vmpaq81e.png" width="350"  />
+</center>
+<p>当温差较小时，热力会以传导的方式从热的板块到冷的板块，当温差较大时，下面的暖流体上升，上面的冷流体下沉，冷、热板块会产生对流滚动。针对这个问题，洛伦茨将他原始方程中除三个傅立叶系数外的其他系数都设为0，得到了简化的微分方程：</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; \dot{x}=-\sigma x+\sigma y \\
+&amp; \dot{y}=-xz+rx-y \\
+&amp; \dot{z}=xy-bz \\
+\end{align*}
+\]</span></p>
+<p>其中<span class="math inline">\(\sigma\)</span>是Prandtl系数、<span class="math inline">\(r\)</span>是Rayleigh系数、<span class="math inline">\(b\)</span>是系统参数，决定了循环的宽度(图中<span class="math inline">\(T_u\)</span>与<span class="math inline">\(T_l\)</span>质检的距离)、<span class="math inline">\(x\)</span>与循环流体的流苏成正比，且<span class="math inline">\(x&gt;0\)</span>时流体顺时针对流，<span class="math inline">\(x&lt;0\)</span>时流体逆时针对流、<span class="math inline">\(y\)</span>与温差成正比、<span class="math inline">\(z\)</span>与垂直温度曲线与平衡温度曲线的失真成正比。</p>
+<p>洛伦茨发现，当<span class="math inline">\(\sigma=10\)</span>且<span class="math inline">\(b=8/3\)</span>时，只要Rayleigh系数超过<span class="math inline">\(r\approx 24.74\)</span>，系统就会表现为"混沌"，即所有的解似乎对初始条件都很敏感，几乎所有的解显然既不是周期性解，也不收敛于周期性解。换句话说，洛伦茨用一个确定性的方程告诉我们一个热力学动态系统的不可预知性。</p>
+<p>回想电视剧里看到的离奇故事：</p>
+<p>1、因为一滴雨水掉在了马的眼睛里，马摔倒了；</p>
+<p>2、恰好骑马的是一名斥候，斥候受伤了；</p>
+<p>3、斥候受伤导致手上的情报没有被及时送到军营，军队战败了；</p>
+<p>4、军队战败导致重要城市丢失，敌军长驱直入进入都城；</p>
+<p>5、都城被灭，皇帝被杀，国家灭亡。</p>
+<p>混沌理论的核心思想是：初始条件的微小差别或变化，可以导致最终结果发生剧烈的变化。</p>
+<p>下面从理论方面做一些简单介绍，帮助理解未来我们会用到的一些概念。</p>
+<h3 id="一维映射">6.2.1 一维映射</h3>
+<p>1、<strong>动态系统(Dynamical System)</strong></p>
+<p>一个动态系统由一组可能的状态组成，再加上一个用过去的状态来确定现在的状态的规则。最典型的动态系统是时间离散动态系统(discrete-time dynamical system)和时间连续动态系统(m continuous-time dynamical system)，前面我们介绍的RNN就是一种离散动态系统。</p>
+<p>很多现实当中问题往往是随着时间演化的动态系统，例如：模拟细菌生长过程，在给定初始细菌数后，随着时间流逝，细菌数量增长的模型如下：</p>
+<p><span class="math display">\[x_n=f(x_{n-1})=2x_{n-1}=f(f(x_{n-2}))=f^n(x_0)=2^nx_0\]</span> <span class="math inline">\(x_0\)</span>表示初始细菌数，<span class="math inline">\(n\)</span>表示随时间演化，显然这个增长过程是以指数增长的。</p>
+2、<strong>固点(Fixed Points)</strong> 如果动态系统有映射<span class="math inline">\(f\)</span>，且满足<span class="math inline">\(f(p)=p\)</span>，则<span class="math inline">\(p\)</span>被称为固点。还以上面细菌生长过程为例，几何意义如下图表示：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1echc1m1417va1si31n9l4uqo4813.png" width="450"  />
+</center>
+<p>利用<span class="math inline">\(y=x\)</span>直线发现动态系统的固点只有x=0这一点，画出动态系统的演化轨迹(虚线部分)，随着时间流逝，细菌种群规模趋向于正无穷。</p>
+<p>但真实情况是，受限于环境、资源等因素，细菌种群规模不可能无限大，所以修改动态系统为： <span class="math display">\[x_n=f(x_{n-1})=2x_{n-1}(1-x_{n-1})=f(f(x_{n-2}))=f^n(x_0)\]</span></p>
+几何意义如下图表示：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1echc0ujc1crhpl71tov2vt165im.png" width="450"  />
+</center>
+<p>利用<span class="math inline">\(y=x\)</span>直线发现动态系统的固点有x=0和x=0.5这两个点，画出动态系统的演化轨迹（虚线），随着时间流逝，不管初始种群<span class="math inline">\(x_0\)</span>取多少，细菌种群规模最终趋向于0.5(被吸引到0.5)，用R做个简单模拟：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">g &lt;- <span class="keyword">function</span>(x)&#123;</span><br><span class="line">  <span class="built_in">return</span>(<span class="number">2</span>*x*(<span class="number">1</span>-x))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gk &lt;- <span class="keyword">function</span>(k, x)&#123;</span><br><span class="line">  <span class="keyword">for</span>(i <span class="keyword">in</span> <span class="number">1</span>:k)&#123;</span><br><span class="line">    x = g(x)</span><br><span class="line">    print(x)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">k=<span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:<span class="number">10</span>)&#123;</span><br><span class="line">  x=runif(<span class="number">1</span>)</span><br><span class="line">  gk(k, x)</span><br><span class="line">  print(<span class="string">&quot;=====&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>部分结果如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>t</th>
+<th style="text-align: right;">y(x=0.941631)</th>
+<th style="text-align: right;">y(x=0.6455615 )</th>
+<th style="text-align: right;">y(x=0.1207315 )</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td style="text-align: right;">0.1099241</td>
+<td style="text-align: right;">0.4576237</td>
+<td style="text-align: right;">0.2123107</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td style="text-align: right;">0.1956815</td>
+<td style="text-align: right;">0.4964085</td>
+<td style="text-align: right;">0.3344698</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td style="text-align: right;">0.3147805</td>
+<td style="text-align: right;">0.4999742</td>
+<td style="text-align: right;">0.4451995</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td style="text-align: right;">0.4313875</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.4939938</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td style="text-align: right;">0.4905846</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.4999279</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td style="text-align: right;">0.4998227</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td style="text-align: right;">0.4999999</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+</tbody>
+</table>
+<p>3、<strong>稳定的固点(Stability of Fixed Points)</strong></p>
+<p>假设动态系统的映射为<span class="math inline">\(f(x) =\frac{(3x-x^3)}{2}\)</span>，几何形态如下：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1echdls5q1f991o6f1bba1fb5bor1g.png" width="450"  />
+</center>
+<p>利用<span class="math inline">\(y=x\)</span>直线发现动态系统的固点有<span class="math inline">\(x_0=0\)</span>和<span class="math inline">\(x_1=1\)</span>和<span class="math inline">\(x_2=-1\)</span>这三个点，画出动态系统的演化轨迹（虚线），其中<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>两个点被称为稳定固点，在<span class="math inline">\(x_1\)</span>和<span class="math inline">\(x_2\)</span>两个值的某个邻域内，y会分别收敛于1和-1两个值，<span class="math inline">\(x_0\)</span>为不稳定固点，在它的+邻域内y会被推到上半区，-邻域内y会被推到下半区。</p>
+<p>4、<strong>吸引固点(Sink)与排斥固点(Source)</strong></p>
+<p>首先对点<span class="math inline">\(p\)</span>定义它的邻域：</p>
+<p><span class="math display">\[N_\epsilon(p)=\{x\in R:|x-p|&lt;\epsilon\},0&lt;\epsilon&lt;&lt;1\]</span></p>
+<p>其次，假设动态系统有映射<span class="math inline">\(f\)</span>，点<span class="math inline">\(p\)</span>为实数值，且满足<span class="math inline">\(f(p)=p\)</span>，如果存在<span class="math inline">\(p\)</span>的邻域<span class="math inline">\(N_\epsilon(p)\)</span>，使得所有邻域内的点会被吸引到<span class="math inline">\(p\)</span>点，即：</p>
+<p><span class="math display">\[lim_{k-&gt;\infty}f^k(x)=p,x\in N_\epsilon(p)\]</span></p>
+<p>则点<span class="math inline">\(p\)</span>被称作Sink，反之如果邻域内的点会被排斥远离点<span class="math inline">\(p\)</span>，则点<span class="math inline">\(p\)</span>被称作Source。</p>
+<p>数学化表示如下，记住这个表示，未来解释为什么RNN无法利用梯度下降学到长依赖关系时会用到：</p>
+<p>如果<span class="math inline">\(f\)</span>是一个在实数集上的平滑映射，假设<span class="math inline">\(p\)</span>是<span class="math inline">\(f\)</span>的固点，则：</p>
+<p>1、如果<span class="math inline">\(|f&#39;(p)|&lt;1\)</span>，则<span class="math inline">\(p\)</span>是吸引固点Sink；</p>
+<p>2、如果<span class="math inline">\(|f&#39;(p)|&gt;1\)</span>，则<span class="math inline">\(p\)</span>是排斥固点Source。</p>
+<p><strong>证明</strong>： 假设<span class="math inline">\(\alpha\)</span>是介于<span class="math inline">\(|f&#39;(p)|\)</span>和1之间的任意实数，对于：</p>
+<p><span class="math display">\[lim_{x-&gt;p}\frac{|f(x)-f(p)|}{|x-p|}=|f&#39;(p)|\]</span> 存在一个<span class="math inline">\(p\)</span>的邻域<span class="math inline">\(N_\epsilon(p),\epsilon&gt;0\)</span>，使得：</p>
+<p><span class="math display">\[\frac{|f(x)-f(p)|}{|x-p|}&lt;a&lt;1,(x\in N_\epsilon(p),x\neq p)\]</span></p>
+<p>换句话说，相比<span class="math inline">\(x\)</span>，<span class="math inline">\(f(x)\)</span>更接近<span class="math inline">\(p\)</span>，也说明，如果<span class="math inline">\(x\in N_\epsilon(p)\)</span>，则<span class="math inline">\(f(x)\in N_\epsilon(p)\)</span>，以此类推，<span class="math inline">\(f^2(x)\)</span>、<span class="math inline">\(f^3(x)\)</span>也满足此性质，归纳下变成： <span class="math display">\[|f^k(x)-p|\leq\alpha^k|x-p|,k\geq 1\]</span></p>
+<p>所以<span class="math inline">\(p\)</span>是一个吸引固点Sink。</p>
+<p>换一个角度，从一阶泰勒展开式或导数的定义来看：</p>
+<p>在<span class="math inline">\(p\)</span>点的一阶泰勒展开式： <span class="math display">\[f(p+h)\approx f(p)+hf&#39;(p)\]</span></p>
+<p>1、如果<span class="math inline">\(|f&#39;(p)|&lt;1\)</span>，则<span class="math inline">\(p\)</span>是吸引固点Sink；</p>
+<p>2、如果<span class="math inline">\(|f&#39;(p)|&gt;1\)</span>，则<span class="math inline">\(p\)</span>是排斥固点Source。</p>
+<p>5、<strong>k周期点</strong></p>
+举一个例子：<span class="math inline">\(f(x)=3.3x(1-x)\)</span>，其图形如下：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ecm4fbi01ci51p1bgvj1opf1kag2a.png" width="450"  />
+</center>
+<p>利用<span class="math inline">\(y=x\)</span>直线发现动态系统的固点有<span class="math inline">\(x_0=0\)</span>和<span class="math inline">\(x_1=\frac{23}{33}\)</span>两个点，而这两个点都是排斥固点，那么吸引固点去哪儿了呢？做一个简单模拟：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">g &lt;- function(x)&#123;</span><br><span class="line">  return(3.3*x*(1-x))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">gk &lt;- function(k, x)&#123;</span><br><span class="line">  for(i in 1:k)&#123;</span><br><span class="line">    x = g(x)</span><br><span class="line">    print(x)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">k=20</span><br><span class="line"></span><br><span class="line">for (i in 1:10)&#123;</span><br><span class="line">  x=runif(1)</span><br><span class="line">  gk(k, x)</span><br><span class="line">  print(&quot;=====&quot;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>部分结果如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th>t</th>
+<th style="text-align: right;">y(x=0.1156445)</th>
+<th style="text-align: right;">y(x=0.3317354)</th>
+<th style="text-align: right;">y(x=0.0.9131461)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td style="text-align: right;">0.3374938</td>
+<td style="text-align: right;">0.7315672</td>
+<td style="text-align: right;">0.2617241</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td style="text-align: right;">0.7378527</td>
+<td style="text-align: right;">0.6480429</td>
+<td style="text-align: right;">0.6376411</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td style="text-align: right;">0.6383061</td>
+<td style="text-align: right;">0.7526749</td>
+<td style="text-align: right;">0.7624812</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td style="text-align: right;">0.7618757</td>
+<td style="text-align: right;">0.6143128</td>
+<td style="text-align: right;">0.5976419</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td style="text-align: right;">0.5986897</td>
+<td style="text-align: right;">0.7818775</td>
+<td style="text-align: right;">0.793538</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td style="text-align: right;">0.7928592</td>
+<td style="text-align: right;">0.5627987</td>
+<td style="text-align: right;">0.540657</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td style="text-align: right;">0.5419706</td>
+<td style="text-align: right;">0.8119858</td>
+<td style="text-align: right;">0.8195451</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td style="text-align: right;">0.8191869</td>
+<td style="text-align: right;">0.5037939</td>
+<td style="text-align: right;">0.48804</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td style="text-align: right;">0.488795</td>
+<td style="text-align: right;">0.8249525</td>
+<td style="text-align: right;">0.824528</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td style="text-align: right;">0.8245857</td>
+<td style="text-align: right;">0.4765394</td>
+<td style="text-align: right;">0.4774493</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td style="text-align: right;">0.4773257</td>
+<td style="text-align: right;">0.8231837</td>
+<td style="text-align: right;">0.8233218</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td style="text-align: right;">0.8233034</td>
+<td style="text-align: right;">0.4803226</td>
+<td style="text-align: right;">0.4800279</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td style="text-align: right;">0.4800672</td>
+<td style="text-align: right;">0.8237222</td>
+<td style="text-align: right;">0.8236837</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td style="text-align: right;">0.8236889</td>
+<td style="text-align: right;">0.4791729</td>
+<td style="text-align: right;">0.4792553</td>
+</tr>
+<tr class="odd">
+<td>15</td>
+<td style="text-align: right;">0.4792442</td>
+<td style="text-align: right;">0.8235686</td>
+<td style="text-align: right;">0.8235799</td>
+</tr>
+<tr class="even">
+<td>16</td>
+<td style="text-align: right;">0.8235784</td>
+<td style="text-align: right;">0.4795012</td>
+<td style="text-align: right;">0.479477</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td style="text-align: right;">0.4794803</td>
+<td style="text-align: right;">0.8236133</td>
+<td style="text-align: right;">0.8236101</td>
+</tr>
+<tr class="even">
+<td>18</td>
+<td style="text-align: right;">0.8236105</td>
+<td style="text-align: right;">0.4794056</td>
+<td style="text-align: right;">0.4794125</td>
+</tr>
+<tr class="odd">
+<td>19</td>
+<td style="text-align: right;">0.4794116</td>
+<td style="text-align: right;">0.8236004</td>
+<td style="text-align: right;">0.8236013</td>
+</tr>
+<tr class="even">
+<td>20</td>
+<td style="text-align: right;">0.8236012</td>
+<td style="text-align: right;">0.4794332</td>
+<td style="text-align: right;">0.4794312</td>
+</tr>
+</tbody>
+</table>
+<p>一个有意思的现象出现，<span class="math inline">\(p_1=0.4694\)</span>和<span class="math inline">\(p_2=0.8236\)</span>交替出现且为吸引固点，换个角度就是：<span class="math inline">\(f(p_1)=p_2,f(p_2)=p_1;f^2(p_1)=p_1\)</span>,<span class="math inline">\(f^2(p_2)=p_2\)</span>，也就是吸引固点以2为周期出现，在两个点间循环往复。</p>
+<p>形式化<strong>定义</strong>为：</p>
+<p>假设动态系统有实数集上的映射<span class="math inline">\(f\)</span>，点<span class="math inline">\(p\)</span>为实数值，且满足<span class="math inline">\(f^k(p)=p\)</span>，<span class="math inline">\(k\)</span>为正整数，则<span class="math inline">\(p\)</span>被称为k周期点。</p>
+<p>扩展下之前吸引固点的定义到k周期点：</p>
+<p>如果<span class="math inline">\(f\)</span>是一个在实数集上的平滑映射，假设<span class="math inline">\(\{p_1,p_2,...p_k\}\)</span>构成了<span class="math inline">\(f\)</span>的<span class="math inline">\(k\)</span>周期点，则：</p>
+<p>1、如果<span class="math inline">\(|f&#39;(p_k)...f&#39;(p_1)|&lt;1\)</span>，则<span class="math inline">\(\{p_1,p_2,...p_k\}\)</span>是吸引固点Sink；</p>
+<p>2、如果<span class="math inline">\(|f&#39;(p_k)...f&#39;(p_1)|&gt;1\)</span>，则<span class="math inline">\(\{p_1,p_2,...p_k\}\)</span>是排斥固点Source。</p>
+<p>还是上面的那个例子:</p>
+<p><span class="math inline">\(f(x)=3.3x(1-x)\)</span></p>
+<p>则有： <span class="math inline">\(f&#39;(x)=3.3-6.6x\)</span> k周期点为：<span class="math inline">\(\{0.4694,0.8236\}\)</span></p>
+<p>因为<span class="math inline">\(|f&#39;(0.4694)f&#39;(0.8236)|=0.2904&lt;1\)</span>，所以它是吸引固点。</p>
+<h3 id="二维映射">6.2.2 二维映射</h3>
+<p>把一维映射扩展到多维映射，看看会出现什么有趣的现象，由于二维映射是多维映射的最简单形式且各种性质与多维映射一致，固以此为基础讨论。</p>
+<p>1、<strong>邻域</strong></p>
+<p>扩展一维映射时的邻域概念如下：</p>
+<p>在欧式空间实数域下，向量<span class="math inline">\(v=(x_1,x_2,......x_m)\)</span>的范数定义为：</p>
+<p><span class="math display">\[|v|=\sqrt{x_1^2+x_2^2+......+x_m^2}\]</span></p>
+<p>对<span class="math inline">\(p=(p_1,p_2,......p_m)\)</span>定义它的邻域：</p>
+<p><span class="math display">\[N_\epsilon(p)=\{v\in \mathbb{R}^m:|v-p|&lt;\epsilon\},0&lt;\epsilon&lt;&lt;1\]</span></p>
+<p>有时候也叫<span class="math inline">\(p\)</span>的<span class="math inline">\(\epsilon\)</span>-<span class="math inline">\(disk\)</span>，举个例子。</p>
+二维下(<span class="math inline">\(p=(1,1)\)</span>)：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/2d" width="450"  />
+</center>
+三维下(<span class="math inline">\(p=(1,1,1)\)</span>)：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/3d" width="450"  />
+</center>
+<p>2、<strong>固点</strong></p>
+<p>其次，假设动态系统有实数域<span class="math inline">\(\mathbb{R}^m\)</span>的映射<span class="math inline">\(f\)</span>，<span class="math inline">\(p\)</span>为实数域<span class="math inline">\(\mathbb{R}^m\)</span>固点，即满足<span class="math inline">\(f(p)=p\)</span>，如果存在<span class="math inline">\(p\)</span>的邻域<span class="math inline">\(N_\epsilon(p)\)</span>，使得所有邻域内<span class="math inline">\(v\)</span>会被吸引到<span class="math inline">\(p\)</span>，即： <span class="math display">\[lim_{k-&gt;\infty}f^k(v)=p,v\in N_\epsilon(p)\]</span></p>
+<p>则<span class="math inline">\(p\)</span>被称作<strong>Sink</strong>，反之如果邻域内的点会被排斥远离点<span class="math inline">\(p\)</span>，则点<span class="math inline">\(p\)</span>被称作<strong>Source</strong>。</p>
+在二维映射下还会出现一个一维映射时不会出现的固点，叫做鞍点(<strong>Saddle</strong>)，可以把它看做介于吸引固点和排斥固点间的一种状态，它拥有至少一个吸引方向和至少一个排斥方向。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ed8qo1fid0m1rmk1qupdb0s1311.png" width="600"  />
+</center>
+<p>图中<span class="math inline">\(f\)</span>代表映射，<span class="math inline">\(N\)</span>代表<span class="math inline">\(p\)</span>点的邻域。<span class="math inline">\(a\)</span>图代表<span class="math inline">\(p\)</span>是一个吸引固点，进入其邻域的点会被吸引到<span class="math inline">\(p\)</span>点、<span class="math inline">\(b\)</span>图代表<span class="math inline">\(p\)</span>是一个排斥固点，进入其邻域的点会被排斥而远离<span class="math inline">\(p\)</span>点、<span class="math inline">\(c\)</span>图代表<span class="math inline">\(p\)</span>是一个鞍点，进入其邻域的点先会被吸引到<span class="math inline">\(p\)</span>点，然后会被排斥而远离<span class="math inline">\(p\)</span>点。来个更直观的图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/saddle.gif" width="450"  />
+</center>
+<p>在《<a href="https://vivounicorn.github.io/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/">最优化原理-梯度下降</a>》这一章我们曾经介绍过常用的一阶最优化方法，给定初始值后，不同的优化方法的优化轨迹不一样，但大的方向都是先被迭代吸引到鞍点，然后再从鞍点被排斥走，而因为待优化问题往往有很多局部最优点，所以我们希望优化算法能尽可能跳出当前点去寻找更优的局部最优点。</p>
+<p>综上所述，显然排斥固点Source和鞍点Saddle的最大特点是：它们都是固点，都不是稳定固点，因为它们对初始条件很敏感，但对研究一个动态系统它们很重要。</p>
+<h3 id="线性映射">6.2.3 线性映射</h3>
+<p>1、<strong>线性映射</strong></p>
+<p>所谓线性映射是指：</p>
+<p>给定实数<span class="math inline">\(a,b\in \mathbb{R}\)</span>及实数向量<span class="math inline">\(v,w \in \mathbb{R}^m\)</span>，有<span class="math inline">\(\mathbb{R}^m\to \mathbb{R}^m\)</span>的映射<span class="math inline">\(A(v)\)</span>满足: <span class="math display">\[A(av+bw)=aA(v)+bA(w)\]</span> 显然原点(0,0)是所有线性映射的固点，且是稳定的，如果它邻域内的点在迭代映射时都趋向于接近固点，则该固点是一个<strong>吸引子</strong>，稍微正式点的定义如下：</p>
+<p>在一个随时间演变的动态系统中，吸引子是一个代表某种稳定状态的数值集合，在给定动态系统初始状态后，系统有着朝该集合所表示的稳态演化的趋势，在吸引子的某个邻域(basin of attraction)范围内，即使系统受到扰动，也会趋向于该稳态。</p>
+<p>后面会大量出现吸引子这个概念。</p>
+<p>2、<strong>鞍点</strong></p>
+<p>如果实数<span class="math inline">\(\lambda\)</span>和实数向量<span class="math inline">\(v\)</span>满足：</p>
+<p><span class="math display">\[Av=\lambda v\]</span> 则它们分别被称为A的特征值和特征向量。</p>
+<p>假设有以下向量关系：</p>
+<p><span class="math display">\[v_{n+1}=Av_n\]</span></p>
+<p>则有递推关系：</p>
+<p><span class="math display">\[
+\begin{align*}
+&amp; v_1=Av_0=\lambda v_0 \\
+&amp; v_2=Av_1=\lambda v_1=\lambda^2v_0 \\
+&amp; ...... \\
+&amp; v_{n+1}=\lambda^n v_0\\
+\end{align*}
+\]</span> 以<span class="math inline">\(\mathbb{R}^2\)</span>上的映射为例：</p>
+<p><span class="math display">\[A(x,y)=(ax,by)\]</span></p>
+<p>表示成矩阵形式： <span class="math display">\[
+Av=
+\left[
+ \begin{matrix}
+   a &amp; 0 \\
+   0 &amp; b
+  \end{matrix}
+  \right]
+  \left[
+ \begin{matrix}
+   x\\
+   y
+  \end{matrix}
+  \right]
+\]</span> 以上过程迭代了<span class="math inline">\(n\)</span>次后得到： <span class="math display">\[
+A^n=
+\left[
+ \begin{matrix}
+   a^n &amp; 0 \\
+   0 &amp; b^n
+  \end{matrix}
+  \right]
+\]</span></p>
+<p>这里就有意思了，<span class="math inline">\(A\)</span>迭代了<span class="math inline">\(n\)</span>次后，把它映射在一个二维平面上，看上去应该是个椭圆形，其中横坐标长度为<span class="math inline">\(|a|^n\)</span>，纵坐标为<span class="math inline">\(|b|^n\)</span>，对于原点的某个邻域<span class="math inline">\(N_\epsilon(0,0)\)</span>同样也是个椭圆，横纵坐标长度分别为<span class="math inline">\(\epsilon|a|^n\)</span>和<span class="math inline">\(\epsilon|b|^n\)</span>，假设<span class="math inline">\(n\to \infty\)</span>，则会有三种情况：</p>
+<p>1、如果<span class="math inline">\(|a|,|b|&lt;1\)</span>，则整个椭圆会收缩到原点(0,0)，原点是Sink；</p>
+<p>2、如果<span class="math inline">\(|a|,|b|&gt;1\)</span>，则整个椭圆会无限过大并远离原点(0,0)，原点是Source；</p>
+<p>3、如果<span class="math inline">\(|a|&gt;1&gt;|b|\)</span>，则整个椭圆的横坐标会无限扩大，而纵坐标会收缩到0，此时原点既不是Sink也不是Source，人们把它叫做Saddle(鞍点)。</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj5o3bpprf1te3jlc6c5qmb2v.png" width="600"  />
+</center>
+<p>假设取：<span class="math inline">\(a=2,b=0.5\)</span>，则： <span class="math display">\[
+A=
+\left[
+ \begin{matrix}
+   2 &amp; 0 \\
+   0 &amp; 0.5
+  \end{matrix}
+  \right]
+\]</span> 经过<span class="math inline">\(n\)</span>次迭代后，得到下图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj6hipk4o5138gi491htcbi93c.png" width="300"  />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1edj6hu8vaf019av52n1d70h263p.png" width="300"  />
+</center>
+<p>3、<strong>双曲(hyperbolic)</strong></p>
+<p>假设A是实数域矩阵，基于它定义了<span class="math inline">\(\mathbb{R}^m\to \mathbb{R}^m\)</span>的线性映射<span class="math inline">\(A(v)\)</span>，则：</p>
+<ul>
+<li><p>如果<span class="math inline">\(A\)</span>的所有特征值的绝对值都小于1，则原点是一个吸引固点Sink;</p></li>
+<li><p>如果<span class="math inline">\(A\)</span>的所有特征值的绝对值都大于1，则原点是一个排斥固点Source;</p></li>
+<li><p>如果<span class="math inline">\(A\)</span>的所有特征值中至少有一个其绝对值大于1，且最少有一个其绝对值小于1，则原点是一个鞍点Saddle。</p></li>
+</ul>
+<p>如果一个映射<span class="math inline">\(A\)</span>，没有一个特征值的绝对值等于1，则我们把<span class="math inline">\(A\)</span>叫做是双曲的，显然有三类双曲映射：Sink、Source、Saddle。</p>
+<h3 id="非线性映射">6.2.4 非线性映射</h3>
+<p>真实世界中，非线性系统远远多于线性系统，而当非线性程度足够高时，系统将出现混沌状态，不过从概念和定义上与线性映射区别不大。前面说的吸引固点和k周期吸引固点都是运动状态可预测的，它们被叫做平庸吸引子，而运动状态不可预测的叫做奇异吸引子(Strange Attractor)。</p>
+<p>同样利用泰勒展开式，在非线性高维空间，导数被扩展为雅克比矩阵(Jacobian matrix)：</p>
+<p><span class="math display">\[f(p+h)\approx f(p)+Df(p)\cdot h\]</span> 其中：</p>
+<p>1、<span class="math inline">\(f=(f_1,f_2,......f_m)\)</span>是<span class="math inline">\(\mathbb{R}^m\)</span>上的映射，<span class="math inline">\(p\in \mathbb{R}^m\)</span></p>
+<p>2、雅可比矩阵<span class="math inline">\(Df(p)\)</span>为： <span class="math display">\[Df(p)=
+\left[
+ \begin{matrix}
+   \frac{\partial f_1}{\partial x_1}(p) &amp; ...... &amp; \frac{\partial f_1}{\partial x_m}(p) \\
+   \frac{\partial f_m}{\partial x_1}(p) &amp; ...... &amp; \frac{\partial f_ms}{\partial x_m}(p)
+  \end{matrix}
+  \right]\]</span></p>
+<p>假设<span class="math inline">\(p\)</span>为固点，满足<span class="math inline">\(f(p)=p\)</span>，则： <span class="math display">\[f(p+h)\approx f(p)+Df(p)\cdot h=p+Df(p)\cdot h\]</span> 即，在<span class="math inline">\(p\)</span>点邻域内对其做一个微小扰动，输出会有<span class="math inline">\(Df(p)\cdot h\)</span>的变化，显然类似线性映射，可以有下面结论：</p>
+<p>假设：<span class="math inline">\(f\)</span>是<span class="math inline">\(\mathbb{R}^m\)</span>上的映射，且<span class="math inline">\(p\in \mathbb{R}^m\)</span>，满足<span class="math inline">\(f(p)=p\)</span>，则：</p>
+<p>1、如果<span class="math inline">\(Df(p)\)</span>没有取值为1的特征值，则<span class="math inline">\(p\)</span>被称作<strong>双曲(hyperbolic)</strong>的，这个词很重要，会在后面多次出现，直观的也挺好理解，1的多少次方都还是1，只有大于1或小于1才会在某个方向上要么吸引要么排斥；</p>
+<p>2、如果<span class="math inline">\(Df(p)\)</span>的每个特征值的绝对值都小于1，那么<span class="math inline">\(p\)</span>是一个吸引固点Sink，也有人叫做<strong>双曲吸引子(hyperbolic attractor)</strong>；</p>
+<p>3、如果<span class="math inline">\(Df(p)\)</span>的每个特征值的绝对值都大于1，那么<span class="math inline">\(p\)</span>是一个排斥固点Source；</p>
+<p>4、如果<span class="math inline">\(m\geq 1\)</span>且<span class="math inline">\(p\)</span>是双曲的，<span class="math inline">\(Df(p)\)</span>至少有一个特征值的绝对值大于1且至少有一个特征值的绝对值小于1，则<span class="math inline">\(p\)</span>是一个鞍点Saddle。</p>
+<p><strong>举个例子</strong>：</p>
+<p>有非线性映射：</p>
+<p><span class="math display">\[f_{a,b}(x,y)=(-x^2+0.4y,x)\]</span> 因为<span class="math inline">\(f(x,y)=(x,y)\)</span>，则有<span class="math inline">\(-x^2+0.4y=x\)</span>且<span class="math inline">\(x=y\)</span> 所以<span class="math inline">\(f\)</span>有两个固点：<span class="math inline">\((0,0),(-0.6,-0.6)\)</span></p>
+<p>其雅克比矩阵为：</p>
+<p><span class="math display">\[Df(x,y)=
+\left[
+ \begin{matrix}
+   -2x &amp; 0.4 \\
+   1 &amp; 0
+  \end{matrix}
+  \right]
+\]</span></p>
+<p>于是：</p>
+<p><span class="math display">\[Df(0,0)=
+\left[
+ \begin{matrix}
+   0 &amp; 0.4 \\
+   1 &amp; 0
+  \end{matrix}
+  \right]
+\]</span></p>
+<p>特征值为：<span class="math inline">\(\pm\sqrt{4}\approx\pm0.632\)</span></p>
+<p><span class="math display">\[Df(-0.6,-0.6)=
+\left[
+ \begin{matrix}
+   1.2 &amp; 0.4 \\
+   1 &amp; 0
+  \end{matrix}
+  \right]
+\]</span></p>
+<p>特征值为：<span class="math inline">\(1.472\)</span>和<span class="math inline">\(-0.272\)</span>，显然，<span class="math inline">\((0,0)\)</span>为双曲吸引子，<span class="math inline">\((-0.6,-0.6)\)</span>为鞍点。</p>
+<h3 id="混沌的演化及结构">6.2.5 混沌的演化及结构</h3>
+<p>用一个简单的抛物线做说明： <span class="math display">\[y=1-rx^2 :0\leq r\leq 1;-1\leq x_n\leq 1\]</span></p>
+<p>将其转化为迭代形式（一般来说，越复杂的非线性方程越无解析解，常常用数值计算中的迭代方法得到解）：</p>
+<p><span class="math display">\[x_{n+1}=1-rx_n^2\]</span></p>
+<p>程序模拟迭代过程： <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 抛物线函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parabola</span>(<span class="params">r, x</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> - r * x**<span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_bifu</span>(<span class="params">iterations, r, x0, last</span>):</span></span><br><span class="line">    ax = plt.subplot(<span class="number">111</span>)</span><br><span class="line">    x = x0</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(iterations):</span><br><span class="line">        x = parabola(r, x)</span><br><span class="line">        <span class="keyword">if</span> i &gt;= (iterations - last):</span><br><span class="line">            ax.plot(r, x, <span class="string">&#x27;,k&#x27;</span>, alpha=<span class="number">.25</span>)</span><br><span class="line"></span><br><span class="line">    ax.set_xlim(<span class="number">0</span>, <span class="number">2</span>)</span><br><span class="line">    ax.set_title(<span class="string">&quot;Bifurcation: y=1-rx^2&quot;</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    n = <span class="number">10000</span></span><br><span class="line">    r = np.linspace(<span class="number">0</span>, <span class="number">2.0</span>, n)</span><br><span class="line">    iterations = <span class="number">1000</span> <span class="comment"># 迭代次数</span></span><br><span class="line">    last = <span class="number">200</span> <span class="comment"># 输出最后若干次迭代</span></span><br><span class="line">    x0 = <span class="number">0.1</span> * np.ones(n) <span class="comment"># 初始点</span></span><br><span class="line">    plot_bifu(iterations, r, x0, last)</span><br></pre></td></tr></table></figure></p>
+其分叉图如下，结构上按照<span class="math inline">\(2^n\)</span>指数级周期性分裂，当<span class="math inline">\(r\approx 1.40\)</span>时，系统进入混沌状态：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei0s9k6138i1ms215b1vut19lc9.png" width="600"  />
+</center>
+对下图红框部分放大看，可以发现一个有趣的东西:
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei1f9j81t94tbv1g3g1dn0jsv19.png" width="600"  />
+</center>
+放大的部分其结构与开始时的整体结构相同，一般叫做分形，于是在混沌中再次出现周期性：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eei1hdcleacos17k51jt31td51m.png" width="600"  />
+</center>
+<p>随着复杂度的提升，系统经历了：稳定态-&gt;周期态-&gt;类周期态-&gt;混沌态。</p>
+<p>还可以再次放大类似的红框区域，但会发现一个普适的规律：</p>
+<p><span class="math display">\[\delta=\lim\limits_{n-&gt;\infty}\frac{r_n-r_{n-1}}{r_{n+1}-r_n}=4.669201609109...\]</span></p>
+<p>其中<span class="math inline">\(r\)</span>是发生混沌现象时的分界点。上面这个常数叫做Feigenbaum常数，它可能是比圆周率更神秘的常数，我没有做更深入的了解，详情可参见论文《<a target="_blank" rel="noopener" href="https://link.springer.com/article/10.1007/BF01020332">Quantitative universality for a class of nonlinear transformations</a>》，换句话说，混沌演化的过程中存在内部规律性，且这种演化过程存在某种“<strong>普适性</strong>”。</p>
+<h3 id="rnn长依赖学习问题">6.2.6 RNN长依赖学习问题</h3>
+<p>这一节主要基于对Yoshua Bengio《<a target="_blank" rel="noopener" href="https://pdfs.semanticscholar.org/d0be/39ee052d246ae99c082a565aba25b811be2d.pdf?_ga=2.228408725.909305177.1596354587-48890951.1581915581">Learning Long-Term Dependencies with Gradient Descent is Difficult</a>》一文的学习，个人认为它是少有的对长依赖学习做出精彩理论研究和证明的文章。</p>
+<p>文章从实验和理论角度证明了：梯度下降算法无法有效学习长依赖（模型在时间t的输出依赖更早时间<span class="math inline">\(t^{&#39;}\ll t\)</span>时的系统状态）。</p>
+<p>一个能学习长依赖的动态系统，至少应该满足以下几个条件：</p>
+<p>1、系统能够存储任意时长的信息； 2、系统鲁棒性强，即使对系统输入做随机波动也不影响系统做出正确输出； 3、系统参数可在合理有限的时间内学习到。</p>
+<ul>
+<li>单节点RNN实验</li>
+</ul>
+<p>设计一个满足以上条件的简单的序列二分类问题：</p>
+给定任意序列：<span class="math inline">\(u_1,...,u_T\)</span>，二分类器<span class="math inline">\(C(u_1,...,u_T)\in \{0,1\}\)</span>，且分类结果只与序列的前<span class="math inline">\(L\)</span>（<span class="math inline">\(L\ll T\)</span>）个输入有关，即： <span class="math display">\[C(u_1,...,u_T)=C(u_1,...,u_L)\]</span> 显然，<span class="math inline">\(L\)</span>之后的信息都是噪声（文中实验采用高斯噪声），如果系统不能有效存储任意时长的信息则无法做正确分类。换句话说，分类器内置了一个latching subsystem（暂且翻译为锁存子系统），这个子系统可以提取分类的关键信息，并存储于子系统的状态变量中。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1een7h4n513ku1b6uq8e9sjk0h9.png" width="600"  />
+</center>
+<p>当<span class="math inline">\(t\leq L\)</span>时，<span class="math inline">\(h_t\)</span>为可学习调整的参数，当<span class="math inline">\(L&lt;t\leq T\)</span>时，<span class="math inline">\(h_t\)</span>为高斯噪声，损失函数为：</p>
+<p><span class="math display">\[C=\frac{1}{2}\sum_{p}(x_T^p-d^p)^2\]</span> 其中<span class="math inline">\(p\)</span>是训练序列的索引，<span class="math inline">\(d^p\)</span>是目标输出，取值0.8代表分类1，取值-0.8代表分类0，$h_t (t = 1,. . . , L) <span class="math inline">\(代表抽取了分类关键信息后的计算结果，显然，直接学习\)</span>h_t$要比用原始输入学习 <span class="math inline">\(h_t(u_t,\theta)\)</span>来的容易，而且不管以上哪种方式，传播误差梯度<span class="math inline">\(\frac{\partial C}{\partial h_t}\)</span>的方法一样，如果因为梯度消失导致<span class="math inline">\(h_t\)</span>都学不出来，更别说<span class="math inline">\(h_t(u_t,\theta)\)</span>了。</p>
+<p>以最简单的RNN为例：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eend2gj51ahg1c30e0id2113u9m.png" width="100"  />
+</center>
+<p><span class="math display">\[
+\begin{align*}
+&amp; y_t^k=f(x_t^k)=tanh(x_t^k) \\
+&amp; x_t^k=wf(x_{t-1}^k)+h_t^k \quad t=1...T\\
+&amp; x_0^0=x_0^1=1\\
+&amp; k \in\{0,1\}\\
+\end{align*}
+\]</span></p>
+如果<span class="math inline">\(w&gt;1\)</span>，则以上动态系统有两个双曲吸引子，即下图的<span class="math inline">\((\pm x^*,\pm y^*)\)</span>：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eengrro49501c9ur94d581t541g.png" width="600"  />
+</center>
+<p>依据《<a target="_blank" rel="noopener" href="http://ai.dinfo.unifi.it/paolo/ps/tkde93.pdf">Unified integration of explicit rules and learning by example in recurrent networks</a>》的证明，假设初始状态是<span class="math inline">\((-x^*,-y^*)\)</span>，则存在<span class="math inline">\(h^*\)</span>使得：</p>
+<p>1、如果<span class="math inline">\(|h_t|&lt;h^*\)</span>，<span class="math inline">\(\forall t\)</span>，<span class="math inline">\(y_t\)</span>的符号可以保持不变，即在负向<span class="math inline">\((-x^*,-y^*)\)</span>吸引子邻域的点会被吸引；</p>
+<p>2、存在有限步数<span class="math inline">\(L_1\)</span>，如果<span class="math inline">\(h_t&gt;h^*\)</span>，<span class="math inline">\(\forall t \leq L_1\)</span>，使得<span class="math inline">\(y_{L1}&gt;y^*\)</span>，即超过<span class="math inline">\((-x^*,-y^*)\)</span>吸引子邻域的点会被吸引到正向吸引子<span class="math inline">\((x^*,y^*)\)</span>。</p>
+<p>当<span class="math inline">\(w\)</span>取固定值时，<span class="math inline">\(L_1\)</span> 随着 <span class="math inline">\(|h_t|\)</span> 增加而减小。</p>
+<p>总结如下：</p>
+<p>1、上述简单的系统可以锁存1 bit信息（即输出的符号变化与否）；</p>
+<p>2、系统通过对一个大的输入保持足够长的时间来存储信息（<span class="math inline">\(|h_t|&gt;h^*\)</span>）；</p>
+<p>3、对输入做微小的噪声扰动，即使时间很长也不会改变激活函数输出的符号；</p>
+<p>4、<span class="math inline">\(w\)</span>也是可学习的，当<span class="math inline">\(T\gg L\)</span>时，要求<span class="math inline">\(w&gt;1\)</span>，此时会生成正负向两个吸引子，且<span class="math inline">\(w\)</span>越大，相应的阈值<span class="math inline">\(h^*\)</span>越大，因此系统鲁棒性越强。</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eeniuive1ehfgojdr31s7t4302d.png" width="450"  />
+</center>
+上图加粗的点展示了系统成功学出来的3个<span class="math inline">\(h_t\)</span>（<span class="math inline">\(h_1,...,h_L\)</span>）。 5、实验结果： 1)、下图a，取<span class="math inline">\(L=3\)</span>，<span class="math inline">\(T=20\)</span>做实验，发现随着高斯噪声的标准差增大，<span class="math inline">\(w_0\)</span>变小，系统收敛性越来越差。 2)、下图b，取高斯噪声<span class="math inline">\(s=0.2\)</span>，<span class="math inline">\(w_0=1.25\)</span>做实验，发现随着<span class="math inline">\(T\)</span> 的增加，系统收敛性越来越差，即在这么简单的系统中，梯度下降算法想长时间稳定的存储1 bit信息都很困难。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eenjfahi1kov1bf4igd13rd10pk37.png" width="600"  />
+</center>
+<ul>
+<li>混沌理论角度的解释</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef3r2gohi481di0af21v9vn859.png" width="450"  />
+</center>
+<p>回忆前几节关于映射及吸引子、双曲吸引子的说明，围绕着吸引子(attractor)有几个相关定义：</p>
+<p>1、basin of attractor：其实就是吸引子的邻域：</p>
+<p><span class="math display">\[\beta(X)=\{p\in \mathbb{R}^m :\forall \epsilon,\exists x \in X s.t.||f(p)-x||&lt;\epsilon \}\]</span></p>
+<p>2、reduced attractor set：其实就是被<strong>双曲吸引子</strong>强吸引的点集合：</p>
+<p><span class="math display">\[\Gamma(X)=\{p\in \mathbb{R}^m :f&#39;(p)的所有特征值都小于1\}\]</span> 直观展示它们的关系如上图,显然：</p>
+<p><span class="math display">\[X \subset \Gamma(X) \subset \beta(X) \]</span> 如果任意时刻对一个锁存子系统的输入做微小扰动后都落在该系统双曲吸引子的reduced attractor set中，即图中<span class="math inline">\(\Gamma(X)\)</span>，则该锁存系统具有鲁棒性。</p>
+<p>3、对于双曲吸引子<span class="math inline">\(X\)</span>邻域内的点<span class="math inline">\(a\)</span>，如果在<span class="math inline">\(\beta(X)\)</span>但不在<span class="math inline">\(\Gamma(X)\)</span>中，则不确定性会随着<span class="math inline">\(t\)</span>的增加而呈指数增加，最终微小的扰动会让<span class="math inline">\(a\)</span>远离<span class="math inline">\(x\)</span>而进入其他吸引子的邻域，如下图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef93p7r11rsmv6aop414ud1aqs19.png" width="500"  />
+</center>
+<p>证明：</p>
+<p>假设<span class="math inline">\(\exists u\)</span>，满足<span class="math inline">\(\left\|u\right\|=1\)</span>及<span class="math inline">\(\left\|f&#39;(x)u\right\|&gt;1\)</span>，则根据泰勒展开式，对一个很小的值<span class="math inline">\(\lambda\)</span>有：</p>
+<p><span class="math display">\[f(x+\lambda u)=f(x)+f&#39;(x)\lambda u+O(\left\|\lambda u\right\|^2)\]</span></p>
+<p>对一个开放集合<span class="math inline">\(U(x)\)</span>，存在一个很小的值<span class="math inline">\(\lambda\)</span>，使得<span class="math inline">\(x+\lambda u \in U(x)\)</span>，且<span class="math inline">\(O(\left\|\lambda u\right\|^2)&lt;\lambda\left\|f&#39;(x)u\right\|-\lambda\)</span>。另<span class="math inline">\(y=x+\lambda u\)</span>，则根据三角不等式有：</p>
+<p><span class="math display">\[\left\|-f&#39;(x)\lambda u\right\|-\left\|f(y)-f(x)\right\|&lt;\left\|-f&#39;(x)\lambda u+f(y)-f(x)\right\|\]</span></p>
+<p>而：</p>
+<p><span class="math display">\[\left\|-f&#39;(x)\lambda u+f(y)-f(x)\right\|=\left\|O(\left\|\lambda u\right\|^2)\right\|&lt;\lambda\left\|f&#39;(x)u\right\|-\lambda\]</span></p>
+<p>所以有：</p>
+<p><span class="math display">\[\lambda \left\|f&#39;(x)u\right\|-\left\|f(y)-f(x)\right\|&lt;\lambda\left\|f&#39;(x)u\right\|-\lambda\]</span></p>
+<p>从而得到：</p>
+<p><span class="math display">\[\left\|f(y)-f(x)\right\|&gt;\lambda=\left\|y-x\right\|\]</span></p>
+<p>即：对<span class="math inline">\(x\)</span>的微小扰动会使得<span class="math inline">\(f(x)\)</span>的变化“幅度”增大。</p>
+<p>4、一个具有鲁棒性的锁存子系统特点是：即使对系统输入有微小扰动，只要每次迭代时<span class="math inline">\(a_t\)</span>都在双曲吸引子<span class="math inline">\(X\)</span>的<span class="math inline">\(\Gamma(X)\)</span>内，则最终会被吸引收敛到双曲吸引子<span class="math inline">\(X\)</span>附近。如下图：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1ef97as8ol8kr301q571g01l012c.png" width="500"  />
+</center>
+<p>5、动态系统要想做到鲁棒性的锁存信息，则会出现梯度消失现象(gradient vanishing)，鱼与熊掌不可兼得。 一个通用的动态系统可以表示为：</p>
+<p><span class="math display">\[a_{t}=f(a_{t-1})+x_t,\{a,x\}\in \mathbb{R}^m\]</span></p>
+<p>其中<span class="math inline">\(a_t\)</span>和<span class="math inline">\(x_t\)</span>分别是<span class="math inline">\(t\)</span>时刻系统状态向量和<span class="math inline">\(t\)</span>时刻外部输入向量，根据导数的定义和双曲吸引子的性质有：</p>
+<p><span class="math display">\[|\frac{\partial a_t}{\partial_{a_{t-1}}}|=|f&#39;(a_{t-1})|&lt;1\]</span></p>
+<p>显然，当<span class="math inline">\(t\rightarrow \infty\)</span>时，<span class="math inline">\(\frac{\partial a_t}{\partial_{a_{0}}}\rightarrow 0\)</span>，梯度消失！</p>
+<h2 id="lstm">6.3 LSTM</h2>
+<p>上面两节从原理角度说明了RNN为什么很难学到长依赖，而本节的LSTM是一个伟大的和具有里程碑的模型，最著名的论文是Sepp Hochreiter 与 Jurgen Schmidhuber的《<a target="_blank" rel="noopener" href="https://www.bioinf.jku.at/publications/older/2604.pdf">Long Short-Term Memory</a> 》（没错，就是那位怼天怼地怼各种权威的Schmidhuber），从原理上分析解决了RNN学习长依赖中的梯度爆炸(blow up)和梯度消失(vanish)问题，大部分文章只介绍了LSTM的结构，我希望通过本文能抛砖引玉，了解作者为什么这么设计结构。</p>
+<h3 id="基本原理-1">6.3.1 基本原理</h3>
+<p>回忆6.1节末的RNN任意两层隐藏层</p>
+<p><span class="math display">\[
+\delta_{pj}(t-1)=\sum_h^m\delta_{ph}(t)u_{hj}f^{&#39;}(s_{pj}(t-1))
+\]</span></p>
+<p>其中：<span class="math inline">\(h\)</span>是在<span class="math inline">\(t\)</span>时刻的任何一个隐层节点，<span class="math inline">\(j\)</span>是在<span class="math inline">\(t-1\)</span>时刻的任何一个隐层节点，高层的<span class="math inline">\(\delta\)</span>可以通过循环递归的计算出来，所有<span class="math inline">\(\delta\)</span>计算完毕后累加求和并应用在<span class="math inline">\(U\)</span>、<span class="math inline">\(V\)</span>的权重更新中。</p>
+<p>误差从<span class="math inline">\(t\)</span>时刻的隐藏层<span class="math inline">\(h\)</span>节点经过任意<span class="math inline">\(q\)</span>步往<span class="math inline">\(t-q\)</span>时刻的隐藏层<span class="math inline">\(j\)</span>节点做反向传播的传播速度如下：</p>
+<p><span class="math display">\[
+\frac{\partial{\delta_{pj}(t-q)}}{\partial{\delta_{ph}(t)}}=\left\{
+    \begin{array}{**lr**}  
+    f^{&#39;}(s_{pj}(t-1))u_{hj} &amp; q=1 \\  
+    f^{&#39;}(s_{pj}(t-1)) \sum_{i=1}^m \frac{\partial{\delta_{pi}(t-q+1)}}{\partial{\delta_{ph}(t)}}u_{hj}  &amp; q&gt;1
+\end{array} 
+\right. 
+\]</span></p>
+<p>把上面式子完全展开后得到：</p>
+<p><span class="math display">\[
+\frac{\partial{\delta_{pj}(t-q)}}{\partial{\delta_{ph}(t)}}=\sum_{i_1=1}^m...\sum_{i_{q-1}=1}^m\prod_{m=1}^qf^{&#39;}(s_{i_m}(t-m))u_{i_mi_{m-1}} 
+\]</span></p>
+<p>大家会发现整个误差反向传播速度是由$<em>{m=1}<sup>qf</sup>{'}(s</em>{i_m}(t-m))u_{i_mi_{m-1}} $决定的：</p>
+<p>1、如果<span class="math inline">\(|f^{&#39;}(s_{i_m}(t-m))u_{i_mi_{m-1}}|&gt;1\)</span>，则连乘的结果会随着<span class="math inline">\(q\)</span>的增加呈指数形式增大，误差反向传播出现梯度爆炸；</p>
+<p>2、如果<span class="math inline">\(|f^{&#39;}(s_{i_m}(t-m))u_{i_mi_{m-1}}|&lt;1\)</span>，则连乘的结果会随着<span class="math inline">\(q\)</span>的增加呈指数形式减小，误差反向传播出现梯度消失。</p>
+假设以最简单的RNN为例，即：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1eend2gj51ahg1c30e0id2113u9m.png" width="100"  />
+</center>
+<p>在<span class="math inline">\(t\)</span>时刻的反向误差传播为：</p>
+<p><span class="math display">\[\delta_{h}(t)=\delta_{h}(t+1)u_{hh}f^{&#39;}(s_{h}(t))\]</span> 其中：<span class="math inline">\(s_{h}(t)=f(net_h(t))\)</span>。要想不出现梯度爆炸或消失，只能满足：</p>
+<p><span class="math display">\[u_{hh}f^{&#39;}(s_{h}(t))=1\]</span></p>
+<p>对上式积分下，得到：</p>
+<p><span class="math display">\[f(s_{h}(t))=\frac{s_h(t)}{u_{hh}}\]</span></p>
+<p>这意味着，函数<span class="math inline">\(f\)</span>必须是线性的，显然，当<span class="math inline">\(u_{hh}=1\)</span>时，有恒等映射函数<span class="math inline">\(f(x)=x\)</span>，上述关系也叫constant error carrousel(CEC)，CEC在LSTM的结构设计中举足轻重。</p>
+以输入权重为例，由于实际场景中除了自连接节点外，还会有其他输入节点，为简单起见，我们只关注一个额外的输入权重<span class="math inline">\(w_{ji}\)</span> 。假设通过响应某个输入而开启神经网络单元<span class="math inline">\(j\)</span>，并为了减少总误差，希望它能被长时间激活。显然，对同一个输入权重一方面要存储某些输入范式，一方面又要忽略其他输入范式，而涉及<span class="math inline">\(j\)</span>节点的函数(上面的CEC)又是线性的，所以对<span class="math inline">\(w_{ji}\)</span>而言，这些信号会试图让它既得通过开启<span class="math inline">\(j\)</span>单元对输入做存储又需要防止<span class="math inline">\(j\)</span>单元被其他输入关闭，这种情况使得学习变得困难。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/lstm-focus%5B0%5D.png" width="450"  />
+</center>
+<p>对于输出权重，也存在类似的输出冲突，这里就不在赘述。 为了解决上面的输入和输出冲突，LSTM抽象了1个记忆单元（Memory Cel l）、设计了1个基础结构——遗忘门（Forget Gate）和2个组合结构——输入门（Input Gate）和输出门（Output Gate）来解决冲突。</p>
+<p>0、记忆单元是对包含CEC线性单元的抽象，如下图（以RNN作为对比），包含当前时刻输入、上个隐层节点的状态、当前时刻输出、当前时刻隐层节点状态。：</p>
+<center>
+RNN <img src="https://vivounicorn.github.io/images/ai_chapter_6/LSTM3-SimpleRNN%5B0%5D..png" width="500"  />
+</center>
+<center>
+LSTM <img src="https://vivounicorn.github.io/images/ai_chapter_6/LSTM3-chain%5B0%5D..png" width="500"  />
+</center>
+1、遗忘门的结构如下图：它将上一个隐层的状态<span class="math inline">\(h_{t-1}\)</span>和当前输入<span class="math inline">\(x_t\)</span>合并后送入logistic函数<span class="math inline">\(f(x)=\frac{1}{1+e^{-w^Tx}}\)</span>，由于该函数输出为0~1之间，输出接近1的被保留，接近0的被丢掉，也就是说，<strong>遗忘门决定了哪些历史信息要被保留</strong>。
+<center>
+Forget Gate <img src="https://vivounicorn.github.io/images/ai_chapter_6/forget-gate.png" width="450"  />
+</center>
+<p>2、输入门的结构如下图：它将上一个隐层的状态<span class="math inline">\(h_{t-1}\)</span>和当前输入<span class="math inline">\(x_t\)</span>合并后送入Logistic函数，输出介于0～1之间，同样的，0表示信息不重要，1表示信息重要；同时，<span class="math inline">\(h_{t-1}\)</span>和<span class="math inline">\(x_t\)</span>合并后的输入被送入Tanh函数，输出介于-1～1之间，Logistic的输出与Tanh的输出相乘后决定哪些Tanh的输出信息需要保留，哪些要丢掉，也就是说，<strong>输入门决定了哪些新的信息要被加进来</strong>。</p>
+<center>
+Input Gate <img src="https://vivounicorn.github.io/images/ai_chapter_6/input-gate.png" width="450"  />
+</center>
+前一个记忆单元的输出与遗忘门输出相乘后，可以选择性忘记不重要的信息，之后与输入门的结果相加，把新的输入信息纳入进来，最终得到当前记忆单元的输出，比较好解决了输入冲突，如下图：
+<center>
+Cell Output <img src="https://vivounicorn.github.io/images/ai_chapter_6/output.png" width="450"  />
+</center>
+<p>3、输出门的结构如下图：它主要解决<strong>隐藏层</strong>状态的输出冲突问题，它将上一个隐层的状态<span class="math inline">\(h_{t-1}\)</span>和当前输入<span class="math inline">\(x_t\)</span>合并后送入Logistic函数，输出介于0～1之间，然后与当前记忆单元的输出通过Tanh函数变换后的结果相乘，得到当前隐藏层的状态，也就是说，<strong>输出门决定了当前隐藏层要携带哪些历史信息</strong>，比较好解决了输出冲突。</p>
+<center>
+Output Gate <img src="https://vivounicorn.github.io/images/ai_chapter_6/output-gate.png" width="450"  />
+</center>
+<p>以上图片来源于：《<a target="_blank" rel="noopener" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a>》一文，非常不错的一篇LSTM入门文章。后续也有各种各样对经典LSTM的改进（如GRU），但整体上不如LSTM经典（截止2020.10.10在Google Scholar上查寻到该论文已经被引用了37851次，成为20世纪“最火论文”）。</p>
+<p>除了比较完美解决了输入输出冲突外，LSTM的计算和存储复杂度并不高，权重更新计算的复杂度为O(W)，即与权重总个数线性相关；存储方面也不像使用全流程BPTT的传统方法，要存储大量历史节点信息，LSTM只需要存储一定历史时间步的局部信息。</p>
+<h3 id="代码实践-1">6.3.2 代码实践</h3>
+<p>本节以经典的《古诗词生成》为例子，介绍下LSTM的一种应用，以下例子只供娱乐使用。</p>
+<p>问题描述如下：</p>
+<p>“给定五言绝句的首句，生成整首共4句的五言绝句。”</p>
+<p>例如，输入：“月暗竹亭幽，”，输出“月暗竹亭幽，碧昏时尽黄。园春歌雪光，云落分白草。”。</p>
+<p><strong>完整代码在：https://github.com/vivounicorn/LstmApp.git</strong>，其中，data文件夹里包含了训练好的word2vec模型和迭代了2k+次的模型，可以直接做fine-tune。</p>
+<p><strong>1、算法步骤</strong></p>
+<p>Step-1：爬取古诗词作为原始数据； Step-2：清洗原始数据，去掉不符合五言绝句的诗词； Step-3：准备训练数据和相应的标注； Step-4：若使用word2vec生成的词向量，则需要生成相关模型； Step-5：构建以LSTM层和全连接层为主的神经网络； Step-6：训练和验证模型，并做应用。</p>
+<p><strong>2、实现详情</strong></p>
+<ul>
+<li><p><strong>Step-1，爬取古诗词作为原始数据</strong></p>
+<p>用开源工具爬取：https://www.gushiwen.org/上的诗句。解析结果的基本格式为：“诗词标题：诗词内容”。</p></li>
+<li><p><strong>Step-2，数据清洗</strong> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_build_base</span>(<span class="params">self,</span></span></span><br><span class="line"><span class="params"><span class="function">                file_path,</span></span></span><br><span class="line"><span class="params"><span class="function">                vocab=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                word2idx=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                idx2word=<span class="literal">None</span></span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    To scan the file and build vocabulary and so on.</span></span><br><span class="line"><span class="string">    :param file_path: the file path of poetic corpus, one poem per line.</span></span><br><span class="line"><span class="string">    :param vocab: the vocabulary.</span></span><br><span class="line"><span class="string">    :param word2idx: the mapping of word to index.</span></span><br><span class="line"><span class="string">    :param idx2word: the mapping of index to word</span></span><br><span class="line"><span class="string">    :return: None.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 去掉无关字符</span></span><br><span class="line">    pattern = re.<span class="built_in">compile</span>(<span class="string">u&quot;_|\(|（|《&quot;</span>)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&quot;r&quot;</span>, encoding=<span class="string">&#x27;UTF-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                line = line.strip(<span class="string">u&#x27;\n&#x27;</span>)</span><br><span class="line">                title, content = line.strip(SPACE).split(<span class="string">u&#x27;:&#x27;</span>)</span><br><span class="line">                content = content.replace(SPACE, <span class="string">u&#x27;&#x27;</span>)</span><br><span class="line">                idx = re.search(pattern, content)</span><br><span class="line">                <span class="keyword">if</span> idx <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                    content = content[:idx.span()[<span class="number">0</span>]]</span><br><span class="line">                <span class="comment"># 把指定长度的诗词选出来，如：五言绝句。</span></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">len</span>(content) &lt; self.embedding_input_length:  <span class="comment"># Filter data according to embedding input</span></span><br><span class="line">                    <span class="comment"># length to improve accuracy.</span></span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">                words = []</span><br><span class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(content)):</span><br><span class="line">                    word = content[i:i + <span class="number">1</span>]</span><br><span class="line">                    <span class="keyword">if</span> (i + <span class="number">1</span>) % self.embedding_input_length == <span class="number">0</span> <span class="keyword">and</span> word <span class="keyword">not</span> <span class="keyword">in</span> [<span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;,&#x27;</span>, <span class="string">&#x27;，&#x27;</span>, <span class="string">&#x27;.&#x27;</span>, <span class="string">&#x27;。&#x27;</span>]:</span><br><span class="line">                        words = []</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line">                    words.append(word)</span><br><span class="line">                    self.all_words.append(word)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">len</span>(words) &gt; <span class="number">0</span>:</span><br><span class="line">                    self.poetrys.append(words)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                log.error(<span class="built_in">str</span>(e))</span><br><span class="line">    <span class="comment"># 生成词汇表，保留出现频次top n的字</span></span><br><span class="line">    <span class="keyword">if</span> vocab <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        top_n = Counter(self.all_words).most_common(self.vocab_size - <span class="number">1</span>)</span><br><span class="line">        top_n.append(SPACE)</span><br><span class="line">        self.vocab = <span class="built_in">sorted</span>(<span class="built_in">set</span>([i[<span class="number">0</span>] <span class="keyword">for</span> i <span class="keyword">in</span> top_n]))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        top_n = <span class="built_in">list</span>(vocab)[:self.vocab_size - <span class="number">1</span>]</span><br><span class="line">        top_n.append(SPACE)</span><br><span class="line">        self.vocab = <span class="built_in">sorted</span>(<span class="built_in">set</span>([i <span class="keyword">for</span> i <span class="keyword">in</span> top_n]))  <span class="comment"># cut vocab with threshold.</span></span><br><span class="line"></span><br><span class="line">    log.debug(self.vocab)</span><br><span class="line">    <span class="comment"># 生成“字”到“编号”的映射，把每个字做了唯一编号，“空格”也做编号</span></span><br><span class="line">    <span class="keyword">if</span> word2idx <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        self.word2idx = <span class="built_in">dict</span>((c, i) <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.vocab))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.word2idx = word2idx</span><br><span class="line">    <span class="comment"># 生成“编号”到“字”的映射</span></span><br><span class="line">    <span class="keyword">if</span> idx2word <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        self.idx2word = <span class="built_in">dict</span>((i, c) <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.vocab))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        self.idx2word = idx2word</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Function of mapping word to index.</span></span><br><span class="line">    <span class="comment"># 以 “字” 查找 “编号”的函数，没在词汇表的“字”用“空格”的编号代替</span></span><br><span class="line">    self.w2i = <span class="keyword">lambda</span> word: self.word2idx.get(<span class="built_in">str</span>(word)) <span class="keyword">if</span> self.word2idx.get(word) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> \</span><br><span class="line">        <span class="keyword">else</span> self.word2idx.get(SPACE)</span><br><span class="line">    <span class="comment"># Function of mapping index to word.</span></span><br><span class="line">    <span class="comment"># 以 “编号”查找 “字” 的函数，找不到的“字”用“空格”代替</span></span><br><span class="line">    self.i2w = <span class="keyword">lambda</span> idx: self.idx2word.get(<span class="built_in">int</span>(idx)) <span class="keyword">if</span> self.idx2word.get(<span class="built_in">int</span>(idx)) <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> \</span><br><span class="line">        <span class="keyword">else</span> SPACE</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Full vectors.</span></span><br><span class="line">    <span class="comment"># 把文本表示的诗词变成由“编号”表示的向量，如：“床前明月光，”变成[1,2,3,4,5,6]</span></span><br><span class="line">    self.poetrys_vector = [<span class="built_in">list</span>(<span class="built_in">map</span>(self.w2i, poetry)) <span class="keyword">for</span> poetry <span class="keyword">in</span> self.poetrys]</span><br><span class="line">    self._data_size = <span class="built_in">len</span>(self.poetrys_vector)</span><br><span class="line">    self._data_index = np.arange(self._data_size)</span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>Step-3：准备训练数据</strong></p>
+<p>原理是：根据指定的输入长度(input length)截取序列并生成特征数据，指定这个序列的下一个字为“标注”。</p>
+<p>例如：“菩提本无树，明镜亦非台。”，以五言绝句为例，输入长度为6（包括标点符号），可以生成以下样本：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">特征</th>
+<th style="text-align: center;">标注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">菩提本无树，</td>
+<td style="text-align: center;">明</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">提本无树，明</td>
+<td style="text-align: center;">镜</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">本无树，明镜</td>
+<td style="text-align: center;">亦</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">无树，明镜亦</td>
+<td style="text-align: center;">非</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">树，明镜亦非</td>
+<td style="text-align: center;">台</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">，明镜亦非台</td>
+<td style="text-align: center;">。</td>
+</tr>
+</tbody>
+</table>
+<p>对每个字，支持两种编码方式：基于词汇表的one hot和基于语义distributed representation的word2vec。</p>
+<p><strong>1、One-hot</strong></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_one_hot_encoding</span>(<span class="params">self, sample</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    One-hot encoding for a sample, a sample will be split into multiple samples.</span></span><br><span class="line"><span class="string">    :param sample: a sample. [1257, 6219, 3946]</span></span><br><span class="line"><span class="string">    :return: feature and label. feature:[[0,0,0,1,0,0,......],</span></span><br><span class="line"><span class="string">                                        [0,0,0,0,0,1,......],</span></span><br><span class="line"><span class="string">                                        [1,0,0,0,0,0,......]];</span></span><br><span class="line"><span class="string">                                label:  [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0......]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(sample) != <span class="built_in">list</span> <span class="keyword">or</span> <span class="number">0</span> == <span class="built_in">len</span>(sample):</span><br><span class="line">        log.error(<span class="string">&quot;type or length of sample is invalid.&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    feature_samples = []</span><br><span class="line">    label_samples = []</span><br><span class="line">    idx = <span class="number">0</span></span><br><span class="line">    <span class="comment"># embedding_input_length即为输入窗口长度，五言绝句为6，当然也可以取其他值，但会影响训练精度和时间。</span></span><br><span class="line">    <span class="keyword">while</span> idx &lt; <span class="built_in">len</span>(sample) - self.embedding_input_length:</span><br><span class="line">        feature = sample[idx: idx + self.embedding_input_length]</span><br><span class="line">        label = sample[idx + self.embedding_input_length]</span><br><span class="line"></span><br><span class="line">        label_vector = np.zeros(</span><br><span class="line">            shape=(<span class="number">1</span>, self.vocab_size),</span><br><span class="line">            dtype=np.<span class="built_in">float</span></span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 序列的下一个字为标注</span></span><br><span class="line">        label_vector[<span class="number">0</span>, label] = <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">        feature_vector = np.zeros(</span><br><span class="line">            shape=(<span class="number">1</span>, self.embedding_input_length, self.vocab_size),</span><br><span class="line">            dtype=np.<span class="built_in">float</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 根据词汇表，相应的编号赋值为1，其余都是0.</span></span><br><span class="line">        <span class="keyword">for</span> i, f <span class="keyword">in</span> <span class="built_in">enumerate</span>(feature):</span><br><span class="line">            feature_vector[<span class="number">0</span>, i, f] = <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">        idx += <span class="number">1</span></span><br><span class="line">        feature_samples.append(feature_vector)</span><br><span class="line">        label_samples.append(label_vector)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> feature_samples, label_samples</span><br></pre></td></tr></table></figure> 假设输入长度为6，词汇表维度为8000，则，对于一个样本有：</p>
+<p>特征矩阵为：1×6<em>8000 标注向量为：1</em>8000</p>
+<center>
+<p><img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdpl8qlgg6q6l18gt1udq177i9.png" width="600"  /></p>
+</center>
+<p><strong>2、Word2vec</strong></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_word2vec_encoding</span>(<span class="params">self, sample</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    word2vec encoding for sample, a sample will be split into multiple samples.</span></span><br><span class="line"><span class="string">    :param sample: a sample. [1257, 6219, 3946]</span></span><br><span class="line"><span class="string">    :return: feature and label.feature:[[0.01,0.23,0.05,0.1,0.33,0.25,......],</span></span><br><span class="line"><span class="string">                                        [0.23,0.45,0.66,0.32,0.11,1.03,......],</span></span><br><span class="line"><span class="string">                                        [1.22,0.99,0.68,0.7,0.8,0.001,......]];</span></span><br><span class="line"><span class="string">                                label:  [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0......]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(sample) != <span class="built_in">list</span> <span class="keyword">or</span> <span class="number">0</span> == <span class="built_in">len</span>(sample):</span><br><span class="line">        log.error(<span class="string">&quot;type or length of sample is invalid.&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">    feature_samples = []</span><br><span class="line">    label_samples = []</span><br><span class="line">    idx = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> idx &lt; <span class="built_in">len</span>(sample) - self.embedding_input_length:</span><br><span class="line">        feature = sample[idx: idx + self.embedding_input_length]</span><br><span class="line">        label = sample[idx + self.embedding_input_length]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> self.w2v_model <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            log.error(<span class="string">&quot;word2vec model is none.&quot;</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">        label_vector = np.zeros(</span><br><span class="line">            shape=(<span class="number">1</span>, self.vocab_size),</span><br><span class="line">            dtype=np.<span class="built_in">float</span></span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># 序列的下一个字为标注</span></span><br><span class="line">        label_vector[<span class="number">0</span>, label] = <span class="number">1.0</span></span><br><span class="line"></span><br><span class="line">        feature_vector = np.zeros(</span><br><span class="line">            shape=(<span class="number">1</span>, self.embedding_input_length, self.w2v_model.size),</span><br><span class="line">            dtype=np.<span class="built_in">float</span></span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 用训练好的word2vec模型获取相应“字”的语义向量</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.embedding_input_length):</span><br><span class="line">            feature_vector[<span class="number">0</span>, i] = self.w2v_model.get_vector(feature[i])</span><br><span class="line"></span><br><span class="line">        idx += <span class="number">1</span></span><br><span class="line">        feature_samples.append(feature_vector)</span><br><span class="line">        label_samples.append(label_vector)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> feature_samples, label_samples</span><br></pre></td></tr></table></figure> 假设输入长度为6，词的语义向量维度为200，则，对于一个样本有：</p>
+<p>特征矩阵为：1×6<em>200 标注向量为：1</em>8000</p>
+<center>
+<p><img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdqc2sgvspaoa18uk1bqs1t87m.png" width="600"  /></p>
+</center></li>
+<li><p><strong>Step-4：基于word2vec训练词向量</strong></p>
+<p>使用dump函数将训练数据相关数据结构dump下来，其中poetrys_words.dat文件可直接作为word2vec的训练数据（注：要训练的是<strong>字粒度</strong>的语义向量），文件内容类似这样，一行一首诗，字与字空格分割：</p>
+<p>寒 随 穷 律 变 ， 春 逐 鸟 声 开 。 初 风 飘 带 柳 ， 晚 雪 间 花 梅 。 碧 林 青 旧 竹 ， 绿 沼 翠 新 苔 。 芝 田 初 雁 去 ， 绮 树 巧 莺 来 。 晚 霞 聊 自 怡 ， 初 晴 弥 可 喜 。 日 晃 百 花 色 ， 风 动 千 林 翠 。 池 鱼 跃 不 同 ， 园 鸟 声 还 异 。 寄 言 博 通 者 ， 知 予 物 外 志 。</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dump_data</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    To dump: poetry&#x27;s words list, poetry&#x27;s words vectors, poetry&#x27;s words vectors for training,</span></span><br><span class="line"><span class="string">             poetry&#x27;s words vectors for testing, poetry&#x27;s words vectors for validation,</span></span><br><span class="line"><span class="string">             poetry&#x27;s words vocabulary, poetry&#x27;s word to index mapping,poetry&#x27;s index to word mapping.</span></span><br><span class="line"><span class="string">    :return: None</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    org_filename = self.dump_dir + <span class="string">&#x27;poetrys_words.dat&#x27;</span></span><br><span class="line">    self._dump_list(org_filename, self.poetrys)</span><br><span class="line"></span><br><span class="line">    vec_filename = self.dump_dir + <span class="string">&#x27;poetrys_words_vector.dat&#x27;</span></span><br><span class="line">    self._dump_list(vec_filename, self.poetrys_vector)</span><br><span class="line"></span><br><span class="line">    train_vec_filename = self.dump_dir + <span class="string">&#x27;poetrys_words_train_vector.dat&#x27;</span></span><br><span class="line">    self._dump_list(train_vec_filename, self.poetrys_vector_train)</span><br><span class="line"></span><br><span class="line">    valid_vec_filename = self.dump_dir + <span class="string">&#x27;poetrys_words_valid_vector.dat&#x27;</span></span><br><span class="line">    self._dump_list(valid_vec_filename, self.poetrys_vector_valid)</span><br><span class="line"></span><br><span class="line">    test_vec_filename = self.dump_dir + <span class="string">&#x27;poetrys_words_test_vector.dat&#x27;</span></span><br><span class="line">    self._dump_list(test_vec_filename, self.poetrys_vector_test)</span><br><span class="line"></span><br><span class="line">    vocab_filename = self.dump_dir + <span class="string">&#x27;poetrys_vocab.dat&#x27;</span></span><br><span class="line">    self._dump_list(vocab_filename, <span class="built_in">list</span>(self.vocab))</span><br><span class="line"></span><br><span class="line">    w2i_filename = self.dump_dir + <span class="string">&#x27;poetrys_word2index.dat&#x27;</span></span><br><span class="line">    self._dump_dict(w2i_filename, self.word2idx)</span><br><span class="line"></span><br><span class="line">    i2w_filename = self.dump_dir + <span class="string">&#x27;poetrys_index2word.dat&#x27;</span></span><br><span class="line">    self._dump_dict(i2w_filename, self.idx2word)</span><br></pre></td></tr></table></figure></p>
+<p>模型方面直接使用gensim包，定义如下，根据参数不同，可以训练得到基于CBOW或SkipGram的语义向量，我们这种规模下，本质上没有太大差别，我们这里使用SkipGram。</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> gensim</span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> Word2Vec</span><br><span class="line"><span class="keyword">from</span> gensim.models.word2vec <span class="keyword">import</span> LineSentence</span><br><span class="line"><span class="keyword">import</span> multiprocessing</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> src.config <span class="keyword">import</span> Config</span><br><span class="line"><span class="keyword">from</span> src.utils <span class="keyword">import</span> Logger</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Word2vecModel</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Word2vec model class.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self,</span></span></span><br><span class="line"><span class="params"><span class="function">                 cfg_path=<span class="string">&#x27;/home/zhanglei/Gitlab/LstmApp/config/cfg.ini&#x27;</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                 is_ns=<span class="literal">False</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        To initialize model.</span></span><br><span class="line"><span class="string">        :param cfg_path: he path of configration file.</span></span><br><span class="line"><span class="string">        :param model_type:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">        cfg = Config(cfg_path)</span><br><span class="line">        <span class="keyword">global</span> log</span><br><span class="line">        log = Logger(cfg.model_log_path())</span><br><span class="line">        self.model = <span class="literal">None</span></span><br><span class="line">        self.is_ns = is_ns</span><br><span class="line">        self.vec_out = cfg.vec_out()</span><br><span class="line">        self.corpus_file = cfg.corpus_file()</span><br><span class="line">        self.window = cfg.window()</span><br><span class="line">        self.size = cfg.size()</span><br><span class="line">        self.sg = cfg.sg()</span><br><span class="line">        self.hs = cfg.hs()</span><br><span class="line">        self.negative = cfg.negative()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train_vec</span>(<span class="params">self</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        To train a word2vec model.</span></span><br><span class="line"><span class="string">        :return: None</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        output_model = self.vec_out + <span class="string">&#x27;w2v_size&#123;0&#125;_sg&#123;1&#125;_hs&#123;2&#125;_ns&#123;3&#125;.model&#x27;</span>.<span class="built_in">format</span>(self.size,</span><br><span class="line">                                                                                   self.sg,</span><br><span class="line">                                                                                   self.hs,</span><br><span class="line">                                                                                   self.negative)</span><br><span class="line"></span><br><span class="line">        output_vector = self.vec_out + <span class="string">&#x27;w2v_size&#123;0&#125;_sg&#123;1&#125;_hs&#123;2&#125;_ns&#123;3&#125;.vector&#x27;</span>.<span class="built_in">format</span>(self.size,</span><br><span class="line">                                                                                     self.sg,</span><br><span class="line">                                                                                     self.hs,</span><br><span class="line">                                                                                     self.negative)</span><br><span class="line">        <span class="comment"># 是否做负采样</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.is_ns:</span><br><span class="line">            self.model = Word2Vec(LineSentence(self.corpus_file),</span><br><span class="line">                                  size=self.size,</span><br><span class="line">                                  window=self.window,</span><br><span class="line">                                  sg=self.sg,</span><br><span class="line">                                  hs=self.hs,</span><br><span class="line">                                  workers=multiprocessing.cpu_count())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            self.model = Word2Vec(LineSentence(self.corpus_file),</span><br><span class="line">                                  size=self.size,</span><br><span class="line">                                  window=self.window,</span><br><span class="line">                                  sg=self.sg,</span><br><span class="line">                                  hs=self.hs,</span><br><span class="line">                                  negative=self.negative,</span><br><span class="line">                                  workers=multiprocessing.cpu_count())</span><br><span class="line"></span><br><span class="line">        self.model.save(output_model)</span><br><span class="line">        self.model.wv.save_word2vec_format(output_vector, binary=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">load</span>(<span class="params">self, path</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        To load a word2vec model.</span></span><br><span class="line"><span class="string">        :param path: the model file path.</span></span><br><span class="line"><span class="string">        :return: success True otherwise False.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.model = gensim.models.Word2Vec.load(path)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">most_similar</span>(<span class="params">self, word</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        Return the most similar words.</span></span><br><span class="line"><span class="string">        :param word: a word.</span></span><br><span class="line"><span class="string">        :return: similar word list.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        word = self.model.most_similar(word)</span><br><span class="line">        <span class="keyword">for</span> text <span class="keyword">in</span> word:</span><br><span class="line">            log.info(<span class="string">&quot;word:&#123;0&#125; similar:&#123;1&#125;&quot;</span>.<span class="built_in">format</span>(text[<span class="number">0</span>], text[<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> word</span><br><span class="line">    <span class="comment"># 获取某个字 的语义向量</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_vector</span>(<span class="params">self, word</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        To get a word&#x27;s vector.</span></span><br><span class="line"><span class="string">        :param word: a word.</span></span><br><span class="line"><span class="string">        :return: word&#x27;s word2vec vector.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self.model.wv.get_vector(<span class="built_in">str</span>(word))</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">return</span> np.zeros(</span><br><span class="line">                shape=(self.size,),</span><br><span class="line">                dtype=np.<span class="built_in">float</span></span><br><span class="line">            )</span><br><span class="line">    <span class="comment"># 也可以直接把keras的embedding层给拿出来，</span></span><br><span class="line">    <span class="comment"># 为了直观，我这里没有直接用它，如果要用，记着把语义向量的权重冻结下。</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_embedding_layer</span>(<span class="params">self, train_embeddings=<span class="literal">False</span></span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        To get keras embedding layer from model.</span></span><br><span class="line"><span class="string">        :param train_embeddings: if frozen the layer.</span></span><br><span class="line"><span class="string">        :return: embedding layer.</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">return</span> self.model.wv.get_keras_embedding(train_embeddings)</span><br><span class="line">        <span class="keyword">except</span> KeyError:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></p></li>
+<li><p><strong>Step-5：构建LSTM模型</strong></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_build</span>(<span class="params">self,</span></span></span><br><span class="line"><span class="params"><span class="function">           lstm_layers_num,</span></span></span><br><span class="line"><span class="params"><span class="function">           dense_layers_num</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    To build a lstm model with lstm layers and densse layers.</span></span><br><span class="line"><span class="string">    :param lstm_layers_num: The number of lstm layers.</span></span><br><span class="line"><span class="string">    :param dense_layers_num:The number of dense layers.</span></span><br><span class="line"><span class="string">    :return: model.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    units = <span class="number">256</span></span><br><span class="line">    model = Sequential()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 样本特征向量的维度，onehot为词汇表大小，word2vec为语义向量维度</span></span><br><span class="line">    <span class="keyword">if</span> self.mode == WORD2VEC:</span><br><span class="line">        dim = self.data_sets.w2v_model.size</span><br><span class="line">    <span class="keyword">elif</span> self.mode == ONE_HOT:</span><br><span class="line">        dim = self.vocab_size</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;mode must be word2vec or one-hot.&quot;</span>)</span><br><span class="line">    <span class="comment"># embedding_input_length为输入序列窗口大小，如：五言绝句取为6</span></span><br><span class="line">    model.add(Input(shape=(self.embedding_input_length, dim)))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 可以加多个LSTM层提取序列特征，这里会把之前每隔时刻的隐层都输出出来</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(lstm_layers_num - <span class="number">1</span>):</span><br><span class="line">        model.add(LSTM(units=units * (i + <span class="number">1</span>),</span><br><span class="line">                       return_sequences=<span class="literal">True</span>))</span><br><span class="line">        model.add(Dropout(<span class="number">0.6</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 注意这里我只要最后一个隐层的输出</span></span><br><span class="line">    model.add(LSTM(units=units * lstm_layers_num,</span><br><span class="line">                   return_sequences=<span class="literal">False</span>))</span><br><span class="line">    model.add(Dropout(<span class="number">0.6</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 可以加多个稠密层，用于对之前提取出来特征的组合</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(dense_layers_num - <span class="number">1</span>):</span><br><span class="line">        model.add(Dense(units=units * (i + <span class="number">1</span>)))</span><br><span class="line">        model.add(Dropout(<span class="number">0.6</span>))</span><br><span class="line">    <span class="comment"># 最后一层，用softmax做分类</span></span><br><span class="line">    model.add(Dense(units=self.vocab_size,  </span><br><span class="line">                    activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">    <span class="comment"># 使用交叉熵损失函数，优化器选择默认参数的adam（ps：随便选的，没做调参）</span></span><br><span class="line">    model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, optimizer=<span class="string">&#x27;adam&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">    model.summary()</span><br><span class="line">    <span class="comment"># 可视化输出模型结构</span></span><br><span class="line">    plot_model(model, to_file=<span class="string">&#x27;../model.png&#x27;</span>, show_shapes=<span class="literal">True</span>, expand_nested=<span class="literal">True</span>)</span><br><span class="line">    self.model = model</span><br><span class="line">    <span class="keyword">return</span> model</span><br></pre></td></tr></table></figure></p>
+<p>例如：使用200维语义向量、输入长度6、词汇量8000、两层LSTM，一层Dense的模型结构如下：</p>
+<center>
+<p><img src="https://vivounicorn.github.io/images/ai_chapter_6/image_1emdtm03k1r4l1mq342e14enu6t13.png" width="300"  /></p>
+</center></li>
+<li><p><strong>Step-6：模型训练和应用</strong></p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> src.lstm_model <span class="keyword">import</span> LstmModel</span><br><span class="line"><span class="keyword">from</span> src.data_processing <span class="keyword">import</span> PoetrysDataSet</span><br><span class="line"><span class="keyword">from</span> src.word2vec <span class="keyword">import</span> Word2vecModel</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_word2vec</span>(<span class="params">base_data</span>) -&gt; <span class="literal">None</span>:</span></span><br><span class="line">    w2v = Word2vecModel()</span><br><span class="line">    w2v.train_vec()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># test.</span></span><br><span class="line">    a = w2v.most_similar(<span class="built_in">str</span>(base_data.w2i(<span class="string">&#x27;床&#x27;</span>)))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(a)):</span><br><span class="line">        <span class="built_in">print</span>(base_data.i2w(a[i][<span class="number">0</span>]), a[i][<span class="number">11</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_lstm</span>(<span class="params">base_data, finetune=<span class="literal">None</span>, mode=<span class="string">&#x27;word2vec&#x27;</span></span>):</span></span><br><span class="line"></span><br><span class="line">    model = LstmModel(cfg_file_path, base_data, mode)</span><br><span class="line">    <span class="comment"># fine tune.</span></span><br><span class="line">    <span class="keyword">if</span> finetune <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        model.load(finetune)</span><br><span class="line"></span><br><span class="line">    model.train_batch(mode=mode)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_lstm</span>(<span class="params">base_data, sentence, model_path=<span class="literal">None</span>, mode=<span class="string">&#x27;word2vec&#x27;</span></span>):</span></span><br><span class="line"></span><br><span class="line">    model = LstmModel(cfg_file_path, base_data, mode)</span><br><span class="line">    <span class="keyword">if</span> model_path <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        model.load(model_path)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> model.generate_poetry(sentence, mode=mode)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    cfg_file_path = <span class="string">&#x27;/home/zhanglei/Gitlab/LstmApp/config/cfg.ini&#x27;</span></span><br><span class="line">    w2vmodel_path = <span class="string">&#x27;/home/zhanglei/Gitlab/LstmApp/data/w2v_models/w2v_size200_sg1_hs0_ns3.model&#x27;</span></span><br><span class="line">    model_path = <span class="string">&#x27;/home/zhanglei/Gitlab/LstmApp/data/models/model-2117.hdf5&#x27;</span></span><br><span class="line"></span><br><span class="line">    base_data = PoetrysDataSet(cfg_file_path)</span><br><span class="line">    train_word2vec(base_data)</span><br><span class="line">    base_data.load_word2vec_model(w2vmodel_path)</span><br><span class="line"></span><br><span class="line">    train_lstm(base_data=base_data, finetune=model_path)</span><br><span class="line"></span><br><span class="line">    sentence = <span class="string">&#x27;惜彼落日暮，&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(test_lstm(base_data=base_data, sentence=sentence, model_path=model_path))</span><br></pre></td></tr></table></figure> 在model.log里会看到训练时的中间信息，如下，随着迭代次数变多，效果会越来越好，包括标点符号的规律也会学进去：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[2020-11-05 12:58:48,723] - lstm_model.py [Line:127] - [DEBUG]-[thread:140045784893248]-[process:29513] - begin training</span><br><span class="line">[2020-11-05 12:58:48,723] - lstm_model.py [Line:132] - [DEBUG]-[thread:140045784893248]-[process:29513] - batch_size:32,steps_per_epoch:355,epochs:5000,validation_steps152</span><br><span class="line">[2020-11-05 12:59:10,260] - lstm_model.py [Line:194] - [INFO]-[thread:140045784893248]-[process:29513] - ==================Epoch 0, Loss 7.93123197555542=====================</span><br><span class="line">[2020-11-05 12:59:11,968] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 欲别牵郎衣，粳酗蓦釱北，鈒静槃遍衫。恸阳日搦蛆，</span><br><span class="line">[2020-11-05 12:59:12,816] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 金庭仙树枝，莨行查娇乂。具撅日霈韂，帝鸟 维。。</span><br><span class="line">[2020-11-05 12:59:13,659] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 素艳拥行舟，母 佶翕何，藁澡   。一 钺辗。，</span><br><span class="line">[2020-11-05 12:59:14,494] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 白鹭拳一足，芾 乡诏秩，启窑 展赢，酪溜劫騊 ，</span><br><span class="line">[2020-11-05 12:59:15,385] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 恩酬期必报，闾瞢，颾钏。啾，。耴望，薖，州耒朿。</span><br><span class="line">[2020-11-05 12:59:16,277] - lstm_model.py [Line:197] - [INFO]-[thread:140045784893248]-[process:29513] - 君去方为宰，沈乡看一帷，柳跂 仁柳，营空长日韍。</span><br><span class="line">[2020-11-05 12:59:16,278] - lstm_model.py [Line:198] - [INFO]-[thread:140045784893248]-[process:29513] - ==================End=====================</span><br><span class="line">......</span><br><span class="line">[2020-11-06 02:12:12,971] - lstm_model.py [Line:194] - [INFO]-[thread:140348029687616]-[process:31309] - ==================Epoch 2106, Loss 7.458868980407715=====================</span><br><span class="line">[2020-11-06 02:12:13,732] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 新开窗犹偏，回雨草花天。谁因家群应，人年功日未。</span><br><span class="line">[2020-11-06 02:12:14,498] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 此心非一事，白物郡期旧。相爱含将回，更相日见光。</span><br><span class="line">[2020-11-06 02:12:15,274] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 刻舟寻已化，有恨多两开。去闻难乱东，地中当如来。</span><br><span class="line">[2020-11-06 02:12:16,069] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 带水摘禾穗，鸟独光冥客。拂船不自已，远年必年非。</span><br><span class="line">[2020-11-06 02:12:16,846] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 茕茕孤思逼，此前路去地。如事别自以，闻阳近高酒。</span><br><span class="line">[2020-11-06 02:12:17,613] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 西陆蝉声唱，日衣烟东云。春出不饥家，马白贵风御。</span><br><span class="line">[2020-11-06 02:12:17,614] - lstm_model.py [Line:198] - [INFO]-[thread:140348029687616]-[process:31309] - ==================End=====================</span><br><span class="line">[2020-11-06 02:13:56,069] - lstm_model.py [Line:194] - [INFO]-[thread:140348029687616]-[process:31309] - ==================Epoch 2112, Loss 7.728175163269043=====================</span><br><span class="line">[2020-11-06 02:13:56,946] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 旅泊多年岁，发知期东今。君自舟岁未，应当折君新。</span><br><span class="line">[2020-11-06 02:13:57,731] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 吾师师子儿，花其重前相。鸟千人身一，清相无道因。</span><br><span class="line">[2020-11-06 02:13:58,532] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 和吹度穹旻，此外更高可。来闻人成独，故去深看春。</span><br><span class="line">[2020-11-06 02:13:59,317] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 下直遇春日，独与时相飞。江君贤犹名，清清曲河人。</span><br><span class="line">[2020-11-06 02:14:00,089] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 月暗竹亭幽，碧昏时尽黄。园春歌雪光，云落分白草。</span><br><span class="line">[2020-11-06 02:14:00,861] - lstm_model.py [Line:197] - [INFO]-[thread:140348029687616]-[process:31309] - 睢阳陷虏日，远平然多岩。公水三共朝，月看同出人。</span><br><span class="line">[2020-11-06 02:14:00,861] - lstm_model.py [Line:198] - [INFO]-[thread:140348029687616]-[process:31309] - ==================End=====================</span><br><span class="line">[2020-11-06 02:15:22,836] - lstm_model.py [Line:148] - [DEBUG]-[thread:140348029687616]-[process:31309] - end training</span><br></pre></td></tr></table></figure></p></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/RNN/" rel="tag"># RNN</a>
+              <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+              <a href="/tags/%E7%AC%AC%E5%85%AD%E7%AB%A0/" rel="tag"># 第六章</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/page/2021/09/14/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%BA%94%E7%AB%A0-%E6%B7%B1%E5%BA%A6%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="机器学习与人工智能技术分享-第五章 深度神经网络">
+      <i class="fa fa-chevron-left"></i> 机器学习与人工智能技术分享-第五章 深度神经网络
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%8Etransformers"><span class="nav-number">1.</span> <span class="nav-text">6. 循环神经网络与Transformers</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#rnn"><span class="nav-number">1.1.</span> <span class="nav-text">6.1 RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.1.</span> <span class="nav-text">6.1.1 基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bptt-%E5%8E%9F%E7%90%86"><span class="nav-number">1.1.2.</span> <span class="nav-text">6.1.2 BPTT 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5"><span class="nav-number">1.1.3.</span> <span class="nav-text">6.1.3 代码实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%B7%E6%B2%8C%E7%90%86%E8%AE%BA"><span class="nav-number">1.2.</span> <span class="nav-text">6.2 混沌理论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%BB%B4%E6%98%A0%E5%B0%84"><span class="nav-number">1.2.1.</span> <span class="nav-text">6.2.1 一维映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E7%BB%B4%E6%98%A0%E5%B0%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">6.2.2 二维映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84"><span class="nav-number">1.2.3.</span> <span class="nav-text">6.2.3 线性映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%98%A0%E5%B0%84"><span class="nav-number">1.2.4.</span> <span class="nav-text">6.2.4 非线性映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B7%E6%B2%8C%E7%9A%84%E6%BC%94%E5%8C%96%E5%8F%8A%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.5.</span> <span class="nav-text">6.2.5 混沌的演化及结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rnn%E9%95%BF%E4%BE%9D%E8%B5%96%E5%AD%A6%E4%B9%A0%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.6.</span> <span class="nav-text">6.2.6 RNN长依赖学习问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstm"><span class="nav-number">1.3.</span> <span class="nav-text">6.3 LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">6.3.1 基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5-1"><span class="nav-number">1.3.2.</span> <span class="nav-text">6.3.2 代码实践</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">张磊</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">张磊</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="Symbols count total">328k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">4:58</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
