@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -21,13 +21,13 @@
     var CONFIG = {"hostname":"vivounicorn.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="4. 最优化原理 4.1 泰勒定理 满足一定条件的函数可以通过泰勒展开式对其做近似： 4.1.1 泰勒展开式 泰勒展开式原理如下，主要采用分部积分推导： \[ \begin{array}{l} f(x+\Delta x)&#x3D;f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\ &#x3D;f(x)+((x+\Delta x) \nabla f(x+\Delta x)-xf(x))">
+  <meta name="description" content="4. 最优化原理 4.1 泰勒定理 满足一定条件的函数可以通过泰勒展开式对其做近似： 4.1.1 泰勒展开式 泰勒展开式原理如下，主要采用分部积分推导： \[ \begin{align*} f(x+\Delta x)&amp;&#x3D;f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\ &amp;&#x3D;f(x)+((x+\Delta x) \nabla f(x+\Delta x">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习与人工智能技术分享-第四章 最优化原理">
 <meta property="og:url" content="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="业精于勤，荒于嬉；行成于思，毁于随。">
-<meta property="og:description" content="4. 最优化原理 4.1 泰勒定理 满足一定条件的函数可以通过泰勒展开式对其做近似： 4.1.1 泰勒展开式 泰勒展开式原理如下，主要采用分部积分推导： \[ \begin{array}{l} f(x+\Delta x)&#x3D;f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\ &#x3D;f(x)+((x+\Delta x) \nabla f(x+\Delta x)-xf(x))">
-<meta property="og:locale">
+<meta property="og:description" content="4. 最优化原理 4.1 泰勒定理 满足一定条件的函数可以通过泰勒展开式对其做近似： 4.1.1 泰勒展开式 泰勒展开式原理如下，主要采用分部积分推导： \[ \begin{align*} f(x+\Delta x)&amp;&#x3D;f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\ &amp;&#x3D;f(x)+((x+\Delta x) \nabla f(x+\Delta x">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjaso1ni41lk7nofbbnba9m.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjbvq0t14gvsisstr1uufcpm13.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjcq0mg8c11h511kmivm11far1g.png">
@@ -59,7 +59,7 @@
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjjubf4103g1son9t5qe61q394r.png">
 <meta property="og:image" content="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjk825e1vldbo71as012u1gsi5o.png">
 <meta property="article:published_time" content="2021-09-05T08:55:13.000Z">
-<meta property="article:modified_time" content="2021-09-18T12:43:33.062Z">
+<meta property="article:modified_time" content="2021-11-04T07:53:04.070Z">
 <meta property="article:author" content="张磊">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="最优化">
@@ -76,7 +76,7 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'zh-Hans'
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -120,7 +120,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -151,31 +151,31 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
       <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
       </li>
   </ul>
@@ -191,7 +191,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
   <span class="popup-btn-close">
@@ -228,7 +228,7 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://vivounicorn.github.io/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -250,33 +250,33 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Created: 2021-09-05 16:55:13" itemprop="dateCreated datePublished" datetime="2021-09-05T16:55:13+08:00">2021-09-05</time>
+              <time title="创建时间：2021-09-05 16:55:13" itemprop="dateCreated datePublished" datetime="2021-09-05T16:55:13+08:00">2021-09-05</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-09-18 20:43:33" itemprop="dateModified" datetime="2021-09-18T20:43:33+08:00">2021-09-18</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-04 15:53:04" itemprop="dateModified" datetime="2021-11-04T15:53:04+08:00">2021-11-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
                 </span>
             </span>
 
           
-            <span id="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="机器学习与人工智能技术分享-第四章 最优化原理" title="Views">
+            <span id="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/" class="post-meta-item leancloud_visitors" data-flag-title="机器学习与人工智能技术分享-第四章 最优化原理" title="阅读次数">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
-              <span class="post-meta-item-text">Views: </span>
+              <span class="post-meta-item-text">阅读次数：</span>
               <span class="leancloud-visitors-count"></span>
             </span>
   
@@ -285,7 +285,7 @@
       <span class="post-meta-item-icon">
         <i class="far fa-comment"></i>
       </span>
-      <span class="post-meta-item-text">Valine: </span>
+      <span class="post-meta-item-text">Valine：</span>
     
     <a title="valine" href="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/#valine-comments" itemprop="discussionUrl">
       <span class="post-comments-count valine-comment-count" data-xid="/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E6%9C%80%E4%BC%98%E5%8C%96%E5%8E%9F%E7%90%86/" itemprop="commentCount"></span>
@@ -293,19 +293,19 @@
   </span>
   
   <br>
-            <span class="post-meta-item" title="Symbols count in article">
+            <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
+                <span class="post-meta-item-text">本文字数：</span>
               <span>31k</span>
             </span>
-            <span class="post-meta-item" title="Reading time">
+            <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>28 mins.</span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>28 分钟</span>
             </span>
 
         </div>
@@ -322,17 +322,15 @@
 <p>满足一定条件的函数可以通过泰勒展开式对其做近似：</p>
 <h3 id="泰勒展开式">4.1.1 泰勒展开式</h3>
 <p>泰勒展开式原理如下，主要采用分部积分推导： <span class="math display">\[
-\begin{array}{l}
-f(x+\Delta x)=f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\
-=f(x)+((x+\Delta x) \nabla f(x+\Delta x)-xf(x))-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
-=f(x)+(x+\Delta x)(\nabla f(x)+\int_{x}^{x+\Delta x}\nabla^2f(t)dt)-x\nabla f(x)-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
-=f(x)+\nabla f(x)\Delta x +\int_{x}^{x+\Delta x}(x+\Delta x-t) \nabla^2f(t)dt\\
-......\\
-=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2
-+
-...\frac{1}{n!}\nabla^nf(x)\Delta x^n  \\
-+ \int_{x}^{x+\Delta x}\frac{\nabla^{n+1}f(t)}{n!}(x+\Delta x-t) dt
-\end{array}
+\begin{align*}
+f(x+\Delta x)&amp;=f(x)+\int_{x}^{x+\Delta x}\nabla f(t)dt\\
+&amp;=f(x)+((x+\Delta x) \nabla f(x+\Delta x)-xf(x))-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
+&amp;=f(x)+(x+\Delta x)(\nabla f(x)+\int_{x}^{x+\Delta x}\nabla^2f(t)dt)-x\nabla f(x)-\int_{x}^{x+\Delta x}t\nabla^2f(t)dt\\
+&amp;=f(x)+\nabla f(x)\Delta x +\int_{x}^{x+\Delta x}(x+\Delta x-t) \nabla^2f(t)dt\\
+&amp;......\\
+&amp;=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2+...\frac{1}{n!}\nabla^nf(x)\Delta x^n  \\
+&amp;+ \int_{x}^{x+\Delta x}\frac{\nabla^{n+1}f(t)}{n!}(x+\Delta x-t) dt
+\end{align*}
 \]</span></p>
 <span id="more"></span>
 <h3 id="泰勒中值定理">4.1.2 泰勒中值定理</h3>
@@ -364,9 +362,12 @@ f(x+\Delta x)=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2
 <p><strong>2、梯度与方向导数</strong></p>
 <ul>
 <li><p>方向导数 以二元函数：<span class="math inline">\(y=f(x_0,x_1)\)</span>为例，设它在点<span class="math inline">\(p(x_0,x_1)\)</span>的某个邻域<span class="math inline">\(U(p)\)</span>内有定义，以点<span class="math inline">\(p(x_0,x_1)\)</span>出发引射线l，<span class="math inline">\(p&#39;(x_0+\Delta x_0,x_1+\Delta x_1)\)</span>为<span class="math inline">\(l\)</span>上的且在邻域<span class="math inline">\(U(p)\)</span>内的任意点，则方向导数的定义为： <span class="math display">\[\frac{\partial f}{\partial l} = \lim_{\rho-&gt;0^+} {\frac{f(x_0+\Delta x_0,x_1+\Delta x_1)-f(x_0,x_1)}{\rho}} \]</span> 其中<span class="math inline">\(\rho\)</span>表示<span class="math inline">\(p\)</span>和<span class="math inline">\(p&#39;\)</span>两点之间的欧氏距离：<span class="math inline">\(\rho = \sqrt{(\Delta x_0)^2 + (\Delta x_1)^2}\)</span> 从这个式子可以看到：方向导数与某个方向<span class="math inline">\(l\)</span>有联系、方向导数是个极限值、方向导数与偏导数似乎有联系。 实际上，如果<span class="math inline">\(y=f(x_0,x_1)\)</span>在点<span class="math inline">\(p(x_0,x_1)\)</span>可微，则： <span class="math display">\[\frac{\partial f}{\partial l} = \frac{\partial f}{\partial x_0} \cos\alpha +\frac{\partial f}{\partial x_1} \cos\beta  \]</span> 其中<span class="math inline">\(\alpha\)</span>和<span class="math inline">\(\beta\)</span>分别是两个维度上的方向角 这里需要注意的一个细节是：沿某个维度的方向导数存在时，其偏导数不一定存在，原因就是方向导数只要求半边极限存在(<span class="math inline">\(\rho-&gt;{0^+}\)</span>)，而偏导数则要求双边都存在。</p></li>
-<li><p>梯度 把方向导数变换一下形式： <span class="math display">\[\frac{\partial f}{\partial l} = \frac{\partial f}{\partial x_0} \cos\alpha +\frac{\partial f}{\partial x_1} \cos\beta =(\frac{\partial f}{\partial x_0},  \frac{\partial f  }{\partial x_1}) \cdot (\cos\alpha, \cos\beta)\]</span> 函数<span class="math inline">\(y=f(x_0,x_1)\)</span>在点<span class="math inline">\(p(x_0,x_1)\)</span>的梯度就被定义为向量： <span class="math display">\[gradf(x_0,x_1)=\frac{\partial f}{\partial x_0}\cdot i + \frac{\partial f  }{\partial x_1}\cdot j\]</span> 与射线l同方向的单位向量被定义为： <span class="math inline">\(e=\cos \alpha \cdot i+ \cos \beta\cdot j\)</span> 于是方向导数变成了： <span class="math display">\[\frac{\partial f}{\partial l} = gradf(x_0,x_1)\cdot e=|gradf(x_0,x_1)|\cdot \cos&lt;gradf(x_0,x_1), e&gt;\]</span> 我的理解是：方向导数描述了由各个维度方向形成的合力方向上函数变化的程度，当这个合力方向与梯度向量的方向相同时，函数变化的最剧烈，我想这就是为什么在梯度上升算法或者梯度下降算法中选择梯度方向或者负梯度方向的原因吧。换句话说就是：函数在某点的梯度是这样一个向量，它的方向与取得最大方向导数的方向一致，而它的模为方向导数的最大值。</p>
+<li>梯度 把方向导数变换一下形式： <span class="math display">\[\frac{\partial f}{\partial l} = \frac{\partial f}{\partial x_0} \cos\alpha +\frac{\partial f}{\partial x_1} \cos\beta =(\frac{\partial f}{\partial x_0},  \frac{\partial f  }{\partial x_1}) \cdot (\cos\alpha, \cos\beta)\]</span> 函数<span class="math inline">\(y=f(x_0,x_1)\)</span>在点<span class="math inline">\(p(x_0,x_1)\)</span>的梯度就被定义为向量： <span class="math display">\[gradf(x_0,x_1)=\frac{\partial f}{\partial x_0}\cdot i + \frac{\partial f  }{\partial x_1}\cdot j\]</span> 与射线l同方向的单位向量被定义为： <span class="math inline">\(e=\cos \alpha \cdot i+ \cos \beta\cdot j\)</span> 于是方向导数变成了： <span class="math display">\[\frac{\partial f}{\partial l} = gradf(x_0,x_1)\cdot e=|gradf(x_0,x_1)|\cdot \cos&lt;gradf(x_0,x_1), e&gt;\]</span> 我的理解是：方向导数描述了由各个维度方向形成的合力方向上函数变化的程度，当这个合力方向与梯度向量的方向相同时，函数变化的最剧烈，我想这就是为什么在梯度上升算法或者梯度下降算法中选择梯度方向或者负梯度方向的原因吧。换句话说就是：函数在某点的梯度是这样一个向量，它的方向与取得最大方向导数的方向一致，而它的模为方向导数的最大值。
 <center>
-<p><img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjbvq0t14gvsisstr1uufcpm13.png" width="300" /> 某个函数和它的等高线，图中标出了a点的梯度上升方向</p>
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjbvq0t14gvsisstr1uufcpm13.png" width="300" />
+</center>
+<center>
+某个函数和它的等高线，图中标出了a点的梯度上升方向
 </center></li>
 </ul>
 <p><strong>3、多维无约束问题</strong></p>
@@ -378,30 +379,30 @@ f(x+\Delta x)=f(x)+\nabla f(x)\Delta x+\frac{1}{2}\nabla^2 f(x)\Delta x^2
 <p>(3)、当 <span class="math inline">\(\alpha=\frac{\pi}{2}\)</span>，梯度向量和<span class="math inline">\(dx\)</span>正交（任一向量为0也视为正交），不管从点<span class="math inline">\(x\)</span>怎样移动都找不到使目标函数值发生变化的点，于是x点就是目标函数的最优解。 由于<span class="math inline">\(dx\)</span>可以是任意方向向量，只要点x的梯度向量不为零，从点x出发总可以找到一个变化方向使得目标函数值向我们希望的方向变化（比如就找梯度方向，此时能引起目标函数值最剧烈地变化），理论上当最优解<span class="math inline">\(x^*\)</span>出现时就一定有<span class="math inline">\(gradf (x^*)=0\)</span>（实际上允许以某个误差<span class="math inline">\(\epsilon\)</span>结束），比如，对于梯度下降算法，当<span class="math inline">\(gradf (x^*)=0\)</span>时迭代结束，此时的<span class="math inline">\(x^*\)</span>为最优解（可能是全局最优解也可能是局部最优解） <span class="math display">\[x_{n+1}=x_n - \alpha \cdot gradf(x_n)\]</span></p>
 <p>总结来说，基于梯度的优化算法通常有两个核心元素：搜索方向和搜索步长，并且一般都会和泰勒定理有某种联系，从泰勒中值定理可以得到下面的等式：</p>
 <p><span class="math display">\[
-\begin{array}{l}
-f(x_{n+1})=f(x_n)+\nabla f(x_n)(x_{n+1}-x_n)+\frac{1}{2}\nabla^2 f(\xi)(x_{n+1}-x_n)^2\\
-~~~~~~~~~~~~~~~\text{where } \xi \in(x_n,x_{n+1})\\
-\because \nabla f(x_{n+1})=g_n+\nabla^2
-f(\xi)(x_{n+1}-x_n)=0\\
-\therefore x_{n+1}=x_n-\underbrace{\nabla^2 f(\xi)^{-1}}_{\eta :~\text{learning rate  }} \underbrace{\nabla f(x_n)}_{ d:~\text{gradient}}\\
-\end{array}
+\begin{align*}
+f(x_{n+1})&amp;=f(x_n)+\nabla f(x_n)(x_{n+1}-x_n)+\frac{1}{2}\nabla^2 f(\xi)(x_{n+1}-x_n)^2\\
+&amp;~~~~~~~~~~~~~~~\text{where } \xi \in(x_n,x_{n+1})\\
+\because &amp; \nabla f(x_{n+1})=g_n+\nabla^2\\
+&amp;f(\xi)(x_{n+1}-x_n)=0\\
+\therefore &amp; x_{n+1}=x_n-\underbrace{\nabla^2 f(\xi)^{-1}}_{\eta :~\text{learning rate  }} \underbrace{\nabla f(x_n)}_{ d:~\text{gradient}}\\
+\end{align*}
 \]</span></p>
 <p>抽象出迭代框架如下：</p>
 <p><span class="math display">\[
-\begin{array}{l}
-x_{n+1}=x_n-\eta \nabla f(x_n)\\
-~~~~~~~~\text{    where $f(x)$ is objective function.}\\
-or\\
-x_{n+1}=x_n-\Delta x_n\\
-\Delta x_n=\eta \nabla f(x_n)
-\end{array}
+\begin{align*}
+x_{n+1}&amp;=x_n-\eta \nabla f(x_n)\\
+&amp;~~~~~~~~\text{    where $f(x)$ is objective function.}\\
+&amp;or\\
+x_{n+1}&amp;=x_n-\Delta x_n\\
+\Delta x_n&amp;=\eta \nabla f(x_n)
+\end{align*}
 \]</span></p>
 <h3 id="拉格朗日乘数法和kkt条件">4.2.2 拉格朗日乘数法和KKT条件</h3>
 <p>假设目标函数和约束在某点可微，用符号<span class="math inline">\(\nabla f\)</span>代替符号<span class="math inline">\(grad f\)</span>。</p>
 <p><strong>1、等式约束</strong></p>
-<span class="math display">\[\begin{eqnarray*} 
- &amp;&amp;\min f(x) \\ 
-&amp;&amp;s.t.  h(x)=0, \quad 
+<span class="math display">\[\begin{eqnarray*}
+ &amp;&amp;\min f(x) \\
+&amp;&amp;s.t.  h(x)=0, \quad
 \end{eqnarray*}\]</span>
 <center>
 <img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1fbjcq0mg8c11h511kmivm11far1g.png" width="300" />
@@ -468,7 +469,7 @@ g_j(x^*) \leq 0,j=0,...m\]</span></p>
 <p><span class="math display">\[ L(x,\alpha ,\beta) = f(x) + \sum\limits_{i=0}^n \alpha_i \cdot h_i(x) + \sum\limits_{j=0}^m \beta_j\cdot g_j(x)\]</span> 其中<span class="math inline">\(\alpha_i \geq 0\)</span>且<span class="math inline">\(\beta_j \geq 0\)</span>，它们都是拉格朗日乘子</p>
 <p>令<span class="math inline">\(O_p(x)=\max\limits_{\alpha ,\beta} L(x,\alpha,\beta)\)</span>，原问题可以表示为下面这个形式：</p>
 <p><span class="math display">\[
-O_p(x)= 
+O_p(x)=
  \left\{
    \begin{array}{c}
    &amp;f(x)&amp; if \quad x \quad satisfies \quad primal \quad constraints&amp;\\
@@ -602,16 +603,11 @@ x_{n+1}=x_n+\Delta x_n\\
 <p>对其他短板，AdaDelta通过以下方法解决。</p>
 <p>对SGD与Momentum(里面的注释是理解这个变换的关键)：</p>
 <p><span class="math display">\[
-\begin{array}{l}
 \text{unit of }\Delta x \propto \text{unit of }g \propto \frac{\partial f}{\partial x} \propto \frac{1}{\text{unit of }x}\\
 (\text{When $f$ is negative log likelihood function }\frac{\partial f}{\partial x} \propto \frac{\partial logf}{\partial x} =\frac{\frac{\partial f}{\partial x}}{f})
-\end{array}
 \]</span></p>
-<p>对牛顿法：</p>
-<p><span class="math display">\[
-\begin{array}{l}
-~~~~\text{unit of }\Delta x \propto \text{unit of }H^{-1}g\propto \frac{\frac{\partial f}{\partial x}}{\frac{\partial^{2}f}{\partial x^{2}}}\propto \frac{\frac{1}{x}}{\frac{1}{x}.\frac{1}{x}}\propto \text{unit of }x
-\end{array}
+<p>对牛顿法： <span class="math display">\[
+\text{unit of }\Delta x \propto \text{unit of }H^{-1}g\propto \frac{\frac{\partial f}{\partial x}}{\frac{\partial^{2}f}{\partial x^{2}}}\propto \frac{\frac{1}{x}}{\frac{1}{x}.\frac{1}{x}}\propto \text{unit of }x
 \]</span></p>
 <p>所以二阶方法有正确的单位且快于一阶方法。</p>
 <p>来源于Becker 和 LeCuns' 的hessian估计法：</p>
@@ -625,71 +621,74 @@ x_{n+1}=x_n+\Delta x_n\\
 \]</span></p>
 完整的算法描述如下：
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/adadelta.png" title="fig:" alt="adadelta.png-82kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/adadelta.png" width="400" />
 </center>
 <center>
 From <a target="_blank" rel="noopener" href="http://www.matthewzeiler.com/pubs/googleTR2012/googleTR2012.pdf">Zeiler</a>
 </center>
 <p>对以上算法的比较如下：</p>
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/compare.png" title="fig:" alt="compare.png-97.5kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/compare.png" width="600" />
 </center>
 <center>
 From <a target="_blank" rel="noopener" href="https://cs.stanford.edu/people/karpathy/convnetjs/demo/trainers.html">Karpathy</a>
 </center>
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/contours_evaluation_optimizers.gif" width="400" /> From <a target="_blank" rel="noopener" href="http://sebastianruder.com/optimizing-gradient-descent/">SGD optimization on loss surface contours</a>
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/contours_evaluation_optimizers.gif" width="400" />
+</center>
+<center>
+From <a target="_blank" rel="noopener" href="http://sebastianruder.com/optimizing-gradient-descent/">SGD optimization on loss surface contours</a>
 </center>
 <h3 id="adam">4.2.10 Adam</h3>
 <p>Adam是对Adadelta的改进，原理如下：</p>
 <p><span class="math display">\[
- \begin{array}{l}
-Recall:
+ \begin{align*}
+&amp;Recall:
 \Delta x_n=-\frac{\eta}{\sqrt{\sum_{i=1}^{n}g_i^2}+\epsilon}g_n\\
-\text{Keeping an exponentially decaying average of past gradients:}\\
-m_n = \beta_1 m_{n-1} + (1 - \beta_1) g_n\\
-v_n = \beta_2 v_{n-1} + (1 - \beta_2) g_n^2\\
-\because m_n=(1-\beta_1)\sum_{i=1}^n\beta_1^{n-i}g_i\\
-~~~~v_n=(1-\beta_2)\sum_{i=1}^n\beta_2^{n-i}g_i^2\\
-\therefore E[m_n]=E[(1-\beta_1)\sum_{i=1}^n\beta_1^{n-i}g_i]=E[g_n](1-\beta_1^n)\\
-~~~~E[v_n]=E[g_n^2](1-\beta_2^n)\\
-\\
-\text{if set: }\\
-\hat{m}_n = \dfrac{m_n}{1 - \beta^n_1}\\
-\hat{v}_n = \dfrac{v_n}{1 - \beta^n_2}\\
-\text{then we get the bias-corrected first and second moment estimates: }\\
-E[\hat{m_n}]=m_n \text{ and } E[\hat{v_n}]=v_n\\
-\\
-\text{So the equation is:}\\
-\Delta x_n=- \dfrac{\eta}{\sqrt{\hat{v}_n} + \epsilon} \hat{m}_n\\
-x_{n+1} = x_{n} +\Delta x_n\\
-\text{The authors propose default values of 0.9 for $\beta_1$, 0.999 for $\beta_2$, and $10^{-8}$ for $\epsilon$.}
-\end{array}
+&amp;\text{Keeping an exponentially decaying average of past gradients:}\\
+&amp;m_n = \beta_1 m_{n-1} + (1 - \beta_1) g_n\\
+&amp;v_n = \beta_2 v_{n-1} + (1 - \beta_2) g_n^2\\
+&amp;\because m_n=(1-\beta_1)\sum_{i=1}^n\beta_1^{n-i}g_i\\
+&amp;~~~~v_n=(1-\beta_2)\sum_{i=1}^n\beta_2^{n-i}g_i^2\\
+&amp;\therefore E[m_n]=E[(1-\beta_1)\sum_{i=1}^n\beta_1^{n-i}g_i]=E[g_n](1-\beta_1^n)\\
+&amp;~~~~E[v_n]=E[g_n^2](1-\beta_2^n)\\
+&amp;\\
+&amp;\text{if set: }\\
+&amp;\hat{m}_n = \dfrac{m_n}{1 - \beta^n_1}\\
+&amp;\hat{v}_n = \dfrac{v_n}{1 - \beta^n_2}\\
+&amp;\text{then we get the bias-corrected first and second moment estimates: }\\
+&amp;E[\hat{m_n}]=m_n \text{ and } E[\hat{v_n}]=v_n\\
+&amp;\\
+&amp;\text{So the equation is:}\\
+&amp;\Delta x_n=- \dfrac{\eta}{\sqrt{\hat{v}_n} + \epsilon} \hat{m}_n\\
+&amp;x_{n+1} = x_{n} +\Delta x_n\\
+&amp;\text{The authors propose default values of 0.9 for $\beta_1$, 0.999 for $\beta_2$, and $10^{-8}$ for $\epsilon$.}
+\end{align*}
 \]</span></p>
 算法伪代码如下：
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apn008f514vrvrf12mmjo31qrrm.png" title="fig:" alt="image_1apn008f514vrvrf12mmjo31qrrm.png-222.1kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apn008f514vrvrf12mmjo31qrrm.png" alt="image_1apn008f514vrvrf12mmjo31qrrm.png-222.1kB" />
 </center>
 <h2 id="并行sgd">4.3 并行SGD</h2>
 <p>SGD相对简单并且被证明有较好的收敛性质和精度，所以自然而然就想到将其扩展到大规模数据集上，就像Hadoop/Spark的基本框架是MapReduce，并行机器学习的常见框架有两种： AllReduce 和 Parameter Server（PS）。</p>
 <h3 id="allreduce">4.3.1 AllReduce</h3>
 <p>AllReduce的思想来源于MPI，它可以被看做Reduce操作+Broadcast操作，例如：</p>
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/allreduce1.png" title="fig:" alt="allreduce1.png-15.8kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/allreduce1.png" alt="allreduce1.png-15.8kB" />
 </center>
 <center>
 From <a target="_blank" rel="noopener" href="http://mpitutorial.com/tutorials/mpi-reduce-and-allreduce/">MPI Tutorials</a>
 </center>
 <p>其他AllReduce的拓扑结构如下：</p>
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1app04foe100116b7vf6rblrqn9.png" title="fig:" alt="image_1app04foe100116b7vf6rblrqn9.png-74kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1app04foe100116b7vf6rblrqn9.png" alt="image_1app04foe100116b7vf6rblrqn9.png-74kB" />
 </center>
 <center>
 From <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1312.3020.pdf">Huasha Zhao &amp; John Canny</a>
 </center>
 非常好的开源实现有<a target="_blank" rel="noopener" href="http://hunch.net/~jl/"><strong>John Langford</strong></a>的<a target="_blank" rel="noopener" href="https://github.com/JohnLangford/vowpal_wabbit/"><strong>vowpal wabbit</strong></a>和<a target="_blank" rel="noopener" href="http://homes.cs.washington.edu/~tqchen/"><strong>陈天奇</strong></a>的<a target="_blank" rel="noopener" href="https://github.com/dmlc/rabit"><strong>Rabit</strong></a>（轻量级、可容错）。并行计算的关键之一是如何在大规模数据集下计算目标函数的梯度值，AllReduce框架很适合这种任务，比如：vw通过构建一个二叉树来管理机器节点，其中一个节点会被当做master，其他节点作为slave，master管理着slave并定期接受它们的心跳，每个子节点的计算结果会被其父节点收集，到达根节点后累加并广播到其所有子节点，一个简单的例子如下：
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apo0jjdvq6v8h011kq1useljp15.png" title="fig:" alt="image_1apo0jjdvq6v8h011kq1useljp15.png-11.6kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apo0jjdvq6v8h011kq1useljp15.png" alt="image_1apo0jjdvq6v8h011kq1useljp15.png-11.6kB" />
 </center>
 <p>使用mini-batch的并行SGD算法伪代码如下：</p>
 <p><span class="math display">\[
@@ -721,7 +720,7 @@ From <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1312.3020.pdf
 <h3 id="参数服务器parameter-server">4.3.2 参数服务器(Parameter Server)</h3>
 参数服务器强调模型训练时参数的并行异步更新，最早是由Google的Jeffrey Dean团队提出，为了解决深度学习的参数学习问题，其基本思想是：将数据集划分为若干子数据集，每个子数据集所在的节点都运行着一个模型的副本，通过独立 部署的参数服务器组织模型的所有权重，其基本操作有：Fatching：每隔n次迭代，从参数服务器获取参数权重，Pushing：每隔m次迭代，向参数服务器推送本地梯度更新值，之后参数服务器会更新相关参数权重，其基本架构如下：
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1appb6oak1iu3eptmi51dvhjmhm.png" title="fig:" alt="image_1appb6oak1iu3eptmi51dvhjmhm.png-33.9kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1appb6oak1iu3eptmi51dvhjmhm.png" alt="image_1appb6oak1iu3eptmi51dvhjmhm.png-33.9kB" />
 </center>
 <center>
 From <a target="_blank" rel="noopener" href="https://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks.pdf">Jeffrey Dean: Large Scale Distributed Deep Networks</a>
@@ -756,7 +755,7 @@ p_{k}=-B_{k}^{-1}\nabla f(x_k)
 </ul>
 <p><span class="math display">\[
 \begin{array}{l}
-\because 
+\because
 p_{k}^T\nabla f(x_k)=-\nabla f(x_k)^TB_{k}^{-1}\nabla f(x_k)&lt;0\\
 \therefore \text{$B_k$ is must positive definite.}
 \end{array}
@@ -806,7 +805,7 @@ p_{k}^T\nabla f(x_k)=-\nabla f(x_k)^TB_{k}^{-1}\nabla f(x_k)&lt;0\\
 <li><p>迭代，直到满足精度条件得到<span class="math inline">\(f(x)=0\)</span>的最优解.</p></li>
 </ul>
 <center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apq53v8s1567rgu1t1v14eaqjb13.png" title="fig:" alt="image_1apq53v8s1567rgu1t1v14eaqjb13.png-21.7kB" />
+<img src="https://vivounicorn.github.io/images/ai_chapter_4/image_1apq53v8s1567rgu1t1v14eaqjb13.png" alt="image_1apq53v8s1567rgu1t1v14eaqjb13.png-21.7kB" />
 </center>
 <p>从泰勒展开式得到牛顿法的基本迭代式：</p>
 <p><span class="math display">\[
@@ -889,16 +888,16 @@ H_{k+1}=(I-(y_k^Ts_k)^{-1}s_ky_k^T)H_k(I-(y_k^Ts_k)^{-1}y_ky_s^T)+(y_k^Ts_k)^{-1
 <p>2、矩阵非稀疏会导致训练速度慢。</p>
 <h3 id="l-bfgs算法">4.5.2 L-BFGS算法</h3>
 <p>针对BFGS的缺点，主要在于如何合理的估计出一个Hessian矩阵的逆矩阵，L-BFGS的基本思想是只保存最近的m次迭代信息，从而大大降低数据存储空间。对照BFGS，我重新整理一下用到的公式：</p>
-<p><span class="math display">\[\rho_k=\frac{1}{y_{k}^T s_k}     
- s_k=x_k-x_{k-1}            
+<p><span class="math display">\[\rho_k=\frac{1}{y_{k}^T s_k}
+ s_k=x_k-x_{k-1}
 y_k\\
 =\nabla{f(x_k)}-\nabla{f(x_{k-1})}
 V_k\\
-=I-\rho_{k}y_{k}s_{k}^T 
+=I-\rho_{k}y_{k}s_{k}^T
 \]</span></p>
 <p>于是估计的Hessian矩阵逆矩阵如下：</p>
 <p><span class="math display">\[
-H_k=(I-\rho_{k-1}s_{k-1}y_{k-1}^T)H_{k-1}(I-\rho_{k-1}y_{k-1}s_{k-1}^T)+s_{k-1}\rho_{k-1}s_{k-1}^T  \\                                   =V_{k-1}^TH_{k-1}V_{k-1}+ s_{k-1}\rho_{k-1}s_{k-1}^T 
+H_k=(I-\rho_{k-1}s_{k-1}y_{k-1}^T)H_{k-1}(I-\rho_{k-1}y_{k-1}s_{k-1}^T)+s_{k-1}\rho_{k-1}s_{k-1}^T  \\                                   =V_{k-1}^TH_{k-1}V_{k-1}+ s_{k-1}\rho_{k-1}s_{k-1}^T
 \]</span></p>
 <p>把 <span class="math display">\[
 H_{k-1}=V_{k-2}^TH_{k-2}V_{k-2}+ s_{k-2}\rho_{k-2}s_{k-2}^T\]</span></p>
@@ -910,7 +909,7 @@ H_{k-1}=V_{k-2}^TH_{k-2}V_{k-2}+ s_{k-2}\rho_{k-2}s_{k-2}^T\]</span></p>
  + (V_{k-1}^TV_{k-2}^T\ldots V_{k-m+1}^T) S_{k-m}\rho_{k-m}S_{k-m}^T (V_{k-m}\ldots V_{k-2}V_{k-1})\\
  + (V_{k-1}^TV_{k-2}^T\ldots V_{k-m+2}^T) S_{k-m+1}\rho_{k-m+1}S_{k-m+1}^T (V_{k-m+1}\ldots V_{k-2}V_{k-1})\\
 +\ldots
-+V_{k-1}^T s_{k-2}\rho_{k-2} s_{k-2}^TV_{k-1}  
++V_{k-1}^T s_{k-2}\rho_{k-2} s_{k-2}^TV_{k-1}
           +s_{k-1}\rho_{k-1}s_{k-1}^T
 \]</span></p>
 <p>算法第二步表明了上面推导的最终目的：找到第k次迭代的可行方向，满足：</p>
@@ -929,7 +928,7 @@ H_{k-1}=V_{k-2}^TH_{k-2}V_{k-2}+ s_{k-2}\rho_{k-2}s_{k-2}^T\]</span></p>
     &amp;\quad \beta=\rho_{k-i}y_{k-i}^Tr \\
     &amp;\quad r=r+s_{k-i}(\alpha_i-\beta)\\
 &amp;end  \quad for\\
- &amp;return   \quad r 
+ &amp;return   \quad r
 \end{align*}
 \]</span></p>
 <p>该算法的正确性推导：</p>
@@ -987,7 +986,7 @@ r_1&amp;=s_{k-1}\alpha_1+V_{k-1}^Tr_2 =s_{k-1}\rho_{k-1}s_{k-1}^T \nabla f(x_k)+
 <p><strong>Step6</strong>:更新权重<span class="math inline">\(x\)</span>：</p>
 <p><span class="math display">\[ x_{k+1}=x_k+\alpha_kp_k\]</span></p>
 <p><strong>Step7</strong>: 如果 $ k &gt; m$ 只保留最近m次的向量对，需删除(<span class="math inline">\(s_{k-m},y_{k-m}\)</span>)；</p>
-<p><strong>Step8</strong>:计算并保存： <span class="math display">\[ 
+<p><strong>Step8</strong>:计算并保存： <span class="math display">\[
 \begin{align*}
 s_k&amp;=x_{k+1}-x_k\\
 y_k&amp;=\nabla f(x_{k+1})-\nabla f(x_k)
@@ -998,7 +997,7 @@ y_k&amp;=\nabla f(x_{k+1})-\nabla f(x_k)
 <p>需要注意的地方，每次迭代都需要一个<span class="math inline">\(H_{k-m}\)</span> ，实践当中被证明比较有效的取法为：</p>
 <p><span class="math display">\[
 \begin{align*}
-H_k^0&amp;=\gamma_k I\\                     
+H_k^0&amp;=\gamma_k I\\
 \gamma_k&amp;=\frac{s_{k-1}^Ty_{k-1}}{y_{k-1}^Ty_{k-1}}
 \end{align*}
 \]</span></p>
@@ -1006,7 +1005,7 @@ H_k^0&amp;=\gamma_k I\\
 <p><strong>1、问题描述</strong></p>
 <p>对于类似于Logistic Regression这样的Log-Linear模型，一般可以归结为最小化下面这个问题：</p>
 <p><span class="math display">\[
-                          J(x)=l(x)+r(x) 
+                          J(x)=l(x)+r(x)
                           \]</span> 其中，第一项为loss function，用来衡量当训练出现偏差时的损失，可以是任意可微凸函数（如果是非凸函数该算法只保证找到局部最优解），后者为regularization term，用来对模型空间进行限制，从而得到一个更“简单”的模型。 根据对模型参数所服从的概率分布的假设的不同，regularization term一般有：L2-norm（模型参数服从Gaussian分布）；L1-norm（模型参数服从Laplace分布）；以及其他分布或组合形式。</p>
 <p>L2-norm的形式类似于：</p>
 <p><span class="math display">\[
@@ -1048,18 +1047,18 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
 <ul>
 <li>利用次梯度的概念推广了梯度 定义了一个符合上述原则的虚梯度，求一维搜索的可行方向时用虚梯度来代替L-BFGS中的梯度： <span class="math display">\[
 \begin{align*}
-\Diamond_i f(x) &amp;=\left\{  
-           \begin{array}{**lr**}  
-           \partial_i^{-}f(x) &amp; if &amp;\partial_i^{-}f(x)&gt;0 \\ 
-           \partial_i^{+}f(x)&amp; if &amp;\partial_i^{+}f(x)&lt;0\\  
-           0 &amp; &amp;otherwise    
-           \end{array}  
+\Diamond_i f(x) &amp;=\left\{
+           \begin{array}{**lr**}
+           \partial_i^{-}f(x) &amp; if &amp;\partial_i^{-}f(x)&gt;0 \\
+           \partial_i^{+}f(x)&amp; if &amp;\partial_i^{+}f(x)&lt;0\\
+           0 &amp; &amp;otherwise
+           \end{array}
 \right.\\
-\partial_i^{\pm}f(x)&amp;=\frac{\partial}{\partial x_i}l(x)+\left\{  
-           \begin{array}{**lr**}  
-           C\sigma (x_i) &amp;  if &amp;x_i\neq 0\\  
-           \pm C&amp; if &amp; x_i=0    
-           \end{array}  
+\partial_i^{\pm}f(x)&amp;=\frac{\partial}{\partial x_i}l(x)+\left\{
+           \begin{array}{**lr**}
+           C\sigma (x_i) &amp;  if &amp;x_i\neq 0\\
+           \pm C&amp; if &amp; x_i=0
+           \end{array}
 \right.\\
 \partial_i^{-}f(x) &amp;\leq \partial_i^{+}f(x)
 \end{align*}
@@ -1169,10 +1168,10 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -1195,20 +1194,20 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
           <a href="/archives/">
         
           <span class="site-state-item-count">13</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
         <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">categories</span></a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
         <span class="site-state-item-count">33</span>
-        <span class="site-state-item-name">tags</span></a>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
@@ -1243,14 +1242,14 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="Symbols count total">423k</span>
+    <span title="站点总字数">444k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">6:24</span>
+    <span title="站点阅读时长">6:43</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
   </div>
 
         
