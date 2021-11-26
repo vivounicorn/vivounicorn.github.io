@@ -3699,178 +3699,6 @@ s.t.&amp;\quad&amp;没有或少做人工干预 \nonumber  \\
       </tags>
   </entry>
   <entry>
-    <title>机器学习与人工智能技术分享-第一章 基本概念</title>
-    <url>/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
-    <content><![CDATA[<h1 id="一些基本概念">1. 一些基本概念</h1>
-<h2 id="生成式模型与判别式模型">1.1 生成式模型与判别式模型</h2>
-<p>从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?</p>
-<ul>
-<li><p>生成式模型</p>
-<p>我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。</p></li>
-<li><p>判别式模型</p>
-<p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
-</ul>
-<span id="more"></span>
-<p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
-<p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
-<p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
-<ul>
-<li><p><span class="math inline">\(p(x,y)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(2/5\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/5\)</span></td>
-<td><span class="math inline">\(2/5\)</span></td>
-</tr>
-</tbody>
-</table></li>
-<li><p><span class="math inline">\(p(y|x)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(y|x)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/3\)</span></td>
-<td><span class="math inline">\(2/3\)</span></td>
-</tr>
-</tbody>
-</table></li>
-</ul>
-<p>一些理论可看：<a href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p>
-<ol type="1">
-<li><p>常见生成式模型</p>
-<ul>
-<li><p>Naive Bayes</p></li>
-<li><p>Gaussians</p></li>
-<li><p>Mixtures of Gaussians</p></li>
-<li><p>Mixtures of Experts</p></li>
-<li><p>Mixtures of Multinomials</p></li>
-<li><p>HMM</p></li>
-<li><p>Markov random fields</p></li>
-<li><p>Sigmoidal belief networks</p></li>
-<li><p>Bayesian networks</p></li>
-</ul></li>
-<li><p>常见判别式模型</p>
-<ul>
-<li><p>Linear regression</p></li>
-<li><p>Logistic regression</p></li>
-<li><p>SVM</p></li>
-<li><p>Perceptron</p></li>
-<li><p>Traditional Neural networks</p></li>
-<li><p>Nearest neighbor</p></li>
-<li><p>Conditional random fields</p></li>
-</ul></li>
-</ol>
-<h2 id="参数学习与非参学习">1.2 参数学习与非参学习</h2>
-<p>从参数与样本的关系角度看待模型。</p>
-<h3 id="参数学习">1.2.1 参数学习</h3>
-<p>参数学习的特点是：</p>
-<ol type="1">
-<li>选择某种形式的函数并通过机器学习用一系列固定个数的参数尽可能表征这些数据的某种模式；</li>
-<li>不管数据量有多大，函数参数的个数是固定的，即参数个数不随着样本量的增大而增加，从关系上说它们相互独立；</li>
-<li>往往对数据有较强的假设，如分布的假设，空间的假设等。</li>
-<li><p>常用参数学习的模型有：</p>
-<ul>
-<li><p>Logistic Regression</p></li>
-<li><p>Linear Regression</p></li>
-<li><p>Polynomial regression</p></li>
-<li><p>Linear Discriminant Analysis</p></li>
-<li><p>Perceptron</p></li>
-<li><p>Naive Bayes</p></li>
-<li><p>Simple Neural Networks</p></li>
-<li><p>使用线性核的SVM</p></li>
-<li><p>Mixture models</p></li>
-<li><p>K-means</p></li>
-<li><p>Hidden Markov models</p></li>
-<li><p>Factor analysis / pPCA / PMF</p></li>
-</ul></li>
-</ol>
-<h3 id="非参学习">1.2.2 非参学习</h3>
-<p>注意不要被名字误导，<strong>非参不等于无参</strong>。</p>
-<ol type="1">
-<li>数据决定了函数形式，函数参数个数不固定；</li>
-<li>随着数据量的增加，参数个数一般也会随之增长；</li>
-<li>对数据本身做较少的先验假设。</li>
-<li><p>一些常用的非参学习模型：</p>
-<ul>
-<li><p>k-Nearest Neighbors</p></li>
-<li><p>Decision Trees like CART and C4.5</p></li>
-<li><p>使用非线性核的SVM</p></li>
-<li><p>Gradient Boosted Decision Trees</p></li>
-<li><p>Gaussian processes for regression</p></li>
-<li><p>Dirichlet process mixtures</p></li>
-<li><p>infinite HMMs</p></li>
-<li><p>infinite latent factor models</p></li>
-</ul></li>
-</ol>
-<p>进一步知识可以看：<a href="http://mlss.tuebingen.mpg.de/2015/slides/ghahramani/gp-neural-nets15.pdf">Parametric vs Nonparametric Models</a>。</p>
-<h2 id="监督学习非监督学习与强化学习">1.3 监督学习、非监督学习与强化学习</h2>
-<h3 id="监督学习">1.3.1 监督学习</h3>
-<p>对于每一个样本都会提供一个明确的学习目标（标注），有自变量也有因变量，学习机接收样本进行学习并通过对该样本预测后的结果和事先给定的目标比较后修正学习过程，这里的每一个样本都是标注好的，所以好处是歧义较低，坏处是万一有一定量样本标错了或者没标会对最终应用效果影响较大。通常监督学习过程如下：</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjqpcau16kj17d5iupnob1rco9.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
-</center>
-<h3 id="非监督学习">1.3.2 非监督学习</h3>
-对于每个样本不提供明确的学习目标（标注），有自变量但无因变量，学习机接收样本后会按事先指定的必要参数，依据某种相似度衡量方式自动学习样本内部的分布模式，好处是没有过多先验假设，能够体现数据内在模式并应用，坏处是有“盲目”性，并会混在噪声数据。比如：常用LDA做主题聚类，但如果使用场景不是降维而是想得到可输出的主题词，基本上没有人肉的干预无法直接使用（虽然整体上看感觉可能不错）。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjrioa912r21h0n1u571vh11go3m.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
-</center>
-<h3 id="强化学习">1.3.3 强化学习</h3>
-<p>我认为强化学习是最接近人类学习过程的，很多情况下我们无法直接表达什么是正确的什么是错误的（比如：我正在爬山，迈了一大步，又迈了一小步，那么没法儿说我迈了大步正确还是错误），但是可以通过惩罚不好的结果或者奖励好的结果来强化学习的效果（我迈了个大步，导致没有站稳，那么对迈大步做惩罚，然后接下来我会迈小一点）。所以强化学习是一个序列的决策过程，学习机的学习目标是通过在给定状态下选择某种动作，寻找合适动作的策略序列使得它可以获得某种最优结果的过程。 强化学习的几个要素，体现其序列、交互性：</p>
-<ul>
-<li>环境(environment)：强化学习所处的上下文；</li>
-<li>学习器(agent)：与环境的交互并学习的对象，具有主动性；</li>
-<li>动作(action)：处于环境下的可行动作集合；</li>
-<li>反馈(feedback)：对动作的回报或惩罚；</li>
-<li>策略(policy)：学习到的策略链。</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjski0i16221ae2rdd1789l3n13.png" width="400"/> picture from <a href="http://www.cse.unsw.edu.au/~cs9417ml/RL1/followup.html">here</a>
-</center>
-经典的训练狗的实验就是一种强化学习的过程：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asju6357fv9q891abinifjkf2a.png" width="500" /> picture from <a href="http://www.krigolsonteaching.com/reinforcement-learning.html">here</a>
-</center>
-<p>强化学习的有趣应用例如：</p>
-<ul>
-<li><a href="https://deepmind.com/research/alphago/">AlphaGo</a> <a href="https://gogameguru.com/i/2016/03/deepmind-mastering-go.pdf">Mastering the Game of Go with Deep Neural Networks and Tree Search</a></li>
-<li>Atari 2600 games <a href="http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html#ref12">Human-level control through deep reinforcement learning</a> <a href="https://arxiv.org/pdf/1507.04296.pdf">Massively Parallel Methods for Deep Reinforcement Learning</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>第一章</tag>
-        <tag>基本概念</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习与人工智能技术分享-第十四章 金融风控</title>
     <url>/page/2021/09/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E5%8D%81%E5%9B%9B%E7%AB%A0-%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/</url>
     <content><![CDATA[<h1 id="金融风控应用">14. 金融风控应用</h1>
@@ -4358,6 +4186,178 @@ Economic Value Added：全面评价企业经营者有效使用资本和为股东
       <tags>
         <tag>机器学习</tag>
         <tag>金融风控</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习与人工智能技术分享-第一章 基本概念</title>
+    <url>/page/2021/09/05/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%8A%80%E6%9C%AF%E5%88%86%E4%BA%AB-%E7%AC%AC%E4%B8%80%E7%AB%A0-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
+    <content><![CDATA[<h1 id="一些基本概念">1. 一些基本概念</h1>
+<h2 id="生成式模型与判别式模型">1.1 生成式模型与判别式模型</h2>
+<p>从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?</p>
+<ul>
+<li><p>生成式模型</p>
+<p>我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。</p></li>
+<li><p>判别式模型</p>
+<p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
+</ul>
+<span id="more"></span>
+<p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
+<p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
+<p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
+<ul>
+<li><p><span class="math inline">\(p(x,y)\)</span></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
+<th><span class="math inline">\(y=1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2/5\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1/5\)</span></td>
+<td><span class="math inline">\(2/5\)</span></td>
+</tr>
+</tbody>
+</table></li>
+<li><p><span class="math inline">\(p(y|x)\)</span></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(p(y|x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
+<th><span class="math inline">\(y=1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1/3\)</span></td>
+<td><span class="math inline">\(2/3\)</span></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<p>一些理论可看：<a href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p>
+<ol type="1">
+<li><p>常见生成式模型</p>
+<ul>
+<li><p>Naive Bayes</p></li>
+<li><p>Gaussians</p></li>
+<li><p>Mixtures of Gaussians</p></li>
+<li><p>Mixtures of Experts</p></li>
+<li><p>Mixtures of Multinomials</p></li>
+<li><p>HMM</p></li>
+<li><p>Markov random fields</p></li>
+<li><p>Sigmoidal belief networks</p></li>
+<li><p>Bayesian networks</p></li>
+</ul></li>
+<li><p>常见判别式模型</p>
+<ul>
+<li><p>Linear regression</p></li>
+<li><p>Logistic regression</p></li>
+<li><p>SVM</p></li>
+<li><p>Perceptron</p></li>
+<li><p>Traditional Neural networks</p></li>
+<li><p>Nearest neighbor</p></li>
+<li><p>Conditional random fields</p></li>
+</ul></li>
+</ol>
+<h2 id="参数学习与非参学习">1.2 参数学习与非参学习</h2>
+<p>从参数与样本的关系角度看待模型。</p>
+<h3 id="参数学习">1.2.1 参数学习</h3>
+<p>参数学习的特点是：</p>
+<ol type="1">
+<li>选择某种形式的函数并通过机器学习用一系列固定个数的参数尽可能表征这些数据的某种模式；</li>
+<li>不管数据量有多大，函数参数的个数是固定的，即参数个数不随着样本量的增大而增加，从关系上说它们相互独立；</li>
+<li>往往对数据有较强的假设，如分布的假设，空间的假设等。</li>
+<li><p>常用参数学习的模型有：</p>
+<ul>
+<li><p>Logistic Regression</p></li>
+<li><p>Linear Regression</p></li>
+<li><p>Polynomial regression</p></li>
+<li><p>Linear Discriminant Analysis</p></li>
+<li><p>Perceptron</p></li>
+<li><p>Naive Bayes</p></li>
+<li><p>Simple Neural Networks</p></li>
+<li><p>使用线性核的SVM</p></li>
+<li><p>Mixture models</p></li>
+<li><p>K-means</p></li>
+<li><p>Hidden Markov models</p></li>
+<li><p>Factor analysis / pPCA / PMF</p></li>
+</ul></li>
+</ol>
+<h3 id="非参学习">1.2.2 非参学习</h3>
+<p>注意不要被名字误导，<strong>非参不等于无参</strong>。</p>
+<ol type="1">
+<li>数据决定了函数形式，函数参数个数不固定；</li>
+<li>随着数据量的增加，参数个数一般也会随之增长；</li>
+<li>对数据本身做较少的先验假设。</li>
+<li><p>一些常用的非参学习模型：</p>
+<ul>
+<li><p>k-Nearest Neighbors</p></li>
+<li><p>Decision Trees like CART and C4.5</p></li>
+<li><p>使用非线性核的SVM</p></li>
+<li><p>Gradient Boosted Decision Trees</p></li>
+<li><p>Gaussian processes for regression</p></li>
+<li><p>Dirichlet process mixtures</p></li>
+<li><p>infinite HMMs</p></li>
+<li><p>infinite latent factor models</p></li>
+</ul></li>
+</ol>
+<p>进一步知识可以看：<a href="http://mlss.tuebingen.mpg.de/2015/slides/ghahramani/gp-neural-nets15.pdf">Parametric vs Nonparametric Models</a>。</p>
+<h2 id="监督学习非监督学习与强化学习">1.3 监督学习、非监督学习与强化学习</h2>
+<h3 id="监督学习">1.3.1 监督学习</h3>
+<p>对于每一个样本都会提供一个明确的学习目标（标注），有自变量也有因变量，学习机接收样本进行学习并通过对该样本预测后的结果和事先给定的目标比较后修正学习过程，这里的每一个样本都是标注好的，所以好处是歧义较低，坏处是万一有一定量样本标错了或者没标会对最终应用效果影响较大。通常监督学习过程如下：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjqpcau16kj17d5iupnob1rco9.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
+</center>
+<h3 id="非监督学习">1.3.2 非监督学习</h3>
+对于每个样本不提供明确的学习目标（标注），有自变量但无因变量，学习机接收样本后会按事先指定的必要参数，依据某种相似度衡量方式自动学习样本内部的分布模式，好处是没有过多先验假设，能够体现数据内在模式并应用，坏处是有“盲目”性，并会混在噪声数据。比如：常用LDA做主题聚类，但如果使用场景不是降维而是想得到可输出的主题词，基本上没有人肉的干预无法直接使用（虽然整体上看感觉可能不错）。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjrioa912r21h0n1u571vh11go3m.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
+</center>
+<h3 id="强化学习">1.3.3 强化学习</h3>
+<p>我认为强化学习是最接近人类学习过程的，很多情况下我们无法直接表达什么是正确的什么是错误的（比如：我正在爬山，迈了一大步，又迈了一小步，那么没法儿说我迈了大步正确还是错误），但是可以通过惩罚不好的结果或者奖励好的结果来强化学习的效果（我迈了个大步，导致没有站稳，那么对迈大步做惩罚，然后接下来我会迈小一点）。所以强化学习是一个序列的决策过程，学习机的学习目标是通过在给定状态下选择某种动作，寻找合适动作的策略序列使得它可以获得某种最优结果的过程。 强化学习的几个要素，体现其序列、交互性：</p>
+<ul>
+<li>环境(environment)：强化学习所处的上下文；</li>
+<li>学习器(agent)：与环境的交互并学习的对象，具有主动性；</li>
+<li>动作(action)：处于环境下的可行动作集合；</li>
+<li>反馈(feedback)：对动作的回报或惩罚；</li>
+<li>策略(policy)：学习到的策略链。</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjski0i16221ae2rdd1789l3n13.png" width="400"/> picture from <a href="http://www.cse.unsw.edu.au/~cs9417ml/RL1/followup.html">here</a>
+</center>
+经典的训练狗的实验就是一种强化学习的过程：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asju6357fv9q891abinifjkf2a.png" width="500" /> picture from <a href="http://www.krigolsonteaching.com/reinforcement-learning.html">here</a>
+</center>
+<p>强化学习的有趣应用例如：</p>
+<ul>
+<li><a href="https://deepmind.com/research/alphago/">AlphaGo</a> <a href="https://gogameguru.com/i/2016/03/deepmind-mastering-go.pdf">Mastering the Game of Go with Deep Neural Networks and Tree Search</a></li>
+<li>Atari 2600 games <a href="http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html#ref12">Human-level control through deep reinforcement learning</a> <a href="https://arxiv.org/pdf/1507.04296.pdf">Massively Parallel Methods for Deep Reinforcement Learning</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>第一章</tag>
+        <tag>基本概念</tag>
       </tags>
   </entry>
   <entry>
@@ -5363,7 +5363,7 @@ Attention\_Value(Q,K,V)=Softmax(\frac{QK^T}{\sqrt{d_k}})\cdot V
 <p><strong><em>三、Position-wise Feed-Forward Networks</em></strong></p>
 <p>主要用来做Attention信息的非线性组合，类似于使用了1×1卷积操作，输入序列上每个位置的词生成的Attention信息都会有一个前馈网络做这种非线性组合，注意是每个“位置”都会做但不同位置使用相同的线性变换，所以被叫做“position-wise”或“point-wise”，同时也意味着位置间可以做并行计算，公式如下： <span class="math display">\[
 FFN(x) = max(0, xW_1 + b_1)W_2 + b_2
-\]</span> 两个子层之间采用relu做激活，同样为了更好的保留输入信息和有利于梯度传播，也会增加一个残差连接，代码如下： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionwiseFeedForward</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, d_model, d_ff</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(PositionwiseFeedForward, self).__init__()</span><br><span class="line">        <span class="comment"># 类似做1×1卷积，self.w_1 = nn.Conv1d(d_model, d_ff, 1)</span></span><br><span class="line">        self.w_1 = nn.Linear(d_model, d_ff)</span><br><span class="line">        <span class="comment"># 类似做1×1卷积，self.w_2 = nn.Conv1d(d_model, d_ff, 1)</span></span><br><span class="line">        self.w_2 = nn.Linear(d_ff, d_model)</span><br><span class="line">        self.layer_norm = nn.LayerNorm(d_model)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">        residual = x</span><br><span class="line">        output = self.w_2(F.relu(self.w_1(x)))</span><br><span class="line">        output = self.layer_norm(output + residual)</span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
+\]</span> 两个子层之间采用relu做激活，同样为了更好的保留输入信息和有利于梯度传播，也会增加一个残差连接，代码如下： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionwiseFeedForward</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, dim_of_model, d_ff</span>):</span></span><br><span class="line">        <span class="built_in">super</span>(PositionwiseFeedForward, self).__init__()</span><br><span class="line">        <span class="comment"># 类似做1×1卷积，self.w_1 = nn.Conv1d(dim_of_model, d_ff, 1)</span></span><br><span class="line">        self.w_1 = nn.Linear(dim_of_model, d_ff)</span><br><span class="line">        <span class="comment"># 类似做1×1卷积，self.w_2 = nn.Conv1d(dim_of_model, d_ff, 1)</span></span><br><span class="line">        self.w_2 = nn.Linear(d_ff, dim_of_model)</span><br><span class="line">        self.layer_norm = nn.LayerNorm(dim_of_model)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x</span>):</span></span><br><span class="line">        residual = x</span><br><span class="line">        output = self.w_2(F.relu(self.w_1(x)))</span><br><span class="line">        output = self.layer_norm(output + residual)</span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
 <p><strong><em>五、Positional Encoding &amp; Positional Embedding</em></strong></p>
 <p>我们知道，RNN类神经网络在结构上天然具有序列学习能力，从而将词与词之间的位置关系可以很好的学到，而CNN利用zero-padding及通道编码位置信息，使得空间信息可以被捕获到，相关论文：《<a href="https://arxiv.org/pdf/2108.07884.pdf">Global Pooling, More than Meets the Eye:Position Information is Encoded Channel-Wise in CNNs</a>》，对没有使用这两种结构的网络就需要某种机制帮助考虑词与词在序列中的相对或绝对位置信息。这种机制应该既能隐含位置信息从而捕捉长依赖，又能做并行计算加快训练速度。通过类似word2vec这种机制能够把词的语义压缩在某个低维空间中（即Embedding的维度），且语义相近的词在空间中距离相近，同样的，除了语义距离外，词与词之间的绝对或相对距离也可以通过某种编码或Embedding的方法引入到模型中，这样既考虑了词与词之间的语义相关性又考虑了它们的距离相关性，例如：下面两个句子，分词后的“词”完全一样，语义向量也一样，但词放在不同的位置则意思南辕北辙：</p>
 <blockquote>
@@ -5383,14 +5383,52 @@ PE_{(pos,2i)} &amp;= sin(pos/10000^{2i/d_{model}})\\
 PE_{(pos,2i+1)} &amp;= cos(pos/10000^{2i/d_{model}})
 \end{align*}
 \]</span> 其中<span class="math inline">\(pos\)</span>是位置，<span class="math inline">\(i\)</span>是维度。位置编码的每个维度都对应于一个正弦曲线, 其波长形成从<span class="math inline">\(2\pi\)</span>到<span class="math inline">\(10000 \cdot 2 \pi\)</span>的等比级数。 代码如下： <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionalEncoding</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, d_model, max_len=<span class="number">5000</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>(PositionalEncoding, self).__init__()</span><br><span class="line"></span><br><span class="line">        pe = torch.zeros(max_len, d_model, requires_grad=<span class="literal">False</span>)</span><br><span class="line">        position = torch.arange(<span class="number">0</span>, max_len).unsqueeze(<span class="number">1</span>).<span class="built_in">float</span>()</span><br><span class="line">        div_term = torch.exp(torch.arange(<span class="number">0</span>, d_model, <span class="number">2</span>).<span class="built_in">float</span>() *</span><br><span class="line">                             -(math.log(<span class="number">10000.0</span>) / d_model))</span><br><span class="line">        pe[:, <span class="number">0</span>::<span class="number">2</span>] = torch.sin(position * div_term)</span><br><span class="line">        pe[:, <span class="number">1</span>::<span class="number">2</span>] = torch.cos(position * div_term)</span><br><span class="line">        pe = pe.unsqueeze(<span class="number">0</span>)</span><br><span class="line">        self.register_buffer(<span class="string">&#x27;pe&#x27;</span>, pe)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span></span><br><span class="line">        length = <span class="built_in">input</span>.size(<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> self.pe[:, :length]</span><br></pre></td></tr></table></figure></li>
-<li>Positional Embedding 不使用固定函数生成位置信息隐向量，类似word embedding，通过学习方式获得，相关论文见：《<a href="https://arxiv.org/pdf/1705.03122.pdf">Convolutional Sequence to Sequence Learning</a>》，虽然从效果上看两者没什么区别，但个人感觉embedding方式更自然，本身被“原生集成”在了模型中，且一旦与输入序列的embedding向量做“加法”操作，计算开销可以忽略不计。</li>
-</ul>
+<li><p>Positional Embedding 不使用固定函数生成位置信息隐向量，类似word embedding，通过学习方式获得，相关论文见：《<a href="https://arxiv.org/pdf/1705.03122.pdf">Convolutional Sequence to Sequence Learning</a>》，虽然从效果上看两者没什么区别，但个人感觉embedding方式更自然，本身被“原生集成”在了模型中，且一旦与输入序列的embedding向量做“加法”操作，计算开销可以忽略不计。</p>
 <p>关于位置编码的一些深入研究，可以看以下文章：</p>
 <p>1、《<a href="https://openreview.net/pdf?id=09-528y2Fgf">Rethinking Positional Encoding in Language Pre-training</a>》</p>
 <p>2、《<a href="https://kazemnejad.com/blog/transformer_architecture_positional_encoding/">Transformer Architecture:The Positional Encoding</a>》</p>
-<p>3、《<a href="https://openreview.net/pdf?id=onxoVA9FxMw">On Position Embeddings in BERT</a>》</p>
+<p>3、《<a href="https://openreview.net/pdf?id=onxoVA9FxMw">On Position Embeddings in BERT</a>》</p></li>
+</ul>
 <p>至此，Transformer里会用到的一些基本结构介绍完毕。</p>
 <h2 id="transformer">6.5. Transformer</h2>
+<p>与标准Sequence2Sequence模型类似，Transformer版本的模型也是由Encoder和Decoder两大部分组成：</p>
+<p>1、输入序列经过若干个Encoder，为序列中每个词生成一个输出。</p>
+<p>2、Decoder利用Encoder的输出以及Attention信息预测下一个词。</p>
+大的框架如下：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/2021-09-18-机器学习与人工智能技术分享-第六章-循环神经网络与Transformers-2021-11-25 10-36-09 的屏幕截图.png" width="500" height="" >
+</center>
+<p>Encoder之间相互独立，每个Encoder又由两大部分组成：自身的Multi-Head Attention模块和前馈神经网络模块组成：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/2021-09-18-机器学习与人工智能技术分享-第六章-循环神经网络与Transformers-2021-11-25 10-58-44 的屏幕截图.png" width="330" height="" >
+</center>
+<p>Decoder之间相互独立，每个Decoder又由三大部分组成：自身的Masked Multi-Head Attention模块、由Encoder产生并输入的Multi-Head Attention信息和前馈神经网络模块组成：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/2021-11-25%2011-12-43%20的屏幕截图.png" width="600" height="" >
+</center>
+<p>完整的标准Transformer结构如下：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_6/2021-09-18-机器学习与人工智能技术分享-第六章-循环神经网络与Transformers-the transformer" width="390" height="" >
+</center>
+<p>需要注意几个地方：</p>
+<ul>
+<li>Encoder的输入部分除了Word Embedding外还有描述词序的Positional Embedding，这两个向量维度相同，且执行“加法”操作后输入到Encoder；</li>
+<li>Encoder的Multi-Head Attention做了Padding Masked；</li>
+<li>Encoder每个子层都有一个残差连接（类似ResNet）帮助梯度更好更深的传播；</li>
+<li>Encoder的Position-wise前馈神经网络后面接了归一化层，用于降低模型方差；</li>
+<li>Transformer有多个Encoder串联；</li>
+<li>Decoder的Masked Multi-Head Attention既做了Padding Masked又做了Sequence Masked；</li>
+<li>Decoder的Multi-Head Attention做了Padding Masked；</li>
+<li>Decoder除了使用Word Embedding外还有描述词序的Positional Embedding；</li>
+<li>Decoder的Position-wise前馈神经网络后面接了归一化层，用于降低模型方差；</li>
+<li>Transformer有多个Decoder串联。</li>
+</ul>
+<p>代码示例如下：</p>
+<ul>
+<li><p>Encoder Layer &amp; Encoder <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># padding填充，为公共方法</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_attn_pad_mask</span>(<span class="params">seq_q, seq_k</span>):</span></span><br><span class="line">    batch_size, len_q = seq_q.size()</span><br><span class="line">    batch_size, len_k = seq_k.size()</span><br><span class="line">    pad_attn_mask = seq_k.data.eq(<span class="number">0</span>).unsqueeze(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> pad_attn_mask.expand(batch_size, len_q, len_k)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EncoderLayer</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;每个Encoder层由两部分组成.</span></span><br><span class="line"><span class="string">      1. multi-head self-attention.</span></span><br><span class="line"><span class="string">      2. position-wise fully connected feed-forward network.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, num_of_heads, dim_of_model, d_ff, dropout=<span class="number">0.1</span></span>):</span></span><br><span class="line">      <span class="built_in">super</span>(EncoderLayer, self).__init__()</span><br><span class="line">      self.mul_attn = MultiHeadAttention(num_of_heads, dim_of_model, dropout)</span><br><span class="line">      self.pos_ffn = PositionwiseFeedForward(dim_of_model, d_ff)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, query, padding_mask=<span class="literal">None</span></span>):</span></span><br><span class="line">      output, attention_weights = self.mul_attn.forward(</span><br><span class="line">          query, query, query, mask=padding_mask)</span><br><span class="line"></span><br><span class="line">      output = self.pos_ffn(output)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> output, attention_weights</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Encoder</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;Transformer有多个Encoder串联.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, num_of_layers=<span class="number">6</span>, num_of_heads=<span class="number">8</span>, dim_of_model=<span class="number">512</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">               d_ff=<span class="number">512</span>, dropout=<span class="number">0.1</span>, max_length=<span class="number">2000</span></span>):</span></span><br><span class="line">      <span class="built_in">super</span>(Encoder, self).__init__()</span><br><span class="line"></span><br><span class="line">      <span class="comment"># vocab_size 词典大小</span></span><br><span class="line">      <span class="comment"># Encoder个数</span></span><br><span class="line">      self.n_layers = num_of_layers</span><br><span class="line">      <span class="comment"># Multi-head数</span></span><br><span class="line">      self.num_of_heads = num_of_heads</span><br><span class="line">      <span class="comment"># 模型维度</span></span><br><span class="line">      self.dim_of_model = dim_of_model</span><br><span class="line">      <span class="comment"># 仿射变换输出维度</span></span><br><span class="line">      self.d_ff = d_ff</span><br><span class="line">      self.dropout_rate = dropout</span><br><span class="line">      <span class="comment"># 序列最大长度</span></span><br><span class="line">      self.max_length = max_length</span><br><span class="line"></span><br><span class="line">      <span class="comment"># 输入的Embedding层</span></span><br><span class="line">      self.input_emb = nn.Embedding(vocab_size, dim_of_model)</span><br><span class="line">      <span class="comment"># 输入的词序embedding层</span></span><br><span class="line">      self.pos_emb = PositionalEncoding(dim_of_model, max_len=max_length)</span><br><span class="line">      self.dropout = nn.Dropout(dropout)</span><br><span class="line"></span><br><span class="line">      <span class="comment"># Encoder层</span></span><br><span class="line">      self.layers = nn.ModuleList([</span><br><span class="line">          EncoderLayer(num_of_heads, dim_of_model, d_ff, dropout=dropout)</span><br><span class="line">          <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_of_layers)])</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, padded_input</span>):</span></span><br><span class="line">      enc_slf_attn_list = []</span><br><span class="line"></span><br><span class="line">      <span class="comment"># 词向量Embedding</span></span><br><span class="line">      enc_outputs = self.input_emb(padded_input)</span><br><span class="line">      <span class="comment"># 词向量Embedding + 词序Embedding</span></span><br><span class="line">      enc_outputs += self.pos_emb(enc_outputs)</span><br><span class="line">      enc_output = self.dropout(enc_outputs)</span><br><span class="line"></span><br><span class="line">      slf_attn_mask = get_attn_pad_mask(padded_input, padded_input)</span><br><span class="line"></span><br><span class="line">      <span class="comment"># Encoder层的多级串联</span></span><br><span class="line">      <span class="keyword">for</span> enc_layer <span class="keyword">in</span> self.layers:</span><br><span class="line">          enc_output, enc_slf_attn = enc_layer(enc_output, slf_attn_mask)</span><br><span class="line">          enc_slf_attn_list += [enc_slf_attn]</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> enc_output, enc_slf_attn_list</span><br><span class="line"></span><br><span class="line">sample_encoder = Encoder(<span class="number">200</span>)</span><br><span class="line">q = torch.randint(<span class="number">1</span>, <span class="number">10</span>, (<span class="number">64</span>, <span class="number">62</span>))</span><br><span class="line">sample_encoder_output, enc_slf_attn_list = sample_encoder.forward(q)</span><br><span class="line"><span class="built_in">print</span>(sample_encoder_output.shape)</span><br></pre></td></tr></table></figure></p></li>
+<li>Decoder Layer &amp; Decoder <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_subsequent_mask</span>(<span class="params">seq</span>):</span></span><br><span class="line">  sz_b, len_s = seq.size()</span><br><span class="line">  subsequent_mask = torch.triu(</span><br><span class="line">      torch.ones((len_s, len_s), device=seq.device, dtype=torch.uint8), diagonal=<span class="number">1</span>)</span><br><span class="line">  subsequent_mask = subsequent_mask.unsqueeze(<span class="number">0</span>).expand(sz_b, -<span class="number">1</span>, -<span class="number">1</span>)  <span class="comment"># b x ls x ls</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> subsequent_mask</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DecoderLayer</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">  <span class="string">&quot;&quot;&quot;每个Decoder层由两部分组成.</span></span><br><span class="line"><span class="string">      1. multi-head self-attention.</span></span><br><span class="line"><span class="string">      2. encoder-decoder multi-head self-attention.</span></span><br><span class="line"><span class="string">      3. position-wise fully connected feed-forward network.</span></span><br><span class="line"><span class="string">  &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, num_of_heads, dim_of_model, d_ff, dropout=<span class="number">0.1</span></span>):</span></span><br><span class="line">      <span class="built_in">super</span>(DecoderLayer, self).__init__()</span><br><span class="line">      self.mul_attn = MultiHeadAttention(num_of_heads, dim_of_model, dropout)</span><br><span class="line">      self.enc_attn = MultiHeadAttention(num_of_heads, dim_of_model, dropout)</span><br><span class="line">      self.pos_ffn = PositionwiseFeedForward(dim_of_model, d_ff)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, dec_input, enc_output, dec_self_attn_mask=<span class="literal">None</span>, dec_enc_attn_mask=<span class="literal">None</span></span>):</span></span><br><span class="line">      dec_output, dec_slf_attn = self.mul_attn(</span><br><span class="line">          dec_input, dec_input, dec_input, mask=dec_self_attn_mask)</span><br><span class="line"></span><br><span class="line">      dec_output, dec_enc_attn = self.enc_attn(</span><br><span class="line">          dec_output, enc_output, enc_output, mask=dec_enc_attn_mask)</span><br><span class="line"></span><br><span class="line">      dec_output = self.pos_ffn(dec_output)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> dec_output, dec_slf_attn, dec_enc_attn</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Decoder</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Transformer有多个Decoder串联.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, tgt_vocab_size, num_of_layers=<span class="number">6</span>, num_of_heads=<span class="number">8</span>, dim_of_model=<span class="number">512</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                 d_ff=<span class="number">512</span>, dropout=<span class="number">0.1</span>, max_length=<span class="number">2000</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>(Decoder, self).__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># vocab_size 词典大小</span></span><br><span class="line">        <span class="comment"># Encoder个数</span></span><br><span class="line">        self.n_layers = num_of_layers</span><br><span class="line">        <span class="comment"># Multi-head数</span></span><br><span class="line">        self.num_of_heads = num_of_heads</span><br><span class="line">        <span class="comment"># 模型维度</span></span><br><span class="line">        self.dim_of_model = dim_of_model</span><br><span class="line">        <span class="comment"># 仿射变换输出维度</span></span><br><span class="line">        self.d_ff = d_ff</span><br><span class="line">        self.dropout_rate = dropout</span><br><span class="line">        <span class="comment"># 序列最大长度</span></span><br><span class="line">        self.max_length = max_length</span><br><span class="line"></span><br><span class="line">        self.tgt_emb = nn.Embedding(tgt_vocab_size, dim_of_model)</span><br><span class="line">        self.positional_encoding = PositionalEncoding(dim_of_model, max_len=max_length)</span><br><span class="line">        self.dropout = nn.Dropout(dropout)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Decoder层串行级联</span></span><br><span class="line">        self.layers = nn.ModuleList([</span><br><span class="line">            DecoderLayer(num_of_heads, dim_of_model, d_ff, dropout=dropout)</span><br><span class="line">            <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(num_of_layers)])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 映射目标词维度空间到词典表维度空间</span></span><br><span class="line">        self.tgt_word_prj = nn.Linear(dim_of_model, tgt_vocab_size, bias=<span class="literal">False</span>)</span><br><span class="line">        nn.init.xavier_normal_(self.tgt_word_prj.weight)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, padded_input, encoder_padded_outputs, dec_enc_attn_mask=<span class="literal">None</span></span>):</span></span><br><span class="line">        <span class="comment"># multi-head self-attention 和 encoder-decoder multi-head self-attention的attention信息</span></span><br><span class="line">        dec_slf_attn_list, dec_enc_attn_list = [], []</span><br><span class="line"></span><br><span class="line">        dec_self_attn_subsequence_mask = get_subsequent_mask(padded_input)</span><br><span class="line">        dec_self_attn_pad_mask = get_attn_pad_mask(padded_input,</span><br><span class="line">                                                   padded_input)</span><br><span class="line">        dec_self_attn_mask = (dec_self_attn_pad_mask + dec_self_attn_subsequence_mask).gt(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        dec_output = self.dropout(self.tgt_emb(padded_input) +</span><br><span class="line">                                  self.positional_encoding(padded_input))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 多个Decoder层串行执行.</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            dec_output, dec_slf_attn, dec_enc_attn = layer(</span><br><span class="line">                dec_output, encoder_padded_outputs,</span><br><span class="line">                dec_self_attn_mask=dec_self_attn_mask,</span><br><span class="line">                dec_enc_attn_mask=dec_enc_attn_mask)</span><br><span class="line"></span><br><span class="line">            dec_slf_attn_list += [dec_slf_attn]</span><br><span class="line">            dec_enc_attn_list += [dec_enc_attn]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 把目标词维度映射到词典维度</span></span><br><span class="line">        seq_logit = self.tgt_word_prj(dec_output)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> seq_logit, dec_slf_attn_list, dec_enc_attn_list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sample_decoder = Decoder(tgt_vocab_size=<span class="number">8000</span>)</span><br><span class="line">q = torch.randint(<span class="number">1</span>, <span class="number">10</span>, (<span class="number">64</span>, <span class="number">26</span>))</span><br><span class="line"></span><br><span class="line">output, dec_slf_attn_list, dec_enc_attn_list = sample_decoder.forward(padded_input=q,</span><br><span class="line">                                                                      encoder_padded_outputs=sample_encoder_output)</span><br><span class="line"><span class="built_in">print</span>(output.shape)</span><br></pre></td></tr></table></figure></li>
+<li><p>Transformer <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Transformer</span>(<span class="params">nn.Module</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Transformer构建.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size=<span class="number">8000</span></span>):</span></span><br><span class="line">        <span class="built_in">super</span>(Transformer, self).__init__()</span><br><span class="line">        self.encoder = Encoder(vocab_size)</span><br><span class="line">        self.decoder = Decoder(vocab_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, padded_input, padded_target</span>):</span></span><br><span class="line"></span><br><span class="line">        encoder_padded_outputs, enc_slf_attn_list = self.encoder(padded_input)</span><br><span class="line"></span><br><span class="line">        pred, dec_slf_attn_list, dec_enc_attn_list = self.decoder(padded_target, encoder_padded_outputs)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> pred, enc_slf_attn_list, dec_slf_attn_list, dec_enc_attn_list</span><br><span class="line"></span><br><span class="line">model = Transformer()</span><br><span class="line">q = torch.randint(<span class="number">1</span>, <span class="number">10</span>, (<span class="number">64</span>, <span class="number">26</span>))</span><br><span class="line">t = torch.randint(<span class="number">1</span>, <span class="number">10</span>, (<span class="number">64</span>, <span class="number">26</span>))</span><br><span class="line">pred, *_ = model.forward(q, t)</span><br><span class="line"><span class="built_in">print</span>(pred.shape)</span><br><span class="line"></span><br></pre></td></tr></table></figure></p></li>
+</ul>
 ]]></content>
       <categories>
         <category>机器学习</category>
