@@ -946,197 +946,6 @@ OWL-QN主要是针对L1-norm不可微提出的，它是基于这样一个事实�
       </tags>
   </entry>
   <entry>
-    <title>机器学习与人工智能技术分享-第九章 语义分割</title>
-    <url>/article/b12a240.html</url>
-    <content><![CDATA[<h1 id="语义分割">9. 语义分割</h1>
-<h2 id="fcn">9.1 FCN</h2>
-<p>FCN在《<a href="https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf">Fully Convolutional Networks for Semantic Segmentation</a>》中第一次被提出，个人认为是实现图像end to end语义分割的开山之作，第一次做到了低成本的像素级分类预测（end-to-end, pixels-to-pixels），另外这个方法用在目标检测、识别上效果好于传统新方法(如：Faster R-CNN)。</p>
-<p>所谓语义分割简单说就是不但要知道你属于哪一类，还要知道你在哪儿：</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1blc5thhohau12itero1ige1v6dm.png" width="800"  />
-</center>
-<span id="more"></span>
-<p>从左到右分别是：原图、ground truth图、训练2轮的模型预测图、训练5轮的模型预测图（ps：截止本文前，训练达到理想状态还差200多轮）。</p>
-<h3 id="算法概述">9.1.1 算法概述</h3>
-<p>CNN网络无疑是特征提取的利器，尤其在图像领域，回顾我们的做法：CNN做特征提取+全连接层做特征组合+分类/回归，为了能提高模型预测能力，需要通过多个全连接层（做笛卡尔积）做特征组合，这里是参数数量最多的地方，成为模型训练，尤其是inference时的最大瓶颈（所以模型压缩和剪枝算法会把第一把刀放在全连接层），而由于全连接层的存在，导致整个网络的输入必须是固定大小的：由于卷积和采样操作更本不关心输入大小如何，试想如果输入大小不一，不同图片到了全连接层时其输入节点数是不一样的，而网络的定义必须事先定义好，所以没法儿玩儿了，于是有了前面的SPP及RoI pooling来解决这个问题，FCN则是解决这个问题的另一个思路。</p>
-<p>总结该算法要解决的问题如下：</p>
-<p>1、取消网络对输入数据大小必须固定的限制；</p>
-<p>2、提高模型效果且加快其训练和inference速度。</p>
-相比于传统CNN，FCN把全连接层全部替换成卷积层，并在feature map(可以是其中任何一个)上<strong>做上采样</strong>，使其恢复到原始图片大小，这样不但保留了每个像素的空间信息，而且每个像素都会有一个分类预测。比如下图中pixelwise prediction那一层，小猫、小狗、电视、背景都会在像素级别做分类预测：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7ig9dqebe1n3v1jmb1o2g1gdim.png" width="500"  />
-</center>
-<h3 id="卷积回顾">9.1.2 1×1卷积回顾</h3>
-<p>前面我们在介绍各种经典识别网络中介绍了1×1卷积核，回顾下它的作用，尤其对多通道而言：</p>
-<p>1、每个1×1卷积核会有一个参数，利用它们可以做跨通道特征融合，即对多个通道的feature map做线性组合；</p>
-<p>2、具有降维或升维作用，如：在GoogleNet中它可以跟在pooling层后面做降维，也可以直接通过减少通道数做降维，大大减少了参数量；</p>
-<p>3、可以在不损失feature map信息的前提下利用后面的激活函数增加模型非线性表征能力，可以低成本的把网络变深。</p>
-<h3 id="全卷积网络">9.1.3 全卷积网络</h3>
-<p>使用传统CNN做像素级分类的问题：</p>
-<p>1、为了考虑上下文信息，需要一个滑动窗口，利用滑动窗口内的feature map对每个像素做分类，分类效果及存储空间随滑动窗口的大小上升；</p>
-<p>2、为了考虑上下文信息，导致相邻两个窗口之间有大量的像素重复，意味着大量计算重复；</p>
-<p>3、原图的空间信息没有被很好的利用；</p>
-<p>4、原图需要固定大小，图像的resize（本质就是图像的下采样）导致信息损失。</p>
-FCN则很好的解决了上面几个问题。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7jj2q4i9n16l81fm1bf8nhb13.png" width="500"  />
-</center>
-上图是传统CNN工作流程，下图是FCN工作流程，它最终可以得到关于目标的热图，这种变换除了在语义分割、检测、识别上用到，也会在feature map可视化上用来帮助分析特征。 一张图说明：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7p4cjk1klm1kqc4oefh67ci1g.png" width="800"  />
-</center>
-<p>理解FCN最关键的一步是理解上采样（upsampling）。</p>
-<h3 id="nyquistshannon采样定理">9.1.4 Nyquist–Shannon采样定理</h3>
-<p>关于采样，这个话题可大可小，从定义上说，采样是这么一个过程：在尽可能减少信息损失的情况下，将信号从一种采样率下的形态转换为另外一种，对于图片，这个过程叫做图像缩放。详细定义参见<a href="http://avisynth.nl/index.php/Resampling">Resampling</a>。</p>
-<p>对计算机而言无法处理连续信号（读者想想为什么？），必须通过采样做信号离散化，那就必须回答一个问题：理想情况下，以什么样的频率采样能完美重构连续信号的信息。</p>
-<p>Nyquist–Shannon采样定理回答了上面的问题：当对信号均匀间隔离散采样且信号的带宽小于采样率的一半时，原始连续信号可以被其得到的采样样本完全重构，不满足该条件则会出现混叠(Aliasing)现象。</p>
-<p>理论上连续信号可以通过以下公式重构（信息重构器）：</p>
-<span class="math display">\[
-\text{s(x) = sum_n s(n*T) * sinc((x-n*T)/T), with sinc(x) = sin(pi*x)/(pi*x) for x!=0, and = 1 for x=0}
-\]</span>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7skcf2l9opk4f19si01a0c1t.png" width="500"  />
-</center>
-<p>其中采样率为:1/T，s(n*T)是s(x)的采样样本，sinc(x)是采样核(resampling kernel)。</p>
-<p>一般来说 信息重构器有以下性质：</p>
-<p>1、<span class="math inline">\(s(m*T)\)</span>确实是信号<span class="math inline">\(s(x)\)</span>的样本；</p>
-<p>2、$_n{sinc((x-n*T)/T)} = 1 $;</p>
-<p>3、resampling kernel：<span class="math inline">\(sinc(x)=* \text{ for x!=0, and = 1 for x=0}\)</span>；</p>
-<p>4、resampling kernel：<span class="math inline">\(sinc(x)\)</span>是对称的，<span class="math inline">\(sinc(x) = sinc(-x)\)</span>；</p>
-<p>5、resampling kernel：<span class="math inline">\(sinc(x)\)</span>是处处可微的。</p>
-<p>当然还有其他形式的resampling kernel，比如bilinear resampling kernel，满足上述性质2、3、4：</p>
-<p><span class="math display">\[
-f(x)=
-\begin{cases}
-1 - |x|&amp; \text{|x|&lt;1}\\
-0&amp; \text{other}
-\end{cases}
-\]</span></p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7va3qf153pjto2n1ahrn52n.png" width="500"  />
-</center>
-<p>这个函数在FCN里广泛用到。</p>
-<p>我利用scikit-image library给个简单的bilinear resampling示例：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> skimage.transform</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> ogrid, repeat, newaxis</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_with_skimage</span>(<span class="params">img, factor</span>):</span></span><br><span class="line">    <span class="comment"># order=1表示bilinear resampling，参见：http://scikit-image.org/docs/dev/api/skimage.transform.html。</span></span><br><span class="line">    <span class="comment"># order的含义：</span></span><br><span class="line">    <span class="comment"># 0: Nearest-neighbor</span></span><br><span class="line">    <span class="comment"># 1: Bi-linear (default)</span></span><br><span class="line">    <span class="comment"># 2: Bi-quadratic</span></span><br><span class="line">    <span class="comment"># 3: Bi-cubic</span></span><br><span class="line">    <span class="comment"># 4: Bi-quartic</span></span><br><span class="line">    <span class="comment"># 5: Bi-quintic</span></span><br><span class="line">    <span class="keyword">return</span> skimage.transform.rescale(img,</span><br><span class="line">                                     factor,</span><br><span class="line">                                     mode=<span class="string">&#x27;constant&#x27;</span>,</span><br><span class="line">                                     cval=<span class="number">0</span>,</span><br><span class="line">                                     order=<span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    target = upsample_with_skimage(img=io.imread(<span class="string">&quot;feature_map.jpg&quot;</span>), factor=<span class="number">5</span>)</span><br><span class="line">    io.imsave(<span class="string">&quot;upsampling.png&quot;</span>, target, interpolation=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1blc6rav11cik1qkgmnf1b9qovg1g.png" width="700"  />
-</center>
-<h3 id="转置卷积transposed-convolution">9.1.5 转置卷积(Transposed Convolution)</h3>
-<p>很多人把这个过程叫做“反卷积(deconvolution)”，但我认为这么叫是错误的，它的过程并不是对卷积的逆运算，它除了用在FCN中还会用在卷积可视化、对抗神经网络中。 原理如下：</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bleq0o8judv1ma7bjegob1nbv9.png" width="500"  />
-</center>
-<p>假设，输入为4×4、输出为2×2、卷积核为3×3，则把输出、输入和卷积核按照从左到右、从上到下展开为向量，前向传播的卷积过程相当于输入与以下稀疏矩阵的乘积：</p>
-<p><span class="math display">\[
-\begin{equation}
-W=\left(
-\begin{array}{lll}
-w_{0,0} &amp;0&amp;0&amp;0 \\
-w_{0,1} &amp;w_{0,0}&amp;0&amp;0 \\
-w_{0,2} &amp;w_{0,1}&amp;0&amp;0 \\
-0 &amp;w_{0,2}&amp;0&amp;0 \\
-w_{1,0} &amp;0&amp;w_{0,0}&amp;0 \\
-w_{1,1} &amp;w_{1,0}&amp;w_{0,1}&amp;w_{0,0} \\
-w_{1,2} &amp;w_{1,1}&amp;w_{0,2}&amp;w_{0,1} \\
-0 &amp;w_{1,2}&amp;0&amp;w_{0,2} \\
-w_{2,0} &amp;0&amp;w_{1,0}&amp;0 \\
-w_{2,1} &amp;w_{2,0}&amp;w_{1,1}&amp;w_{1,0} \\
-w_{2,2} &amp;w_{2,1}&amp;w_{1,2}&amp;w_{1,1} \\
-0 &amp;w_{2,2}&amp;0&amp;w_{1,2} \\
-0 &amp;0&amp;w_{2,0}&amp;0 \\
-0 &amp;0&amp;w_{2,1}&amp;w_{2,0} \\
-0 &amp;0&amp;w_{2,2}&amp;w_{2,1} \\
-0 &amp;0&amp;0&amp;w_{2,2}
-\end{array}
-\right)^T\nonumber
-\end{equation}
-\]</span></p>
-<p>前向传播过程就表述为：</p>
-<p><span class="math display">\[
-\begin{equation}
-Y=W \cdot X =\left(
-\begin{array}{lll}
-w_{0,0} &amp;0&amp;0&amp;0 \\
-w_{0,1} &amp;w_{0,0}&amp;0&amp;0 \\
-w_{0,2} &amp;w_{0,1}&amp;0&amp;0 \\
-0 &amp;w_{0,2}&amp;0&amp;0 \\
-w_{1,0} &amp;0&amp;w_{0,0}&amp;0 \\
-w_{1,1} &amp;w_{1,0}&amp;w_{0,1}&amp;w_{0,0} \\
-w_{1,2} &amp;w_{1,1}&amp;w_{0,2}&amp;w_{0,1} \\
-0 &amp;w_{1,2}&amp;0&amp;w_{0,2} \\
-w_{2,0} &amp;0&amp;w_{1,0}&amp;0 \\
-w_{2,1} &amp;w_{2,0}&amp;w_{1,1}&amp;w_{1,0} \\
-w_{2,2} &amp;w_{2,1}&amp;w_{1,2}&amp;w_{1,1} \\
-0 &amp;w_{2,2}&amp;0&amp;w_{1,2} \\
-0 &amp;0&amp;w_{2,0}&amp;0 \\
-0 &amp;0&amp;w_{2,1}&amp;w_{2,0} \\
-0 &amp;0&amp;w_{2,2}&amp;w_{2,1} \\
-0 &amp;0&amp;0&amp;w_{2,2}
-\end{array}
-\right)^T\nonumber
-\cdot
-\left(
-\begin{array}{lll}
-1\\
-2\\
-3\\
-4 \\
-5\\
-6\\
-7\\
-8 \\
-9\\
-10\\
-11\\
-12\\
-13\\
-14\\
-15\\
-16
-\end{array}
-\right)\nonumber=
-\left(
-\begin{array}{lll}
-1\\
-2\\
-3\\
-4
-\end{array}
-\right)\nonumber
-\end{equation}
-\]</span></p>
-<p>误差反向传播(如果记不清了可以回看5.1节)：</p>
-<p><span class="math display">\[
-\frac{\partial E}{\partial X}=W^T\frac{\partial E}{\partial Y}
-\]</span></p>
-<p>那么反过来，我们希望从4维向量映射回16维向量怎么做呢：把上面过程逆反一下(当然该做padding还得做)： 前向传播： <span class="math display">\[Y=W^T X
-\]</span> 反向传播: <span class="math display">\[
-\frac{\partial E}{\partial X}=(W^T)^T\frac{\partial E}{\partial Y}=W\frac{\partial E}{\partial Y}
-\]</span></p>
-<p>整个过程平滑柔顺，多种情况下的详细解释可以看：<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">《Convolution arithmetic tutorial》</a></p>
-<p>keras下做转置卷积，输入feature map及最终效果同8.7.4。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> skimage</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_kernel_size</span>(<span class="params">factor</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    给定上采样因子，返回核大小，上采样因子大小等于转置卷积步长。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * factor - factor % <span class="number">2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_filt</span>(<span class="params">size</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    返回上采样bilinear kernel矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    factor = (size + <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> size % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">        center = factor - <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        center = factor - <span class="number">0.5</span></span><br><span class="line">    og = np.ogrid[:size, :size]</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1</span> - <span class="built_in">abs</span>(og[<span class="number">0</span>] - center) / factor) * \</span><br><span class="line">           (<span class="number">1</span> - <span class="built_in">abs</span>(og[<span class="number">1</span>] - center) / factor)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bilinear_upsample_weights</span>(<span class="params">factor, channel</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    使用bilinear filter初始化转置卷积权重矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    filter_size = get_kernel_size(factor)</span><br><span class="line"></span><br><span class="line">    weights = np.zeros((filter_size,</span><br><span class="line">                        filter_size,</span><br><span class="line">                        channel,</span><br><span class="line">                        channel), dtype=np.float32)</span><br><span class="line"></span><br><span class="line">    upsample_kernel = upsample_filt(filter_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(channel):</span><br><span class="line"></span><br><span class="line">        weights[:, :, i, i] = upsample_kernel</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> weights</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_keras</span>(<span class="params">factor, input_img</span>):</span></span><br><span class="line"></span><br><span class="line">    SCALE = <span class="number">256</span></span><br><span class="line">    channel = input_img.shape[<span class="number">2</span>]</span><br><span class="line">    scale_height = input_img.shape[<span class="number">0</span>] * factor</span><br><span class="line">    scale_width = input_img.shape[<span class="number">1</span>] * factor</span><br><span class="line">    expanded_img = np.expand_dims(input_img, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tf.device(<span class="string">&quot;/gpu:1&quot;</span>):</span><br><span class="line">        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=<span class="number">1</span>, allow_growth=<span class="literal">True</span>)</span><br><span class="line">        os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line">        sess = tf.Session(config=K.tf.ConfigProto(allow_soft_placement=<span class="literal">True</span>,</span><br><span class="line">                                       log_device_placement=<span class="literal">True</span>,</span><br><span class="line">                                       gpu_options=gpu_options))</span><br><span class="line">        input_value = tf.placeholder(tf.float32)</span><br><span class="line">        trans_filter = tf.placeholder(tf.float32)</span><br><span class="line">        upsample_filter_np = bilinear_upsample_weights(factor, channel)</span><br><span class="line"></span><br><span class="line">        res = K.conv2d_transpose(input_value, trans_filter,</span><br><span class="line">                    output_shape=[<span class="number">1</span>, scale_height, scale_width, channel],</span><br><span class="line">                    padding=<span class="string">&#x27;same&#x27;</span>,</span><br><span class="line">                    strides=(factor, factor))</span><br><span class="line"></span><br><span class="line">        final_result = sess.run(res,</span><br><span class="line">                            feed_dict=&#123;trans_filter: upsample_filter_np,</span><br><span class="line">                                       input_value: expanded_img&#125;)</span><br><span class="line">    <span class="keyword">if</span> channel != <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> final_result.squeeze() / SCALE</span><br><span class="line">    <span class="keyword">return</span> final_result.squeeze()</span><br><span class="line"></span><br><span class="line">upsampled_img_keras = upsample_keras(factor=<span class="number">5</span>, input_img=skimage.io.imread(<span class="string">&quot;feature_map.jpg&quot;</span>))</span><br><span class="line">skimage.io.imsave(<span class="string">&quot;bilinear_feature_map.jpg&quot;</span>,upsampled_img_keras, interpolation=<span class="string">&#x27;none&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="代码实践">9.1.6 代码实践</h3>
-<p>开源代码可参见：<a href="https://github.com/aurora95/Keras-FCN">Keras-FCN</a>，虽然缺点是训练有点慢，模型有点大，但对于理解如何实现很有帮助。</p>
-<p>里面实现了五种模型，两种基于vgg-16，两种基于resnet-50，一种基于densenet。</p>
-<p>上采样操作做为一个新的网络层意味着它需要能够前向传播、反向传播、更新权重，其实现在代码中为BilinearUpSampling.py。</p>
-<p>inference.py的代码需要稍微变下：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> keras.preprocessing.image <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> keras.applications.imagenet_utils <span class="keyword">import</span> preprocess_input</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> models <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inference</span>(<span class="params">model_name, weight_file, image_size, image_list, data_dir, label_dir, return_results=<span class="literal">True</span>, save_dir=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">              label_suffix=<span class="string">&#x27;.png&#x27;</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">              data_suffix=<span class="string">&#x27;.jpg&#x27;</span></span>):</span></span><br><span class="line">    current_dir = os.path.dirname(os.path.realpath(__file__))</span><br><span class="line">    <span class="comment"># mean_value = np.array([104.00699, 116.66877, 122.67892])</span></span><br><span class="line">    batch_shape = (<span class="number">1</span>, ) + image_size + (<span class="number">3</span>, )</span><br><span class="line">    save_path = os.path.join(current_dir, <span class="string">&#x27;Models/&#x27;</span>+model_name)</span><br><span class="line">    model_path = os.path.join(save_path, <span class="string">&quot;model.json&quot;</span>)</span><br><span class="line">    checkpoint_path = os.path.join(save_path, weight_file)</span><br><span class="line">    <span class="comment"># model_path = os.path.join(current_dir, &#x27;model_weights/fcn_atrous/model_change.hdf5&#x27;)</span></span><br><span class="line">    <span class="comment"># model = FCN_Resnet50_32s((480,480,3))</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#config = tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))</span></span><br><span class="line">    <span class="comment">#session = tf.Session(config=config)</span></span><br><span class="line">    <span class="comment">#K.set_session(session)</span></span><br><span class="line"></span><br><span class="line">    model = <span class="built_in">globals</span>()[model_name](batch_shape=batch_shape, input_shape=(<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>))</span><br><span class="line">    model.load_weights(checkpoint_path, by_name=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    model.summary()</span><br><span class="line"></span><br><span class="line">    results = []</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> img_num <span class="keyword">in</span> image_list:</span><br><span class="line">        img_num = img_num.strip(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        total += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;#%d: %s&#x27;</span> % (total,img_num))</span><br><span class="line">        image = Image.<span class="built_in">open</span>(<span class="string">&#x27;%s/%s%s&#x27;</span> % (data_dir, img_num, data_suffix))</span><br><span class="line">        image = img_to_array(image)  <span class="comment"># , data_format=&#x27;default&#x27;)</span></span><br><span class="line"></span><br><span class="line">        label = Image.<span class="built_in">open</span>(<span class="string">&#x27;%s/%s%s&#x27;</span> % (label_dir, img_num, label_suffix))</span><br><span class="line">        label_size = label.size</span><br><span class="line"></span><br><span class="line">        img_h, img_w = image.shape[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># long_side = max(img_h, img_w, image_size[0], image_size[1])</span></span><br><span class="line">        pad_w = <span class="built_in">max</span>(image_size[<span class="number">1</span>] - img_w, <span class="number">0</span>)</span><br><span class="line">        pad_h = <span class="built_in">max</span>(image_size[<span class="number">0</span>] - img_h, <span class="number">0</span>)</span><br><span class="line">        image = np.lib.pad(image, ((pad_h/<span class="number">2</span>, pad_h - pad_h/<span class="number">2</span>), (pad_w/<span class="number">2</span>, pad_w - pad_w/<span class="number">2</span>), (<span class="number">0</span>, <span class="number">0</span>)), <span class="string">&#x27;constant&#x27;</span>, constant_values=<span class="number">0.</span>)</span><br><span class="line">        <span class="comment"># image -= mean_value</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;img = array_to_img(image, &#x27;channels_last&#x27;, scale=False)</span></span><br><span class="line"><span class="string">        img.show()</span></span><br><span class="line"><span class="string">        exit()&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># image = cv2.resize(image, image_size)</span></span><br><span class="line"></span><br><span class="line">        image = np.expand_dims(image, axis=<span class="number">0</span>)</span><br><span class="line">        image = preprocess_input(image)</span><br><span class="line"></span><br><span class="line">        result = model.predict(image, batch_size=<span class="number">1</span>)</span><br><span class="line">        result = np.argmax(np.squeeze(result), axis=-<span class="number">1</span>).astype(np.uint8)</span><br><span class="line"></span><br><span class="line">        result_img = Image.fromarray(result, mode=<span class="string">&#x27;P&#x27;</span>)</span><br><span class="line">        result_img.palette = label.palette</span><br><span class="line">        <span class="comment"># result_img = result_img.resize(label_size, resample=Image.BILINEAR)</span></span><br><span class="line">        result_img = result_img.crop((pad_w/<span class="number">2</span>, pad_h/<span class="number">2</span>, pad_w/<span class="number">2</span>+img_w, pad_h/<span class="number">2</span>+img_h))</span><br><span class="line">        <span class="comment"># result_img.show(title=&#x27;result&#x27;)</span></span><br><span class="line">        <span class="keyword">if</span> return_results:</span><br><span class="line">            results.append(result_img)</span><br><span class="line">        <span class="keyword">if</span> save_dir:</span><br><span class="line">            result_img.save(os.path.join(save_dir, img_num + <span class="string">&#x27;.png&#x27;</span>))</span><br><span class="line">    <span class="keyword">return</span> results</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">with</span> tf.device(<span class="string">&#x27;/gpu:1&#x27;</span>):</span><br><span class="line">	gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=<span class="number">1</span>, allow_growth=<span class="literal">True</span>)</span><br><span class="line">        os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line">        tf.Session(config=K.tf.ConfigProto(allow_soft_placement=<span class="literal">True</span>,</span><br><span class="line">                                           log_device_placement=<span class="literal">True</span>,</span><br><span class="line">                                           gpu_options=gpu_options))</span><br><span class="line">    	model_name = <span class="string">&#x27;AtrousFCN_Resnet50_16s&#x27;</span></span><br><span class="line">    	weight_file = <span class="string">&#x27;checkpoint_weights.hdf5&#x27;</span></span><br><span class="line">    	image_size = (<span class="number">512</span>, <span class="number">512</span>)</span><br><span class="line">    	data_dir = os.path.expanduser(<span class="string">&#x27;~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/JPEGImages&#x27;</span>)</span><br><span class="line">    	label_dir = os.path.expanduser(<span class="string">&#x27;~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/SegmentationClass&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    	image_list = sys.argv[<span class="number">1</span>:]<span class="comment">#&#x27;2007_000491&#x27;</span></span><br><span class="line">    	results = inference(model_name, weight_file, image_size, image_list, data_dir, label_dir, save_dir=<span class="string">&quot;result&quot;</span>)</span><br><span class="line">    	<span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">        	result.show(title=<span class="string">&#x27;result&#x27;</span>, command=<span class="literal">None</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="fcn-crf">9.2 FCN-CRF</h2>
-<h2 id="segnet">9.3 SegNet</h2>
-<h2 id="ubernet">9.4 UberNet</h2>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>第九章</tag>
-        <tag>FCN</tag>
-        <tag>语义分割</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习与人工智能技术分享-第二章 建模方法回顾</title>
     <url>/article/307f39c.html</url>
     <content><![CDATA[<h1 id="建模方法回顾">2. 建模方法回顾</h1>
@@ -2489,6 +2298,197 @@ Google DeepMind 记忆神经网络(用于AlphaGo)
       </tags>
   </entry>
   <entry>
+    <title>机器学习与人工智能技术分享-第九章 语义分割</title>
+    <url>/article/b12a240.html</url>
+    <content><![CDATA[<h1 id="语义分割">9. 语义分割</h1>
+<h2 id="fcn">9.1 FCN</h2>
+<p>FCN在《<a href="https://people.eecs.berkeley.edu/~jonlong/long_shelhamer_fcn.pdf">Fully Convolutional Networks for Semantic Segmentation</a>》中第一次被提出，个人认为是实现图像end to end语义分割的开山之作，第一次做到了低成本的像素级分类预测（end-to-end, pixels-to-pixels），另外这个方法用在目标检测、识别上效果好于传统新方法(如：Faster R-CNN)。</p>
+<p>所谓语义分割简单说就是不但要知道你属于哪一类，还要知道你在哪儿：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1blc5thhohau12itero1ige1v6dm.png" width="800"  />
+</center>
+<span id="more"></span>
+<p>从左到右分别是：原图、ground truth图、训练2轮的模型预测图、训练5轮的模型预测图（ps：截止本文前，训练达到理想状态还差200多轮）。</p>
+<h3 id="算法概述">9.1.1 算法概述</h3>
+<p>CNN网络无疑是特征提取的利器，尤其在图像领域，回顾我们的做法：CNN做特征提取+全连接层做特征组合+分类/回归，为了能提高模型预测能力，需要通过多个全连接层（做笛卡尔积）做特征组合，这里是参数数量最多的地方，成为模型训练，尤其是inference时的最大瓶颈（所以模型压缩和剪枝算法会把第一把刀放在全连接层），而由于全连接层的存在，导致整个网络的输入必须是固定大小的：由于卷积和采样操作更本不关心输入大小如何，试想如果输入大小不一，不同图片到了全连接层时其输入节点数是不一样的，而网络的定义必须事先定义好，所以没法儿玩儿了，于是有了前面的SPP及RoI pooling来解决这个问题，FCN则是解决这个问题的另一个思路。</p>
+<p>总结该算法要解决的问题如下：</p>
+<p>1、取消网络对输入数据大小必须固定的限制；</p>
+<p>2、提高模型效果且加快其训练和inference速度。</p>
+相比于传统CNN，FCN把全连接层全部替换成卷积层，并在feature map(可以是其中任何一个)上<strong>做上采样</strong>，使其恢复到原始图片大小，这样不但保留了每个像素的空间信息，而且每个像素都会有一个分类预测。比如下图中pixelwise prediction那一层，小猫、小狗、电视、背景都会在像素级别做分类预测：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7ig9dqebe1n3v1jmb1o2g1gdim.png" width="500"  />
+</center>
+<h3 id="卷积回顾">9.1.2 1×1卷积回顾</h3>
+<p>前面我们在介绍各种经典识别网络中介绍了1×1卷积核，回顾下它的作用，尤其对多通道而言：</p>
+<p>1、每个1×1卷积核会有一个参数，利用它们可以做跨通道特征融合，即对多个通道的feature map做线性组合；</p>
+<p>2、具有降维或升维作用，如：在GoogleNet中它可以跟在pooling层后面做降维，也可以直接通过减少通道数做降维，大大减少了参数量；</p>
+<p>3、可以在不损失feature map信息的前提下利用后面的激活函数增加模型非线性表征能力，可以低成本的把网络变深。</p>
+<h3 id="全卷积网络">9.1.3 全卷积网络</h3>
+<p>使用传统CNN做像素级分类的问题：</p>
+<p>1、为了考虑上下文信息，需要一个滑动窗口，利用滑动窗口内的feature map对每个像素做分类，分类效果及存储空间随滑动窗口的大小上升；</p>
+<p>2、为了考虑上下文信息，导致相邻两个窗口之间有大量的像素重复，意味着大量计算重复；</p>
+<p>3、原图的空间信息没有被很好的利用；</p>
+<p>4、原图需要固定大小，图像的resize（本质就是图像的下采样）导致信息损失。</p>
+FCN则很好的解决了上面几个问题。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7jj2q4i9n16l81fm1bf8nhb13.png" width="500"  />
+</center>
+上图是传统CNN工作流程，下图是FCN工作流程，它最终可以得到关于目标的热图，这种变换除了在语义分割、检测、识别上用到，也会在feature map可视化上用来帮助分析特征。 一张图说明：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7p4cjk1klm1kqc4oefh67ci1g.png" width="800"  />
+</center>
+<p>理解FCN最关键的一步是理解上采样（upsampling）。</p>
+<h3 id="nyquistshannon采样定理">9.1.4 Nyquist–Shannon采样定理</h3>
+<p>关于采样，这个话题可大可小，从定义上说，采样是这么一个过程：在尽可能减少信息损失的情况下，将信号从一种采样率下的形态转换为另外一种，对于图片，这个过程叫做图像缩放。详细定义参见<a href="http://avisynth.nl/index.php/Resampling">Resampling</a>。</p>
+<p>对计算机而言无法处理连续信号（读者想想为什么？），必须通过采样做信号离散化，那就必须回答一个问题：理想情况下，以什么样的频率采样能完美重构连续信号的信息。</p>
+<p>Nyquist–Shannon采样定理回答了上面的问题：当对信号均匀间隔离散采样且信号的带宽小于采样率的一半时，原始连续信号可以被其得到的采样样本完全重构，不满足该条件则会出现混叠(Aliasing)现象。</p>
+<p>理论上连续信号可以通过以下公式重构（信息重构器）：</p>
+<span class="math display">\[
+\text{s(x) = sum_n s(n*T) * sinc((x-n*T)/T), with sinc(x) = sin(pi*x)/(pi*x) for x!=0, and = 1 for x=0}
+\]</span>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7skcf2l9opk4f19si01a0c1t.png" width="500"  />
+</center>
+<p>其中采样率为:1/T，s(n*T)是s(x)的采样样本，sinc(x)是采样核(resampling kernel)。</p>
+<p>一般来说 信息重构器有以下性质：</p>
+<p>1、<span class="math inline">\(s(m*T)\)</span>确实是信号<span class="math inline">\(s(x)\)</span>的样本；</p>
+<p>2、$_n{sinc((x-n*T)/T)} = 1 $;</p>
+<p>3、resampling kernel：<span class="math inline">\(sinc(x)=* \text{ for x!=0, and = 1 for x=0}\)</span>；</p>
+<p>4、resampling kernel：<span class="math inline">\(sinc(x)\)</span>是对称的，<span class="math inline">\(sinc(x) = sinc(-x)\)</span>；</p>
+<p>5、resampling kernel：<span class="math inline">\(sinc(x)\)</span>是处处可微的。</p>
+<p>当然还有其他形式的resampling kernel，比如bilinear resampling kernel，满足上述性质2、3、4：</p>
+<p><span class="math display">\[
+f(x)=
+\begin{cases}
+1 - |x|&amp; \text{|x|&lt;1}\\
+0&amp; \text{other}
+\end{cases}
+\]</span></p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bl7va3qf153pjto2n1ahrn52n.png" width="500"  />
+</center>
+<p>这个函数在FCN里广泛用到。</p>
+<p>我利用scikit-image library给个简单的bilinear resampling示例：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> skimage.transform</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> ogrid, repeat, newaxis</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_with_skimage</span>(<span class="params">img, factor</span>):</span></span><br><span class="line">    <span class="comment"># order=1表示bilinear resampling，参见：http://scikit-image.org/docs/dev/api/skimage.transform.html。</span></span><br><span class="line">    <span class="comment"># order的含义：</span></span><br><span class="line">    <span class="comment"># 0: Nearest-neighbor</span></span><br><span class="line">    <span class="comment"># 1: Bi-linear (default)</span></span><br><span class="line">    <span class="comment"># 2: Bi-quadratic</span></span><br><span class="line">    <span class="comment"># 3: Bi-cubic</span></span><br><span class="line">    <span class="comment"># 4: Bi-quartic</span></span><br><span class="line">    <span class="comment"># 5: Bi-quintic</span></span><br><span class="line">    <span class="keyword">return</span> skimage.transform.rescale(img,</span><br><span class="line">                                     factor,</span><br><span class="line">                                     mode=<span class="string">&#x27;constant&#x27;</span>,</span><br><span class="line">                                     cval=<span class="number">0</span>,</span><br><span class="line">                                     order=<span class="number">1</span>)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    target = upsample_with_skimage(img=io.imread(<span class="string">&quot;feature_map.jpg&quot;</span>), factor=<span class="number">5</span>)</span><br><span class="line">    io.imsave(<span class="string">&quot;upsampling.png&quot;</span>, target, interpolation=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1blc6rav11cik1qkgmnf1b9qovg1g.png" width="700"  />
+</center>
+<h3 id="转置卷积transposed-convolution">9.1.5 转置卷积(Transposed Convolution)</h3>
+<p>很多人把这个过程叫做“反卷积(deconvolution)”，但我认为这么叫是错误的，它的过程并不是对卷积的逆运算，它除了用在FCN中还会用在卷积可视化、对抗神经网络中。 原理如下：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_9/image_1bleq0o8judv1ma7bjegob1nbv9.png" width="500"  />
+</center>
+<p>假设，输入为4×4、输出为2×2、卷积核为3×3，则把输出、输入和卷积核按照从左到右、从上到下展开为向量，前向传播的卷积过程相当于输入与以下稀疏矩阵的乘积：</p>
+<p><span class="math display">\[
+\begin{equation}
+W=\left(
+\begin{array}{lll}
+w_{0,0} &amp;0&amp;0&amp;0 \\
+w_{0,1} &amp;w_{0,0}&amp;0&amp;0 \\
+w_{0,2} &amp;w_{0,1}&amp;0&amp;0 \\
+0 &amp;w_{0,2}&amp;0&amp;0 \\
+w_{1,0} &amp;0&amp;w_{0,0}&amp;0 \\
+w_{1,1} &amp;w_{1,0}&amp;w_{0,1}&amp;w_{0,0} \\
+w_{1,2} &amp;w_{1,1}&amp;w_{0,2}&amp;w_{0,1} \\
+0 &amp;w_{1,2}&amp;0&amp;w_{0,2} \\
+w_{2,0} &amp;0&amp;w_{1,0}&amp;0 \\
+w_{2,1} &amp;w_{2,0}&amp;w_{1,1}&amp;w_{1,0} \\
+w_{2,2} &amp;w_{2,1}&amp;w_{1,2}&amp;w_{1,1} \\
+0 &amp;w_{2,2}&amp;0&amp;w_{1,2} \\
+0 &amp;0&amp;w_{2,0}&amp;0 \\
+0 &amp;0&amp;w_{2,1}&amp;w_{2,0} \\
+0 &amp;0&amp;w_{2,2}&amp;w_{2,1} \\
+0 &amp;0&amp;0&amp;w_{2,2}
+\end{array}
+\right)^T\nonumber
+\end{equation}
+\]</span></p>
+<p>前向传播过程就表述为：</p>
+<p><span class="math display">\[
+\begin{equation}
+Y=W \cdot X =\left(
+\begin{array}{lll}
+w_{0,0} &amp;0&amp;0&amp;0 \\
+w_{0,1} &amp;w_{0,0}&amp;0&amp;0 \\
+w_{0,2} &amp;w_{0,1}&amp;0&amp;0 \\
+0 &amp;w_{0,2}&amp;0&amp;0 \\
+w_{1,0} &amp;0&amp;w_{0,0}&amp;0 \\
+w_{1,1} &amp;w_{1,0}&amp;w_{0,1}&amp;w_{0,0} \\
+w_{1,2} &amp;w_{1,1}&amp;w_{0,2}&amp;w_{0,1} \\
+0 &amp;w_{1,2}&amp;0&amp;w_{0,2} \\
+w_{2,0} &amp;0&amp;w_{1,0}&amp;0 \\
+w_{2,1} &amp;w_{2,0}&amp;w_{1,1}&amp;w_{1,0} \\
+w_{2,2} &amp;w_{2,1}&amp;w_{1,2}&amp;w_{1,1} \\
+0 &amp;w_{2,2}&amp;0&amp;w_{1,2} \\
+0 &amp;0&amp;w_{2,0}&amp;0 \\
+0 &amp;0&amp;w_{2,1}&amp;w_{2,0} \\
+0 &amp;0&amp;w_{2,2}&amp;w_{2,1} \\
+0 &amp;0&amp;0&amp;w_{2,2}
+\end{array}
+\right)^T\nonumber
+\cdot
+\left(
+\begin{array}{lll}
+1\\
+2\\
+3\\
+4 \\
+5\\
+6\\
+7\\
+8 \\
+9\\
+10\\
+11\\
+12\\
+13\\
+14\\
+15\\
+16
+\end{array}
+\right)\nonumber=
+\left(
+\begin{array}{lll}
+1\\
+2\\
+3\\
+4
+\end{array}
+\right)\nonumber
+\end{equation}
+\]</span></p>
+<p>误差反向传播(如果记不清了可以回看5.1节)：</p>
+<p><span class="math display">\[
+\frac{\partial E}{\partial X}=W^T\frac{\partial E}{\partial Y}
+\]</span></p>
+<p>那么反过来，我们希望从4维向量映射回16维向量怎么做呢：把上面过程逆反一下(当然该做padding还得做)： 前向传播： <span class="math display">\[Y=W^T X
+\]</span> 反向传播: <span class="math display">\[
+\frac{\partial E}{\partial X}=(W^T)^T\frac{\partial E}{\partial Y}=W\frac{\partial E}{\partial Y}
+\]</span></p>
+<p>整个过程平滑柔顺，多种情况下的详细解释可以看：<a href="http://deeplearning.net/software/theano_versions/dev/tutorial/conv_arithmetic.html#transposed-convolution-arithmetic">《Convolution arithmetic tutorial》</a></p>
+<p>keras下做转置卷积，输入feature map及最终效果同8.7.4。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> division</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> skimage</span><br><span class="line"><span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_kernel_size</span>(<span class="params">factor</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    给定上采样因子，返回核大小，上采样因子大小等于转置卷积步长。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * factor - factor % <span class="number">2</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_filt</span>(<span class="params">size</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    返回上采样bilinear kernel矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    factor = (size + <span class="number">1</span>) // <span class="number">2</span></span><br><span class="line">    <span class="keyword">if</span> size % <span class="number">2</span> == <span class="number">1</span>:</span><br><span class="line">        center = factor - <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        center = factor - <span class="number">0.5</span></span><br><span class="line">    og = np.ogrid[:size, :size]</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">1</span> - <span class="built_in">abs</span>(og[<span class="number">0</span>] - center) / factor) * \</span><br><span class="line">           (<span class="number">1</span> - <span class="built_in">abs</span>(og[<span class="number">1</span>] - center) / factor)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bilinear_upsample_weights</span>(<span class="params">factor, channel</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    使用bilinear filter初始化转置卷积权重矩阵。</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">    filter_size = get_kernel_size(factor)</span><br><span class="line"></span><br><span class="line">    weights = np.zeros((filter_size,</span><br><span class="line">                        filter_size,</span><br><span class="line">                        channel,</span><br><span class="line">                        channel), dtype=np.float32)</span><br><span class="line"></span><br><span class="line">    upsample_kernel = upsample_filt(filter_size)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(channel):</span><br><span class="line"></span><br><span class="line">        weights[:, :, i, i] = upsample_kernel</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> weights</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">upsample_keras</span>(<span class="params">factor, input_img</span>):</span></span><br><span class="line"></span><br><span class="line">    SCALE = <span class="number">256</span></span><br><span class="line">    channel = input_img.shape[<span class="number">2</span>]</span><br><span class="line">    scale_height = input_img.shape[<span class="number">0</span>] * factor</span><br><span class="line">    scale_width = input_img.shape[<span class="number">1</span>] * factor</span><br><span class="line">    expanded_img = np.expand_dims(input_img, axis=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> tf.device(<span class="string">&quot;/gpu:1&quot;</span>):</span><br><span class="line">        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=<span class="number">1</span>, allow_growth=<span class="literal">True</span>)</span><br><span class="line">        os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line">        sess = tf.Session(config=K.tf.ConfigProto(allow_soft_placement=<span class="literal">True</span>,</span><br><span class="line">                                       log_device_placement=<span class="literal">True</span>,</span><br><span class="line">                                       gpu_options=gpu_options))</span><br><span class="line">        input_value = tf.placeholder(tf.float32)</span><br><span class="line">        trans_filter = tf.placeholder(tf.float32)</span><br><span class="line">        upsample_filter_np = bilinear_upsample_weights(factor, channel)</span><br><span class="line"></span><br><span class="line">        res = K.conv2d_transpose(input_value, trans_filter,</span><br><span class="line">                    output_shape=[<span class="number">1</span>, scale_height, scale_width, channel],</span><br><span class="line">                    padding=<span class="string">&#x27;same&#x27;</span>,</span><br><span class="line">                    strides=(factor, factor))</span><br><span class="line"></span><br><span class="line">        final_result = sess.run(res,</span><br><span class="line">                            feed_dict=&#123;trans_filter: upsample_filter_np,</span><br><span class="line">                                       input_value: expanded_img&#125;)</span><br><span class="line">    <span class="keyword">if</span> channel != <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> final_result.squeeze() / SCALE</span><br><span class="line">    <span class="keyword">return</span> final_result.squeeze()</span><br><span class="line"></span><br><span class="line">upsampled_img_keras = upsample_keras(factor=<span class="number">5</span>, input_img=skimage.io.imread(<span class="string">&quot;feature_map.jpg&quot;</span>))</span><br><span class="line">skimage.io.imsave(<span class="string">&quot;bilinear_feature_map.jpg&quot;</span>,upsampled_img_keras, interpolation=<span class="string">&#x27;none&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="代码实践">9.1.6 代码实践</h3>
+<p>开源代码可参见：<a href="https://github.com/aurora95/Keras-FCN">Keras-FCN</a>，虽然缺点是训练有点慢，模型有点大，但对于理解如何实现很有帮助。</p>
+<p>里面实现了五种模型，两种基于vgg-16，两种基于resnet-50，一种基于densenet。</p>
+<p>上采样操作做为一个新的网络层意味着它需要能够前向传播、反向传播、更新权重，其实现在代码中为BilinearUpSampling.py。</p>
+<p>inference.py的代码需要稍微变下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> pylab <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> keras.preprocessing.image <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> keras.models <span class="keyword">import</span> load_model</span><br><span class="line"><span class="keyword">import</span> keras.backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">from</span> keras.applications.imagenet_utils <span class="keyword">import</span> preprocess_input</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> models <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inference</span>(<span class="params">model_name, weight_file, image_size, image_list, data_dir, label_dir, return_results=<span class="literal">True</span>, save_dir=<span class="literal">None</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">              label_suffix=<span class="string">&#x27;.png&#x27;</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">              data_suffix=<span class="string">&#x27;.jpg&#x27;</span></span>):</span></span><br><span class="line">    current_dir = os.path.dirname(os.path.realpath(__file__))</span><br><span class="line">    <span class="comment"># mean_value = np.array([104.00699, 116.66877, 122.67892])</span></span><br><span class="line">    batch_shape = (<span class="number">1</span>, ) + image_size + (<span class="number">3</span>, )</span><br><span class="line">    save_path = os.path.join(current_dir, <span class="string">&#x27;Models/&#x27;</span>+model_name)</span><br><span class="line">    model_path = os.path.join(save_path, <span class="string">&quot;model.json&quot;</span>)</span><br><span class="line">    checkpoint_path = os.path.join(save_path, weight_file)</span><br><span class="line">    <span class="comment"># model_path = os.path.join(current_dir, &#x27;model_weights/fcn_atrous/model_change.hdf5&#x27;)</span></span><br><span class="line">    <span class="comment"># model = FCN_Resnet50_32s((480,480,3))</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#config = tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))</span></span><br><span class="line">    <span class="comment">#session = tf.Session(config=config)</span></span><br><span class="line">    <span class="comment">#K.set_session(session)</span></span><br><span class="line"></span><br><span class="line">    model = <span class="built_in">globals</span>()[model_name](batch_shape=batch_shape, input_shape=(<span class="number">512</span>, <span class="number">512</span>, <span class="number">3</span>))</span><br><span class="line">    model.load_weights(checkpoint_path, by_name=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    model.summary()</span><br><span class="line"></span><br><span class="line">    results = []</span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> img_num <span class="keyword">in</span> image_list:</span><br><span class="line">        img_num = img_num.strip(<span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">        total += <span class="number">1</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;#%d: %s&#x27;</span> % (total,img_num))</span><br><span class="line">        image = Image.<span class="built_in">open</span>(<span class="string">&#x27;%s/%s%s&#x27;</span> % (data_dir, img_num, data_suffix))</span><br><span class="line">        image = img_to_array(image)  <span class="comment"># , data_format=&#x27;default&#x27;)</span></span><br><span class="line"></span><br><span class="line">        label = Image.<span class="built_in">open</span>(<span class="string">&#x27;%s/%s%s&#x27;</span> % (label_dir, img_num, label_suffix))</span><br><span class="line">        label_size = label.size</span><br><span class="line"></span><br><span class="line">        img_h, img_w = image.shape[<span class="number">0</span>:<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># long_side = max(img_h, img_w, image_size[0], image_size[1])</span></span><br><span class="line">        pad_w = <span class="built_in">max</span>(image_size[<span class="number">1</span>] - img_w, <span class="number">0</span>)</span><br><span class="line">        pad_h = <span class="built_in">max</span>(image_size[<span class="number">0</span>] - img_h, <span class="number">0</span>)</span><br><span class="line">        image = np.lib.pad(image, ((pad_h/<span class="number">2</span>, pad_h - pad_h/<span class="number">2</span>), (pad_w/<span class="number">2</span>, pad_w - pad_w/<span class="number">2</span>), (<span class="number">0</span>, <span class="number">0</span>)), <span class="string">&#x27;constant&#x27;</span>, constant_values=<span class="number">0.</span>)</span><br><span class="line">        <span class="comment"># image -= mean_value</span></span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;img = array_to_img(image, &#x27;channels_last&#x27;, scale=False)</span></span><br><span class="line"><span class="string">        img.show()</span></span><br><span class="line"><span class="string">        exit()&#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="comment"># image = cv2.resize(image, image_size)</span></span><br><span class="line"></span><br><span class="line">        image = np.expand_dims(image, axis=<span class="number">0</span>)</span><br><span class="line">        image = preprocess_input(image)</span><br><span class="line"></span><br><span class="line">        result = model.predict(image, batch_size=<span class="number">1</span>)</span><br><span class="line">        result = np.argmax(np.squeeze(result), axis=-<span class="number">1</span>).astype(np.uint8)</span><br><span class="line"></span><br><span class="line">        result_img = Image.fromarray(result, mode=<span class="string">&#x27;P&#x27;</span>)</span><br><span class="line">        result_img.palette = label.palette</span><br><span class="line">        <span class="comment"># result_img = result_img.resize(label_size, resample=Image.BILINEAR)</span></span><br><span class="line">        result_img = result_img.crop((pad_w/<span class="number">2</span>, pad_h/<span class="number">2</span>, pad_w/<span class="number">2</span>+img_w, pad_h/<span class="number">2</span>+img_h))</span><br><span class="line">        <span class="comment"># result_img.show(title=&#x27;result&#x27;)</span></span><br><span class="line">        <span class="keyword">if</span> return_results:</span><br><span class="line">            results.append(result_img)</span><br><span class="line">        <span class="keyword">if</span> save_dir:</span><br><span class="line">            result_img.save(os.path.join(save_dir, img_num + <span class="string">&#x27;.png&#x27;</span>))</span><br><span class="line">    <span class="keyword">return</span> results</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">with</span> tf.device(<span class="string">&#x27;/gpu:1&#x27;</span>):</span><br><span class="line">	gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=<span class="number">1</span>, allow_growth=<span class="literal">True</span>)</span><br><span class="line">        os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line">        tf.Session(config=K.tf.ConfigProto(allow_soft_placement=<span class="literal">True</span>,</span><br><span class="line">                                           log_device_placement=<span class="literal">True</span>,</span><br><span class="line">                                           gpu_options=gpu_options))</span><br><span class="line">    	model_name = <span class="string">&#x27;AtrousFCN_Resnet50_16s&#x27;</span></span><br><span class="line">    	weight_file = <span class="string">&#x27;checkpoint_weights.hdf5&#x27;</span></span><br><span class="line">    	image_size = (<span class="number">512</span>, <span class="number">512</span>)</span><br><span class="line">    	data_dir = os.path.expanduser(<span class="string">&#x27;~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/JPEGImages&#x27;</span>)</span><br><span class="line">    	label_dir = os.path.expanduser(<span class="string">&#x27;~/.keras/datasets/VOC2012/VOCdevkit/VOC2012/SegmentationClass&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    	image_list = sys.argv[<span class="number">1</span>:]<span class="comment">#&#x27;2007_000491&#x27;</span></span><br><span class="line">    	results = inference(model_name, weight_file, image_size, image_list, data_dir, label_dir, save_dir=<span class="string">&quot;result&quot;</span>)</span><br><span class="line">    	<span class="keyword">for</span> result <span class="keyword">in</span> results:</span><br><span class="line">        	result.show(title=<span class="string">&#x27;result&#x27;</span>, command=<span class="literal">None</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="fcn-crf">9.2 FCN-CRF</h2>
+<h2 id="segnet">9.3 SegNet</h2>
+<h2 id="ubernet">9.4 UberNet</h2>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>第九章</tag>
+        <tag>FCN</tag>
+        <tag>语义分割</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>机器学习与人工智能技术分享-第十一章 OCR</title>
     <url>/article/301f2134.html</url>
     <content><![CDATA[<h1 id="ocr">11. OCR</h1>
@@ -3704,669 +3704,6 @@ s.t.&amp;\quad&amp;没有或少做人工干预 \nonumber  \\
       </tags>
   </entry>
   <entry>
-    <title>机器学习与人工智能技术分享-第一章 基本概念</title>
-    <url>/article/f082dc68.html</url>
-    <content><![CDATA[<h1 id="一些基本概念">1. 一些基本概念</h1>
-<h2 id="生成式模型与判别式模型">1.1 生成式模型与判别式模型</h2>
-<p>从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?</p>
-<ul>
-<li><p>生成式模型</p>
-<p>我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。</p></li>
-<li><p>判别式模型</p>
-<p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
-</ul>
-<span id="more"></span>
-<p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
-<p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
-<p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
-<ul>
-<li><p><span class="math inline">\(p(x,y)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(2/5\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/5\)</span></td>
-<td><span class="math inline">\(2/5\)</span></td>
-</tr>
-</tbody>
-</table></li>
-<li><p><span class="math inline">\(p(y|x)\)</span></p>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: center;"><span class="math inline">\(p(y|x)\)</span></th>
-<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
-<th><span class="math inline">\(y=1\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
-<td><span class="math inline">\(0\)</span></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
-<td style="text-align: right;"><span class="math inline">\(1/3\)</span></td>
-<td><span class="math inline">\(2/3\)</span></td>
-</tr>
-</tbody>
-</table></li>
-</ul>
-<p>一些理论可看：<a href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p>
-<ol type="1">
-<li><p>常见生成式模型</p>
-<ul>
-<li><p>Naive Bayes</p></li>
-<li><p>Gaussians</p></li>
-<li><p>Mixtures of Gaussians</p></li>
-<li><p>Mixtures of Experts</p></li>
-<li><p>Mixtures of Multinomials</p></li>
-<li><p>HMM</p></li>
-<li><p>Markov random fields</p></li>
-<li><p>Sigmoidal belief networks</p></li>
-<li><p>Bayesian networks</p></li>
-</ul></li>
-<li><p>常见判别式模型</p>
-<ul>
-<li><p>Linear regression</p></li>
-<li><p>Logistic regression</p></li>
-<li><p>SVM</p></li>
-<li><p>Perceptron</p></li>
-<li><p>Traditional Neural networks</p></li>
-<li><p>Nearest neighbor</p></li>
-<li><p>Conditional random fields</p></li>
-</ul></li>
-</ol>
-<h2 id="参数学习与非参学习">1.2 参数学习与非参学习</h2>
-<p>从参数与样本的关系角度看待模型。</p>
-<h3 id="参数学习">1.2.1 参数学习</h3>
-<p>参数学习的特点是：</p>
-<ol type="1">
-<li>选择某种形式的函数并通过机器学习用一系列固定个数的参数尽可能表征这些数据的某种模式；</li>
-<li>不管数据量有多大，函数参数的个数是固定的，即参数个数不随着样本量的增大而增加，从关系上说它们相互独立；</li>
-<li>往往对数据有较强的假设，如分布的假设，空间的假设等。</li>
-<li><p>常用参数学习的模型有：</p>
-<ul>
-<li><p>Logistic Regression</p></li>
-<li><p>Linear Regression</p></li>
-<li><p>Polynomial regression</p></li>
-<li><p>Linear Discriminant Analysis</p></li>
-<li><p>Perceptron</p></li>
-<li><p>Naive Bayes</p></li>
-<li><p>Simple Neural Networks</p></li>
-<li><p>使用线性核的SVM</p></li>
-<li><p>Mixture models</p></li>
-<li><p>K-means</p></li>
-<li><p>Hidden Markov models</p></li>
-<li><p>Factor analysis / pPCA / PMF</p></li>
-</ul></li>
-</ol>
-<h3 id="非参学习">1.2.2 非参学习</h3>
-<p>注意不要被名字误导，<strong>非参不等于无参</strong>。</p>
-<ol type="1">
-<li>数据决定了函数形式，函数参数个数不固定；</li>
-<li>随着数据量的增加，参数个数一般也会随之增长；</li>
-<li>对数据本身做较少的先验假设。</li>
-<li><p>一些常用的非参学习模型：</p>
-<ul>
-<li><p>k-Nearest Neighbors</p></li>
-<li><p>Decision Trees like CART and C4.5</p></li>
-<li><p>使用非线性核的SVM</p></li>
-<li><p>Gradient Boosted Decision Trees</p></li>
-<li><p>Gaussian processes for regression</p></li>
-<li><p>Dirichlet process mixtures</p></li>
-<li><p>infinite HMMs</p></li>
-<li><p>infinite latent factor models</p></li>
-</ul></li>
-</ol>
-<p>进一步知识可以看：<a href="http://mlss.tuebingen.mpg.de/2015/slides/ghahramani/gp-neural-nets15.pdf">Parametric vs Nonparametric Models</a>。</p>
-<h2 id="监督学习非监督学习与强化学习">1.3 监督学习、非监督学习与强化学习</h2>
-<h3 id="监督学习">1.3.1 监督学习</h3>
-<p>对于每一个样本都会提供一个明确的学习目标（标注），有自变量也有因变量，学习机接收样本进行学习并通过对该样本预测后的结果和事先给定的目标比较后修正学习过程，这里的每一个样本都是标注好的，所以好处是歧义较低，坏处是万一有一定量样本标错了或者没标会对最终应用效果影响较大。通常监督学习过程如下：</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjqpcau16kj17d5iupnob1rco9.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
-</center>
-<h3 id="非监督学习">1.3.2 非监督学习</h3>
-对于每个样本不提供明确的学习目标（标注），有自变量但无因变量，学习机接收样本后会按事先指定的必要参数，依据某种相似度衡量方式自动学习样本内部的分布模式，好处是没有过多先验假设，能够体现数据内在模式并应用，坏处是有“盲目”性，并会混在噪声数据。比如：常用LDA做主题聚类，但如果使用场景不是降维而是想得到可输出的主题词，基本上没有人肉的干预无法直接使用（虽然整体上看感觉可能不错）。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjrioa912r21h0n1u571vh11go3m.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
-</center>
-<h3 id="强化学习">1.3.3 强化学习</h3>
-<p>我认为强化学习是最接近人类学习过程的，很多情况下我们无法直接表达什么是正确的什么是错误的（比如：我正在爬山，迈了一大步，又迈了一小步，那么没法儿说我迈了大步正确还是错误），但是可以通过惩罚不好的结果或者奖励好的结果来强化学习的效果（我迈了个大步，导致没有站稳，那么对迈大步做惩罚，然后接下来我会迈小一点）。所以强化学习是一个序列的决策过程，学习机的学习目标是通过在给定状态下选择某种动作，寻找合适动作的策略序列使得它可以获得某种最优结果的过程。 强化学习的几个要素，体现其序列、交互性：</p>
-<ul>
-<li>环境(environment)：强化学习所处的上下文；</li>
-<li>学习器(agent)：与环境的交互并学习的对象，具有主动性；</li>
-<li>动作(action)：处于环境下的可行动作集合；</li>
-<li>反馈(feedback)：对动作的回报或惩罚；</li>
-<li>策略(policy)：学习到的策略链。</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjski0i16221ae2rdd1789l3n13.png" width="400"/> picture from <a href="http://www.cse.unsw.edu.au/~cs9417ml/RL1/followup.html">here</a>
-</center>
-经典的训练狗的实验就是一种强化学习的过程：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asju6357fv9q891abinifjkf2a.png" width="500" /> picture from <a href="http://www.krigolsonteaching.com/reinforcement-learning.html">here</a>
-</center>
-<p>强化学习的有趣应用例如：</p>
-<ul>
-<li><a href="https://deepmind.com/research/alphago/">AlphaGo</a> <a href="https://gogameguru.com/i/2016/03/deepmind-mastering-go.pdf">Mastering the Game of Go with Deep Neural Networks and Tree Search</a></li>
-<li>Atari 2600 games <a href="http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html#ref12">Human-level control through deep reinforcement learning</a> <a href="https://arxiv.org/pdf/1507.04296.pdf">Massively Parallel Methods for Deep Reinforcement Learning</a></li>
-</ul>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>第一章</tag>
-        <tag>基本概念</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习与人工智能技术分享-第十四章 金融风控</title>
-    <url>/article/fb9cd06d.html</url>
-    <content><![CDATA[<h1 id="金融风控应用">14. 金融风控应用</h1>
-<h2 id="风控概述">14.1 风控概述</h2>
-<h3 id="风控在行业上的区别">14.1.1 风控在行业上的区别</h3>
-<p>不同行业的风控有不同的区别，大致区别如下图。其实大家也可以很直观的感觉到：比如，你去银行贷款，银行会让你提供各种材料，恨不得知道你祖宗八代的信息，而你去贷现金贷，恨不得提供个身份证号就给你放贷。不同业务场景下，面对的用户不同，风险不同，收益不同，在合适场景下做合适的事儿。 <span id="more"></span></p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0arhlbdsbvghdlvnl1p70m.png" width="800" />
-</center>
-<h3 id="风控审批流程逻辑框架">14.1.2 风控审批流程逻辑框架</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0e8jr1fd2joe1gij0dad1g.png" width="800" />
-</center>
-风控是整个金融业务的核心之一，而贷前、贷中、贷后是风控切入的三个场景。风控很大的工作量就是在判断用户的还款能力（比如，授信流程）和还款意愿（比如，反欺诈流程），技术角度，目前纯基于模型去做的公司我认为没有，大部分都是规则辅以模型的方式，但这里面数据是重中之重，一般会借助于自有数据、第三方数据等。一般系统架构上会是这样：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1cf4ccn4i13sja8vj6iucb15q936.png" width="450" />
-</center>
-<ul>
-<li>业务对接系统 由于风控系统需要和所有业务系统对接，所以这个对接服务是必不可少的，一方面把接口变化控制在这里，另一方面可以做各种字段适配，以保证进入风控系统的业务数据是统一而纯粹的。</li>
-<li>规则配置平台 业务方用于配置风控规则的界面，一个好的风控系统，是可以让业务人员脱离开发而独立配置各种规则和实验的。</li>
-<li>冠军挑战者服务 这是AB test或者Bucket Test在金融行业的别名，由于风控涉及到风险控制指标（如逾期率）、第三方数据花费、订单通过率等诸多结果指标，现实往往是这三大类指标的tradeoff，所以需要有一个强大的效果测试服务，能让业务人员做实验。</li>
-<li>工作流程服务 这个是风控引擎的调度服务，用于发起各种内部流程，如：取数据、解析规则、返回结果等，一般情况下不需要人工介入及交互，所以这里不需要很重的工作框架，例如Activiti。</li>
-<li>规则引擎 用于解析和执行规则的核心服务，一般规则引擎都是基于RETE算法的产生式系统（大家如果学过离散数学会很熟悉这个概念），简单来说是如何高效定义和执行if-else，开源的框架最有名的是DRools，当然还有很多商用引擎。对于没有精力或者能力的团队可以直接用它，但有能力情况下建议还是自己做，毕竟像DRools这样的太通用、太重。</li>
-<li>数据服务 这里包括第三方数据和自有数据，前者主要是采购的市面上第三方数据源，一般良心点的是查得收费的，这部分数据是风控的成本，要做好缓存和花费规划；后者是业务自身的数据，可以是业务数据、统计数据、挖掘数据等，两者在逻辑上是分开的，一般能用自有数据解决的就不用第三方数据，能用免费数据解决的不用收费数据。</li>
-<li>反欺诈服务 这个是用来发现用户欺诈行为的，可以通过黑名单、类似广告中look alike用户发现、欺诈关系发现等方法和算法尽可能降低贷款风险，一般这类欺诈事件一旦发生，贷后催收就很被动了，资产会大概率减值。</li>
-<li>前端报表服务 方便业务看数，可以是定制报表或自助报表的形式。</li>
-<li>日志服务 日志在系统中是最核心的地位之一，决定了整个系统有多好用和合理，尤其冠军挑战者这样的服务和日志设计的好不好有及其紧密的关系。</li>
-<li>数据采集服务 用来采集业务数据、行为数据等，属于常规服务。</li>
-<li>模型服务 用于做模型inference，属于常规服务。</li>
-<li>数据仓库与集市 离线部分服务，用于建立离线数据支持部分，帮助生成线上使用数据和模型，决定数据质量、数据丰富度等，是整个风控的重中之重。</li>
-<li>离线挖掘服务 基于仓库或集市数据挖掘相关标签。</li>
-<li>爬虫平台 抓取免费的第三方数据，属于常规服务。</li>
-<li>机器学习平台 用于离线训练各种模型，属于常规服务。</li>
-<li>大数据平台 包括hadoop平台、kafka服务、flume服务、streaming服务等大数据服务。</li>
-</ul>
-<h3 id="风控是需要动态闭环的">14.1.3 风控是需要动态闭环的</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0had6rvj1qun11crkfakqd30.png" width="300" />
-</center>
-<p>风控是数据、模型/策略和监控的动态闭环，通过三要素不断迭代运转。</p>
-<h3 id="数据是风控的核心">14.1.4 数据是风控的核心</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0l9r33d01mg9s0aollj873m.png" width="800" />
-</center>
-<p>不同的数据刻画用户不同方面，好的数据事半功倍，差的数据事倍功半。</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0nke613ijn112e41osgs7s4g.png" width="350" />
-</center>
-<p>其中：DPD：Days past due，M：month，C：cycle，从这个月还款日到下个月还款日中间的30天。 逾期相关指标是风控中非常核心的部分，直接决定了公司资产减值情况，好的风控能很好的拿捏逾期与收益之间的平衡。</p>
-<h3 id="融资租赁业务需要以风险为中心考虑收益和产品发展策略">14.1.5 融资租赁业务需要以风险为中心考虑收益和产品发展策略</h3>
-Risk Adjusted Return on Capital：将未来可预计的风险损失量化为当期成本。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2tj33bskjng1nl41nkt1kll3a.png" width="600" />
-</center>
-Economic Value Added：全面评价企业经营者有效使用资本和为股东创造价值的能力，是一种管理理念和企业文化。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2si3rln5ctqt223kn1bmt2t.png" width="600" />
-</center>
-<p>这两个公式意味着我们需要在风险控制大框架下最大化压榨资本的剩余价值。</p>
-<h3 id="风险政策是分层级联的">14.1.6 风险政策是分层级联的</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2v2julls1ht2aro1d3r109s3n.png" width="500" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb309q0r43t0udlu16cm4c344.png" width="300" />
-</center>
-<p>风控政策（规则）是分场景分级级联的，不同场景下的策略打法不尽相同。政策制定会通过实验决定我们的投入产出比。</p>
-<h3 id="风控是以若干假设为前提的">14.1.7 风控是以若干假设为前提的</h3>
-<p>就像所有统计或机器学习的应用一样，规则和模型都是建立在一定的建设下才能成立的。</p>
-<p>1、空间假设——度量意义，例如，“距离”这个定义是在欧式空间下的长度、角度还是在希尔伯特空间下的长度、角度。</p>
-<p>2、样本量假设——统计意义，例如，达到什么样的样本量规模下，产生的实验结果才是有统计意义的。</p>
-<p>3、样本标注假设——“坏”的意义，例如，我可以假设所有到期未还款的用户为坏样本，也可以假设所有被拖车的用户为坏样本，这与具体使用场景也有关系。</p>
-<p>4、分布一致性假设——学习意义，例如，我们会假设近期历史数据的概率分布会和未来一段时间的数据分布一致。</p>
-<p>5、概率分布假设——函数意义，例如，我们常常会假设，数据服从高斯分布。</p>
-<p>6、极大似然假设——求解意义，例如，我们假设求得的参数能最大程度复现已有样本是我们想要的理想模型，那么使用极大似然即是合理方法。</p>
-<h3 id="风控是个最优化问题">14.1.8 风控是个最优化问题</h3>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb34ms5rcjtu0m8j168r12k96l.png" width="450" />
-</center>
-<p>毫无疑问，现实当中的大部分问题都可看做最优化问题，只是复杂度不同而已。风控可以看做是在权衡通过率、花费数据成本、产生的收益、逾期坏账、用户授信额度等等诸多要求的限制下的一个优化问题。</p>
-<h3 id="风控是在不停的做实验">14.1.9 风控是在不停的做实验</h3>
-在我看来风控是一门实验科学，金融行业里叫冠军者挑战赛，互联网行业叫AB Test、Bucket Test，一篇经典的论文如下：《Overlapping Experiment Infrastructure: More, Better, Faster Experimentation》，是源自Google的分层实验架构，它影响了整个互联网的AB Test工程架构。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb370rj1ams1up5valncu142v7s.png" width="800" />
-</center>
-<h3 id="保证风控实验的置信度在于正确分割流量">14.1.10 保证风控实验的置信度在于正确分割流量</h3>
-实验要保证结果的置信度，是需要正确分割流量的，一旦不合理则实验结果无效甚至误导，比如著名的Simpson's Paradox，就是违反了分布一致性假设的典型例子，明明单独看商学院和法学院，男生录取率都远高于女生，但从整体看女生录取率却远高于男生：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb390dqu291jn91d3dnmadf93.png" width="500" />
-</center>
-也有一些基于统计的方法估计流量切分置信度，例如下面这种方法：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3a10i126a32q42em79d889t.png" width="600" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3aqn31jhok2mgdfrtp1rvuaq.png" width="500" />
-</center>
-<h3 id="评价指标在风控中是至关重要的">14.1.11 评价指标在风控中是至关重要的</h3>
-<p>风控规则和模型会涉及各种变量，例如：</p>
-<p>1、连续型变量——价格、时间等，值域在实数域，可进行加、减、乘、除、比较等算术运算；</p>
-<p>2、二元离散型变量——只有两种状态，如：0/1、真/假、正/负、逾期/正常、点击/未点击等；</p>
-<p>3、顺序离散型变量——逾期状态（M0、M1……）、年龄等，值域在整数域或自然数域，可进行比较运算；</p>
-<p>4、无序离散型变量——性别、颜色等，值域在整数域或自然数域，可完全枚举，但不能进行比较运算。</p>
-<p>但不管什么数据源、特征、策略、模型评价，都应该以业务需求为导向、能区分用户行为为目标。</p>
-各种评价指标体系如下，实际当中合理使用即可。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3cspl12vi129e1b241gnk1sl9c1.png" width="800" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3e44g1n1j1t5q11nekco1h3fce.png" width="800" />
-</center>
-<h3 id="有效监控对风控业务保驾护航">14.1.12 有效监控对风控业务保驾护航</h3>
-<p>毫无疑问，各种维度的数据监控是风控业务的保镖。</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3fr2t1i1h1nr2hct57bkh0d8.png" width="800" />
-</center>
-<h2 id="风控平台架构">14.2 风控平台架构</h2>
-<p>实践中，我们自研风控系统的目标是以平台方式提供给公司内外业务人员做配置化风险政策制定、风控模型构建和实验、风控效果监测、风控能力输出、风险客户画像等等。 一般来说，了解一个公司风控能力的强弱有这么几点：</p>
-<p>1、对公司业务场景及一线业务的理解深度</p>
-<p>2、数据质量及由业务规模决定的<strong>标注</strong>数据规模</p>
-<p>3、风控系统针对业务人员的自助程度、配置快速性</p>
-<p>4、风控模型构建、实验及应用能力</p>
-<p>5、涉及人工审核的运营能力</p>
-<p>6、数据化监测及分析能力</p>
-从系统研发角度，市面上其实有很多做风控系统的公司，比如：大的有FECO，小的有各个创业公司，但坦白地讲，风控能力作为保证公司长治久安和业务稳步发展的核心能力之一，有一定业务量且有技术能力的公司一定会自研，这其实也是在国内做2B业务的一个难点，但凡有能力的公司，谁也不愿意核心被人卡着，此外国内企业对2B业务的付费意愿也不足，所以我真心佩服做2B业务还能做起来的公司。 ### 14.2.1 风控系统发展概述 一般公司的风控系统的发展可能会有这么几个阶段：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/%E5%8F%91%E5%B1%95%E6%AF%94%E8%BE%83.png" width="800" />
-</center>
-<p>1、采购现成系统显然是貌似最省事儿的，从短期来看，可以让公司业务快速展业，这个阶段抢占业务山头是最重要的，但长远来看，可能会遇到的问题不少，比如：和现有业务贴合度不够时，需要额外定制化开发，势必会产生一系列费用，此外数据使用、模型使用、系统咨询、系统培训等等都会产生费用，当业务量起来后，再想换系统那成本就很高了。</p>
-<p>2、当公司具有开发能力时，基于采购的系统做定制化封装也不失为一条路，但是从可维护性、成本角度来看，未来的性价比依然很低。</p>
-<p>3、开始就具有技术能力的公司，可能会选择基于开源框架做自研，好处是可控性和业务贴合度都比较好，但做技术的人都知道，当你基于一套开源框架想干好活儿时，你需要熟悉整个框架。举个例子，风控政策制定是业务强需求，那么系统必须支持规则配置和解析，于是很多公司会使用开源规则引擎，例如DRules，实际上你需要的可能只是它的一部分功能，但如果不对整个框架熟悉，未来出了线上问题你可能哭都没地儿去；更糟糕的是，不是每个团队成员都熟悉开源框架，当人员离职后可能带来系统上的风险。</p>
-<p>所以只要有能力，我们会选择全套纯自研，进而迈向云端平台化，未来还可能成为一个技术盈利点，比如我们的很多线下合作渠道没有技术人员又想做自己的风控，乐观情况下，我们可以开个账号做个配置就能实现风控能力输出。</p>
-<h3 id="风控系统架构">14.2.2 风控系统架构</h3>
-其实万事万物都有其相通性，尤其在系统架构上，在我看来，广告投放系统、推荐系统与风控系统具有极高相通性，比如，系统需要有够好的稳定性、容错性（包括防雪崩）、扩展性、并发性（包括服务降级）、对算法的支持性、标准化日志、权限控制、实时数据采集、数据可视化、数据统计、指标监控、自动化运维等等，由于我们之前恰好都做过，整体架构类似云原生，比如大体可以有以下架构：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/arch.png" width="800" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/ts%281%29.png" width="800" />
-</center>
-<p>1、统一的日志格式及服务，这个是要放在首位设计的，这里的统一体现在几个方面：</p>
-<ul>
-<li><p>统一的日志格式规范，每一个字段、每一个嵌套关系、每一个扩展段等等都有严格的规范定义，技术选型方面采用ProtoBuf，这样将来对日志的解析可以采用一套方法，管理方便且不容易出错，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package pb_interface.fintech;</span><br><span class="line">import &quot;pb_interface/fintech/*/*.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/**/**.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/***/***.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/****/****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">message FinTechPbLog&#123;</span><br><span class="line">	required string pbLogId=1;		//log唯一标识</span><br><span class="line">	required string createTime=2;	//生成时间</span><br><span class="line">	required string serveName=3;	//服务名称</span><br><span class="line">	optional int32 errCode=4;		//返回码:0正常,非0异常</span><br><span class="line">	optional string errMsg=5;		//返回描述</span><br><span class="line">	optional pb_interface.fintech.*.* *=6; //主引擎服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=7;//规则引擎服务日志</span><br><span class="line">	optional pb_interface.fintech.***.*** ***=8; //数据处理服务日志</span><br><span class="line">	optional pb_interface.fintech.****.**** ****=9;//配置更新服务日志</span><br><span class="line">	optional pb_interface.fintech.***.*** ***=10; //引擎回调服务日志</span><br><span class="line">	optional pb_interface.fintech.*.** ***=11; //数据源指标字段日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=12;//指定名单服务日志</span><br><span class="line">	optional pb_interface.fintech.*.** **=13;//图像处理服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=14;//明细服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=15;//inference服务日志</span><br><span class="line">	optional pb_interface.fintech.***.** ***=16;//异步交互服务日志</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>统一的采集、解析、分析、展示方案，包括提供给算法团队的特征字段，这样在使用层面极大地方便了自己和降低出问题的概率。</p></li>
-<li><p>统一的监控展示方案，对应用系统涉及的从前到后的一系列交互统一做监控，能够对每个请求的今生来世做到一通贯穿。</p></li>
-<li><p>统一的数据安全方案，包括脱敏方案、提取流程、加密方案、反显方案等，做到分层分级安全可控。</p></li>
-</ul>
-<p>2、统一的版本及权限控制，包括以下几个方面：</p>
-<ul>
-<li><p>代码版本需要有一套管理流程，代码提交前必须做交叉Code Review</p></li>
-<li><p>所有的风控模型也需要做类似的版本管理，任何一个模型的特征、权重、参数、分流情况等都需要控制到</p></li>
-<li><p>对接入风控的业务系统做统一的接口认证和鉴权控制</p></li>
-<li><p>对使用系统的用户做统一的分组权限控制</p></li>
-</ul>
-<p>3、风控对接系统 - 对接业务系统服务，采用标准化的RESTful接口对接所有业务系统，由于受限于数据源的获取速度，所以风控审批执行会同时支持同步模式和异步模式</p>
-<ul>
-<li>业务配置服务，除非新增数据源，否则所有风控政策制定都采用可视化配置方式实现，无需代码开发，且实时生效。对于风控模型使用也是类似的逻辑，只要基本的特征数据没有增加，都以配置方式实现模型应用。</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-02-15%20%E4%B8%8B%E5%8D%8812.09.38.png" width="800" />
-</center>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e13i9skc33dal1mkp1jrn3js1e.png" width="800" />
-</center>
-<p>4、AB Test服务 - 大的方面支持订单粒度和用户粒度随机或有策略AB，细的方面支持用户的灵活分组，例如：年龄、地区等以及这些条件的交叉</p>
-<ul>
-<li><p>每个分组的实验量必须具有统计意义，测试时间要足够，并明确每个实验的从前端到后端的全路径</p></li>
-<li><p>同一个用户在相同分流策略下可重入，不会出现一个用户一会儿审批通过一会儿审批拒绝，否则不仅用户体验差，还会招来用户投诉</p></li>
-<li><p>由于汽车的客单价比较高，实验表现期很长，所以每次实验要做到尽量降低实验成本，尽可能的利用历史数据</p></li>
-<li><p>所有实验都是可视化实时配置且有相应实验运营后台，展示每个实验的详细情况</p></li>
-<li><p>离线日志回放，每做一个新模型，能够将历史样本批量回放，一定程度模拟真实场景效率和效果表现</p></li>
-</ul>
-<p>5、风控主服务 - 初始化全局环境、串流程，调度和组合各个微服务的功能</p>
-<ul>
-<li>针对同步或异步场景对业务系统返回结果或做异步回调</li>
-</ul>
-<p>6、规则解析服务</p>
-<ul>
-<li><p>平台在设计时，业务流程和业务规则是完全分开不耦合的，所以规则解析服务只负责解析、检查和执行规则。在风控领域，政策规则的特点是：有大量规则（甚至规则的模式间有一定重复性），但变化并不那么多。而开源的类似Drools的框架，虽然基本能满足需求但一方面随着业务的复杂性越来越高，管理起来越来越费劲，另一方面它实在太重了，学习、维护成本高还不能从架构层面锻炼队伍。 所以我们干脆以RETE算法（论文见：Charles Forgy的 《Rete: A Fast Algorithm for the Many Pattern/Many Object Pattern Match Problem》.）及编译原理的语法分析树解析算法为蓝本自研。</p></li>
-<li><p>在操作符方面，针对风控业务，至少需要支持：</p>
-<ul>
-<li><p>&amp;&amp;</p></li>
-<li><p>||</p></li>
-<li><p>!</p></li>
-<li><p>null判断</p></li>
-<li><p>==/!=</p></li>
-<li><p>in/not in</p></li>
-<li><p>包含/不包含</p></li>
-<li><p>前/后缀等</p></li>
-</ul></li>
-<li><p>在管理模式方面，至少需要支持：</p>
-<ul>
-<li><p>规则集合管理</p></li>
-<li><p>规则优先级</p></li>
-<li><p>规则互斥</p></li>
-<li><p>规则依赖</p></li>
-<li><p>规则循环</p></li>
-<li><p>规则有效期</p></li>
-<li><p>规则缓存等</p></li>
-</ul></li>
-<li><p>在取值管理上，至少要支持：</p>
-<ul>
-<li><p>常量</p></li>
-<li><p>变量</p></li>
-<li>自定义公式</li>
-</ul></li>
-<li><p>在服务部署和响应上，服务横向扩展、解析可以并行执行；单规则解析响应时间在整个规则执行耗时上要做到占比小于99.9%，实际当中，特征取数占执行时间的大头，规则解析时间忽略不计</p></li>
-</ul>
-<p>7、Inference服务 一系列微服务，实现y=f(x)的特征取数和计算。需要支持：</p>
-<ul>
-<li><p>XGBoost/LightGBM（ATM类模型）</p></li>
-<li><p>Logistic Regression</p></li>
-<li><p>MLP及DeepFM类前向传播</p></li>
-<li><p>记录时点特征日志、inference日志和模型计算结果</p></li>
-</ul>
-<p>8、关联及反欺诈服务</p>
-<p>在风控场景下，用户的申请能否通过，主要衡量两方面：</p>
-<ul>
-<li><p>用户的还款能力 还款能力与国家经济情况、用户个人经济情况、家庭突发情况等有关系，可以围绕着用户的属性数据和消费行为数据做刻画</p></li>
-<li><p>用户的还款意愿 真正影响公司资产质量的是对用户还款意愿的预判及用户是否会发生欺诈。欺诈行为往往不是个体行为，对于像汽车这样的大宗消费品，如果发生团体欺诈，损失可想而知。</p></li>
-<li><p>关联反欺诈，根儿上主要还是依赖能够拿到的数据，做法上大致有两大类方法：</p></li>
-<li><p>想象每个用户是一个圆点，每个实体（如某4s店、某银行）是个方点，圆点和圆点或圆点和实体之间的边是关系或行为，利用图算法可以查找异常聚集、多度的多头借贷等</p></li>
-<li><p>类似广告的look-alike，分析已有的欺诈种子用户，找到和他最类似的用户等</p></li>
-</ul>
-<p>9、在线数据服务</p>
-<ul>
-<li><p>特征数据及实时数据服务，主要负责几个方面：</p>
-<ul>
-<li><p>离线生成的特征数据在线使用，风控模型中有一类特征是通过离线挖掘生成后导入线上的，这类特征大部分是T+1特征及月、季度、年时间范围特征</p></li>
-<li><p>反馈类特征数据在线使用，这类特征主要与用户行为有关，例如，某个渠道当天进件量，配合实时数据采集服务，这类特征需要伪实时或实时更新</p></li>
-<li><p>模型权重数据在线使用，包括离线模型权重和online learning模型权重。在机器学习相关工程应用中，特征的online更新（用的更多）和模型的online更新都可以起到捕捉实时数据概率分布的作用 ，可单独使用也可结合使用，但特征或权重监控必须做到位</p></li>
-<li><p>数据缓存服务，承担各类数据的缓存工作</p></li>
-</ul></li>
-<li><p>数据监控服务，主要监控以下几类：</p>
-<ul>
-<li><p>特征监控：监控特征分布是否有大波动、缺失特征是否有大波动等，例如，由于系统bug导致某个特征大量缺失，通过监控立刻报警并熔断</p></li>
-<li>权重监控：监控模型权重分布是否有大波动、权重重要性排序是否有大波动等，例如，在online learning（如：FTRL）中，本就使用类似SGD方式更新权重，虽然有L2正则在一定程度上帮助稳定权重更新，但依然无法避免权重可能学飞掉，所以有效的监控很重要，一旦波动过大就做一次批量样本的模型修正</li>
-<li>卡单监控：全流程描述一个单子从提报到生效的全链路，可视化的告诉运营和开发人员，单子到哪儿了，卡那儿了，由于全流程往往需要多个独立系统互相配合，所以开篇讲到的统一日志设计的重要性不言而喻</li>
-<li>运维监控：对系统做接口粒度监控，流量如何、响应时间如何等</li>
-<li><p>业务指标监控：监控核心业务指标，例如，实时自动审批率表现如何</p></li>
-</ul></li>
-</ul>
-<p>10、实时数据采集服务 - 外部合规数据接入服务，由于一家公司的数据积累毕竟有限，所以风控业务开展往往需要采购第三方数据： - 采购时首要考虑数据是否为一手数据、数据是否合规合法、获取时用户是否知晓且主动授权等 - 其次考虑数据的覆盖率如何，例如，人群覆盖率 - 然后考虑数据在风控政策或风控模型上的贡献度 - 最后是商务谈判，这一步一定要有技术参与，尽可能保证数据接入标准化，方便接入服务，以上完成后，外部数据的接入从时间和质量上都会可控</p>
-<ul>
-<li><p>提报业务数据，采集销售或用户在提报时录入的信息</p></li>
-<li><p>用户及渠道行为数据，采集用户或者渠道业务时点的行为，例如：某个用户在几个渠道下过单，某个渠道当前进件量是否异常等</p></li>
-</ul>
-<p>11、模型一键发布及数据导入服务，连接线上与线下的桥梁，导入效率要够高，对大数据量以mapreduce方式支持集群数据导入 - 模型一键发布服务，管理和发布离线训练好的模型，可将模型一键发布到测试、UAT、生产等环境</p>
-<ul>
-<li>数据导入服务，将离线特征数据及其他必要数据导入线上</li>
-</ul>
-<p>12、机器学习平台 - 广义来说，整个风控平台就是个机器学习平台，同时包括离线和在线服务</p>
-<ul>
-<li>狭义来说，包括离线日志处理、数据标注、特征分析与提取、模型Pipline离线训练、模型测试验证、日志回放模拟、模型剪枝和压缩等等。我们把以上步骤封装成各种机器学习组件，一定程度上，用户不需要写代码，而是采取可视化、拖拽方式建模。</li>
-</ul>
-<p>总的来说一套成熟的风控平台需要多年的技术打磨，以平台方式而不是软件方式打造，一方面要保证不被点状的需求带偏，另一方面重视业务通用性和使用体验、最后设计时要有一定高度，以适应未来未知的挑战。</p>
-<h2 id="风控建模方法">14.3 风控建模方法</h2>
-<p><strong>金融的本质是基于信用风险的生意</strong>，而金融天生又是厌恶风险的，不管是为有钱人理财还是为缺钱人融资。所以要做好这个生意，需要：</p>
-<ul>
-<li><p>尽量保证资产的安全，毫无疑问，这个是金融的基石但不是唯一目标</p></li>
-<li><p>尽量保证资源的最优化配置，不同机构最优化的目标不一样，比如，可以是企业利益最大化，或者兼顾社会责任等</p></li>
-</ul>
-<p>虽然现在互联网金融一地鸡毛，但是从互联网行业（计算广告、智能推荐等）继承而来的建模方法和系统思维，私认为是远领先于传统金融机构的。</p>
-<h3 id="建模概述">14.3.1 建模概述</h3>
-<p>风控建模的目的主要有：</p>
-<ul>
-<li><p>通过完备的理论将风险数据化，减少主观性，把过去依靠“经验”的授信变成数据化的授信，把判断过程中的物料全部数据化落地存储，做到有根有据、可查可追</p></li>
-<li><p>提高最优化资源配置能力，将风险考量放入到衡量公司每个项目的盈利能力中，风控一定不是一味地降低风险，而是tradeoff风险和收益</p></li>
-<li><p>提高运营效率、降低运营成本，显而易见，全自动的审核速度是秒级甚至毫秒级的，而人工审核是几分钟级、十几分钟甚至小时、跨天的。当然，现阶段受限于能够获取的数据规模和质量，人工审核依然必不可少，但风控建模依然可以很好的去辅助人工审核。</p></li>
-</ul>
-一般来说建模有以下几个步骤：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/step.png" width="350" />
-</center>
-<h3 id="需求分析与目标定义">14.3.2 需求分析与目标定义</h3>
-<ul>
-<li>需求分析</li>
-</ul>
-<p>明确了业务需求并准确做出分析，项目就成功了一半，这个很考验产品、研发同学的分析能力。我们强调不要过分建模，不是所有看似建模的需求需求都需要通过建模来完成，很多情况下if-else能搞定的事儿就不要用模型，大家容易犯的错误是拿着锤子看什么都像钉子。</p>
-<ul>
-<li>目标定义</li>
-</ul>
-<p>目标定义是需求分析里的一个阶段，我单独拿出来强调。明确将来应用的场景进而确定建模目标是什么，这一步决定了将来应用的成败。 例如：风控里最常做的事儿是预测用户的逾期概率，你需要进一步明确： - 是M1逾期率还是首期逾期率 - 什么样的用户被定义为“坏”用户 - 是融资租赁场景还是售后回租场景 - 新车还是二手车 - 白户做不做（明确白户的定义是什么）</p>
-<h3 id="数据准备">14.3.3 数据准备</h3>
-规范化对数据分层、分主题管理，确定建模需要什么数据，这些数据从哪儿来放在哪儿了，字段含义是什么，缺失情况如何，是否能够直接使用，能回溯多久等等一系列数据需求，数据需要以统一模式存储和管理，体系化做数据积累，不要来一个项目做一个。 一般采用数据仓库+数据集市方式管理，架构如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/tt.png" width="800" />
-</center>
-<p>其实这一步是贯穿公司数据管理整个过程的，建模只是受益方之一，机器学习领域成熟的模型足够多，但如果没有好的数据体系保证质量，往往事倍功半。 一般来说，风控数据来源主要有三部分：</p>
-<ul>
-<li><p>以订阅方式获取的业务数据，例如：用户进件时的用户信息、车辆信息、融资信息</p></li>
-<li><p>以采集方式获取的行为数据，例如：某个渠道、某些地域的进件行为、用户群申请行为</p></li>
-<li><p>以购买方式获取的合规数据，例如：中国人民银行征信数据</p></li>
-</ul>
-<p>1、Stage层，所有数据通过数据总线以既定的规范分主题接入，这一层是最原始的数据，原则上不对外提供服务。</p>
-<p>2、ODS层，对Stage层数据做不带业务逻辑的加工和清洗，为将来抽象到上一层做准备，同样原则上不对外提供服务。</p>
-<p>3、MDS层，原则上所有业务需求涉及的数据都应该能得到满足，这一层会分层、分主题的做数据加工，数据要尽可能复用。</p>
-<p>4、公共主题，所有经过业务逻辑处理的、定义明确的、口径一致的可公共使用的数据会放在这一层，例如，用户的基本信息，年龄、性别、唯一标识等。</p>
-<p>5、垂直集市，基于MDS数据，加工并抽象出来的某个垂直业务主题的数据，这层可认为是此业务主题下的标准数据，例如：名为dm_risk_secondhand_nobehavior_features_116_v1 的宽表为风控二手车业务场景下针对白户的v1.0含有116个特征的数据集合</p>
-<h3 id="数据标注">14.3.4 数据标注</h3>
-<p>数据标注是数据准备里的一部分，这里单独拿出来做强调，它是风控建模里的一个难点和重点。目前工业应用里最多的还是监督学习supervised learning，需要对数据做样本标注，对分类问题，标注样本的目标类别，对回归问题，标注样本的目标值。 一般来说，对于正常业务量的汽车金融公司，以36期为主要产品的话，早期模型应用会较少（从已经有大量数据积累的场景transfer过来的模型除外），因为数据量级和数据表现都不充足，公司展业三年后开启模型应用之旅。 先介绍几个风控常用的指标和数据标注方法，会影响到样本选取和数据标注，进而影响风控建模质量或基于IFRS9的预期损失准备金拨备：</p>
-<ul>
-<li><p><strong>账龄(Month on Book，MOB)</strong></p>
-<p>指合同生效并放款后的月份，其最大值与金融产品期限有关。 以汽车金融主流的36期产品参照，MOB最大值为36，其中： MOB0 = 合同生效放款的日期到当月月底 MOB1 = 放款后第2个月（1号到月底的整月） ...... MOB36 = 放款后第36个月（1号到月底的整月） <strong>例如：</strong> 2020年2月17日合同生效并放款的订单： MOB0 = 2020年2月 MOB1 = 2020年3月 ...... MOB36 = 2023年2月</p></li>
-<li><p><strong>逾期天数(Days Past Due，DPD)</strong></p>
-<p>1、逾期天数 = 用户实际还款日 - 合同约定应还款日 <strong>例如：</strong> 假设合同约定每月还款日为6号，用户9号还款，那么逾期天数为3天</p>
-<p>2、把上面的逾期天数按照某种规则划分区间后定义<strong>逾期期数(M)</strong> <strong>例如：</strong> M0 = 未逾期 M1 = 逾期1-30天，每家公司根据各自的催收策略不同，会细分该档，另外涉及到逾期征信上报的，各家容忍度也不一样，M1数据是目前风控建模用的最多的。 M2 = 逾期31-60天 M3 = 逾期61-90天 M4 = 逾期91-120天 M5 = 逾期121-150天 M6 = 逾期151-180天 M7 = 逾期超过180天，此时资产大概率回收无望，一般会采取核销。</p></li>
-<li><p><strong>逾期率(Overdue Rate)</strong></p>
-<p>1、订单粒度逾期率 = 逾期订单数 / 合同生效订单总数</p>
-<p>2、金额粒度逾期率 = 逾期金额 / 合同生效订单总金额 它是一个时点指标且会和逾期期数相关，比如：2020.2.19日的M1逾期率</p></li>
-<li><strong>账龄分析(Vintage Analysis)</strong> 通过看逾期率，可以知道某个时点的资产情况，但无法知道变化趋势，所以需要做账龄分析，一般方法是：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/vintage.png" width="800" />
-</center>
-<p><strong>例1：</strong></p>
-假设针对新车消费贷场景的12期产品(数据为编造)
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1gu26h62uaq13l27sm19d39.png" width="800" />
-</center>
-<p>其中，Vintage曲线的横坐标为账龄(MOB)，纵坐标为资产质量(如：逾期率)，每条曲线代表一个放款周期(如：月)。 账龄分析可以帮助我们得到以下信息：</p></li>
-<li><p><strong>确定资产质量好坏情况</strong> Vintage曲线平缓稳定后(随着MOB增加，切线斜率接近0)的逾期率最能代表当期资产质量，如果曲线不能收敛，需要要做进一步分析。 <strong>如例1：</strong></p>
-<p>3月份生效的订单逾期率在1.3%左右稳定，可以认为此时这部分资产质量基本稳定。</p></li>
-<li><p><strong>分析资产质量变化规律</strong></p>
-<p>1、如果发现逾期率一直上升(随着MOB增加，切线斜率平稳增加或下降很小)，需要检查是不是逾期数据取数逻辑或质量有问题，如果确定系统没问题，那么需要尽快分析原因、做风控政策调整。</p>
-<p>2、 如果逾期率超过某个阈值(比如：2%)有失控趋势，则需要调整风控尺度，收口业务规模。</p>
-<p>3、 如果发现前期逾期率上升很快(随着MOB增加，切线斜率迅速增加)甚至具有一定特性（如：地域性），那么很大可能是发生团体欺诈了。</p>
-<p>4、 如果逾期率上升后很快下降，则很可能是计算方法或数据质量有问题了。</p>
-<p><strong>如例1：</strong></p>
-<p>1月份控制的还行，最终逾期率1.5%左右，跑完了所有账期，在2月份出现逾期率明显上升，说明控制的不好或者是为了某种销售策略（如，想做做春节前冲量），在分析原因后修正了3月份的风控策略，使得逾期率下来并稳定在1.3%左右。</p>
-<ul>
-<li><strong>时点质量界定</strong></li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/dur.png" width="600" />
-</center>
-<p>风控建模或分析，选取基准时点很重要，时点选的太晚（如，所有账期走完），则之前的数据分布和未来数据分布很可能差异过大，导致出来的模型泛化性较差；时点选的太早，则风险暴露不充分，同样会导致泛化性较差，所以通过分析Vintage曲线看资产质量变化，可以帮助定义基准时点，提高未来模型的质量，ps：这点是与计算广告、推荐和搜索相比差别最大的难点，它们的数据标注不存在滞后性，比如：对广告的一次曝光，用户看到后想点就点了，不想就关了，从概率建模角度，这是典型的Bernoulli Distribution。此外这个滞后性也决定了风控做E&amp;E(Explore and Exploit)的成本远高于前三类，所以在数据标注和实验设计上都有很大不同。</p>
-<p><strong>如例1：</strong> 对每个月生效合同观察发现经过6个MOB逾期率上升趋缓，说明可以以基准时点往前推半年为训练数据，基准之后的数据为测试数据且至少需要1年的数据。</p></li>
-<li><p><strong>滚动率分析(Roll Rate Analysis)</strong></p>
-<p>业务目标决定了哪些不是目标用户，例如，可以是欺诈用户，也可以是曾经发生M2+逾期的用户。目标也与大环境有关系，例如，因为贷后催收行业整顿，导致用户M1后大概率会迁移到M2，那就需要改变目标用户标注。</p>
-<p>所以前面几个指标能帮我们确定逾期率变化趋势和基准时点前后怎么选取，但不能帮着定义什么样的用户是“坏”用户，因此我们需要借助滚动率分析工具。假设：</p>
-<p>1、基准时点前推6个月为训练数据，后探12个月为测试数据；</p>
-<p>2、定义训练数据的6个月期间：没有逾期的用户为好用户trG，最长曾经逾期期数为M3及以上的用户为trM3+，最长曾经逾期期数为M2的用户为trM2，最长曾经逾期期数为M1的用户为trM1；</p>
-<p>3、定义测试数据的6个月期间：没有逾期的用户为好用户teG，最长曾经逾期期数为M3及以上的用户为teM3+，最长曾经逾期期数为M2的用户为teM2，最长曾经逾期期数为M1的用户为teM1；</p>
-<p>4、基准时点采样5次，以消除随机点影响</p>
-<p>5、保证两段时间的样本数要有统计意义</p>
-分别统计这两段时间的用户表现，可以得到tr到te用户状态的笛卡尔积：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/dika%281%29.png" width="400" />
-</center>
-<p>例如(数据为编造)：</p>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1ld3j0914gqou11iov8ph1f7g3e.png" width="450" />
-</center>
-<p>1、训练数据中的正常客户，在测试数据中98%会继续正常还款，1.5%会转化为M1，0.5%会转化为M2，没有客户转化到M3；</p>
-<p>2、训练数据中M1的客户，在测试数据中2%会转化为正常还款，4%会保持M1，80%会转化为M2，14%会转化为M3及以上；</p>
-<p>3、训练数据中M2的客户，在测试数据中0.5%会转化为正常还款，1%会转化为M1，10%会保持为M2，88.5%会转化为M3及以上；</p>
-<p>4、训练数据中M3及上的客户，在测试数据中0.1%会转化为正常还款，1%会转化为M1，3%会转化为M2，95.9%会保持M3及以上。</p>
-<p>基于以上分析，我们发现用户一旦发生M1逾期，有80%会转化为M2，而M2逾期有88.5%会转化为M3，最终M3逾期有95.9%会保持M3或更差，这意味着：用户一旦发生M1逾期，最终会以较大概率转化到M3逾期，进而就“坏”透了，所以，坏用户=某个时间内曾经出现过M1及以上逾期的用户，数据样本中除了有明确定义的坏样本外，有些样本由于表现期的问题会被排除，总的来说，坏用户定义是由业务目标决定的，滚动率分析是帮助定义坏用户的工具。</p></li>
-<li><p>总结</p>
-<p>综上所述，利用Vintage分析和滚动率分析，可以帮助确定：以某时点为基准的训练及测试数据范围和定义坏用户。</p></li>
-</ul>
-<h3 id="拒绝推断">14.3.5 拒绝推断</h3>
-风控与广告、推荐搜索有一个类似的问题，即幸存者偏差（Survivorship Bias），以广告CTR预估为例：影响其预估准确性的因素是AUC(Ads、User、Context)，建模中能被使用的样本是由有机会曝光的广告产生的，显然数据必然会有偏；此外不同的广告位产生的样本也会有位置偏差，在顶通栏的广告一定比在底通栏的更有机会被用户看到，从而被点击。所以最无偏的情况是每个广告对每个用户在每个上下文环境(如：位置、时段)下都曝光一次，之后看用户反应，但从经济成本、可行性等方面看显然不现实，所以广告会采用E&amp;E的方式，边给曝光机会边探索，通过实时流采集投放效果(感知)并动态评价(决策)，总之是以一定成本尽可能让平台利益最大化(如：最大化eCPM)。 但<strong>对风控来说，最大的问题是用户逾期的滞后性及客单价</strong>。对现金贷场景可能还好些，可以先通过放款小额度贷款去试用户，但对汽车金融等大额消费贷场景就不行了，只能折中使用拒绝推断，尽可能的利用已有数据。
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/jujuetuiduan.png" width="600" />
-</center>
-拒绝推断有很多种方法，不过实践当中我们认为最有效的还是Parceling，它有很多变体，举一个常用的方法：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/pac.png" width="600" />
-</center>
-例如：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1m1rapkmeb12mg1p411ogb1a056j.png" width="600" />
-</center>
-<p>1、利用”通过样本“训练”模型1“</p>
-<p>2、按照置信度对”通过样本“做9个分组，置信度越高逾期率越低；</p>
-<p>2、对每个分组统计”实际逾期率“及相应样本总数</p>
-<p>3、利用”模型1“对”拒绝样本“做inference，同样按照置信度从高到低分9组</p>
-<p>4、对每个分组统计样本总数，根据该组的逾期率，抽样得到”推断坏样本“，剩余的为”推断好样本“</p>
-<p>5、合并”通过样本“和”推断好、坏样本“</p>
-<p>6、训练”模型2“</p>
-<p>总的来说，使用拒绝推断方法一方面可以部分修正训练数据的数据分布，让模型表现的更加稳定，泛化性更强；另一方面充分利用了历史数据，节省未来线上实验的成本。</p>
-<h3 id="风控建模">14.3.6 风控建模</h3>
-<p><strong>1、基本框架</strong> 风控建模的方法和广告、推荐及搜索的建模方法没区别，只是整体会更加保守些，因为风控这个业务很注重可解释性，表现在以下两个方面：</p>
-<ul>
-<li><p>对风控业务可解释 找到影响风险水平的原因，可以有的放矢的调整业务走向，例如，发现地区+车型组合特征对逾期率模型贡献高，则可进一步看哪个地区哪个车型，然后做业务判断。</p></li>
-<li><p>对销售业务可解释 例如，在前端业务发生拒单时，帮助销售向客户解释原因；销售利用可解释的模型变量，有的放矢的和用户面聊，帮助控风险。</p></li>
-</ul>
-一般的建模框架如下：
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/ml.png" width="800" />
-</center>
-<p>与传统机器学习类似，数据及特征准备耗费80%以上建模时间(即使使用AutoML框架辅助特征发现)，而模型方面，由于对可解释性的强烈需求及实际建模效果，早期的baseline是Logistic Regression，现在的baseline是Additive Tree Models(如，各种版本GBDT模型、RF模型，详情可见《<a href="https://www.zybuluo.com/vivounicorn/note/798611#25-additive-tree-%E6%A8%A1%E5%9E%8B">建模方法回顾-Additive Tree Models</a>》)。</p>
-<p>需要说明的是，深度学习模型，诸如：</p>
-<ul>
-<li><p><a href="http://ir.ia.ac.cn/bitstream/173211/12337/1/A%20Convolutional%20Click%20Prediction%20Model.pdf">Convolutional Click Prediction Model</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1601.02376.pdf">Factorization-supported Neural Network</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1611.00144.pdf">Product-based Neural Network</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1606.07792.pdf">Wide &amp; Deep</a></p></li>
-<li><p><a href="http://www.ijcai.org/proceedings/2017/0239.pdf">DeepFM</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1704.05194.pdf">Piece-wise Linear Model</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1708.05123.pdf">Deep &amp; Cross Network</a></p></li>
-<li><p><a href="https://www.ijcai.org/Proceedings/2017/0435.pdf">Attentional Factorization Machine</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1708.05027.pdf">Neural Factorization Machine</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1803.05170.pdf">xDeepFM</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1706.06978.pdf">Deep Interest Network</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1809.03672.pdf">Deep Interest Evolution Network</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1810.11921.pdf">AutoInt</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1902.09096.pdf">NFFM</a></p></li>
-<li><p><a href="https://arxiv.org/pdf/1904.04447">FGCNN</a></p></li>
-<li><p><a href="https://arxiv.org/abs/1905.06482">Deep Session Interest Network</a></p></li>
-</ul>
-<p>虽然在风控特征自动发现方面可以起到一定作用，但并不那么适合风控建模，一方面是金融领域并没有那么大的标注数据，而深度学习模型在数据量足够大时才有明显优势，另一方面就是可解释性太差了。</p>
-<p><strong>2、效果评价指标</strong> 风控建模本质上也是个排序问题，是更智能的狗熊掰棒子，同样也容易出现正负样本分布很不平衡问题(尤其是欺诈问题)，类似广告、推荐和搜索。</p>
-<ul>
-<li><p>K-S值</p>
-<p>风控行业大家喜欢使用K-S值来评价模型好坏，值越大代表正负样本分的越开，一个可用的模型K-S值至少0.5，但是，假设正样本都被预测成了负样本，负样本都被预测成了正样本，猜猜这个指标会如何？</p></li>
-<li><p>AUC值</p>
-<p>个人更喜欢用AUC指标，它是个概率值，AUC=0.5代表你的模型和随机分类一个效果，AUC=0.8左右模型就可用了，AUC超过0.9了，赶紧查是不过拟合了。其数学含义更直接，假设负样本是多数派，那么AUC值表示：当线上随机来一个正样本和一个负样本时，当前模型将这个正样本排在负样本前面的概率。</p></li>
-</ul>
-<p><strong>3、阈值选择</strong> 在风控审批场景中，大体会有三种处理方法：</p>
-<ul>
-<li><p>自动通过</p>
-<p>模型或策略规则，输出很高的通过置信度时，则认为用户大概率不会逾期，此时一般会让进件直接通过，这样前端的时效性和用户体验会很好。</p></li>
-<li><p>自动拒绝</p>
-<p>当模型或策略规则，输出很高的拒绝置信度时，则认为用户大概率会逾期，此时进件一般会被直接拒绝，尤其是触碰红线的用户，则一票否决且不允许召回。</p></li>
-<li><p>转人工审核</p>
-<p>介于通过与否的置信度不那么高的用户，会依据人力情况被转到人工审核岗，之后通过电话、面聊等方式决定是否准予通过。</p></li>
-</ul>
-<p>但由于风控模型输出的置信度是个概率值或连续值，所以需要通过做阈值截取得到以上三种结果。 例如，我们做自动拒绝判定(自动通过的逻辑与下面方法类似，不再赘述)，除了考虑业务量、人力情况等因素外，还需要考虑经济收益，即：我们希望被自动拒绝的订单尽可能多的是”坏“客户，尽可能少的是”好“客户，每拒绝一个”坏“客户，会挽回一单经济损失，而每拒绝一个”好“客户，会丢失一单经济收益，所以确定自动拒绝置信度的阈值要通过算法方式合理设定。 假设：</p>
-<ul>
-<li><p>训练了一个某场景下预测M1逾期率的模型，每一个订单的NPV值(或IRR值)已知，需要确定阈值以尽可能拒绝”坏“用户，让整体收益最大化；</p></li>
-<li><p>有一条曲线是描述拒绝”坏“客户后挽回的经济损失，另一条曲线是拒绝一个”好“客户后丢失的经济收益；</p></li>
-<li><p>横坐标是拒绝用户占总用户的比例，纵坐标是累积的平均NPV(IRR)值</p></li>
-</ul>
-<p>那么：</p>
-<ul>
-<li>如果模型特别差，所有好样本置信分都低于坏样本置信分，意味着下图：</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/worst.png" width="800" />
-</center>
-<ul>
-<li>如果模型特别好，所有好样本置信分都高于坏样本置信分，意味着下图，最优拒绝阈值是让两条曲线间距最大的点(有点类似KS值)：</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/best.png" width="800" />
-</center>
-<ul>
-<li>正常应用的模型，例如AUC达到0.8以上，大部分好样本置信分都高于坏样本置信分，意味着下图，同样，最优拒绝阈值是让两条曲线间距最大的点(有点类似KS值)：</li>
-</ul>
-<center>
-<img src="https://vivounicorn.github.io/images/ai_chapter_14/normal.png" width="800" />
-</center>
-<p>最终确定的拒绝阈值会根据业务量、风险敞口大小、人力情况等因素，在这个最优点附近调整。</p>
-<h2 id="风控模型监控">14.4 风控模型监控</h2>
-<p>模型监控大概包括几部分：监控模型训练和测试指标、监控模型在线应用时的指标、监控业务关心的指标。</p>
-<h3 id="离线模型监控">14.4.1 离线模型监控</h3>
-<p>监控多次训练和测试模型本身的指标，包括不限于：</p>
-<ul>
-<li><p>标注数据分布稳定性 正常情况下，每个建模周期（如，每天、每月）的正负样本标注数据应该是稳定的，例如，某个周期同样量级且表现充分的样本中突然多出大量负样本。</p></li>
-<li><p>特征稳定性 包括每个特征的缺失率、样本覆盖率、权重PSI值、特征重要性排序等。</p></li>
-<li><p>置信分稳定性 置信度分数变化趋势、每个置信度范围覆盖的人群和模型指标都应该是稳定的。</p></li>
-<li><p>人群分布稳定性 每个决策区间（如，拒绝、通过、转人工）下的人群数应该是稳定的。</p></li>
-<li><p>模型指标稳定性 模型训练及测试集中的：AUC、ACC、Recall、F1、Precision、决策点置信度分值等都应该是稳定的。</p></li>
-</ul>
-<h3 id="在线模型监控">14.4.2 在线模型监控</h3>
-<ul>
-<li><p>在线特征稳定性 监控模型线上用到的特征实时分布是否与离线没有大的差距。</p></li>
-<li><p>在线评分稳定性 置信分输出趋势是否稳定，各个决策区间下的人群是否稳定等。</p></li>
-</ul>
-<h3 id="业务监控">14.4.3 业务监控</h3>
-<ul>
-<li><p>每个模型AB后的进件量、自动通过、拒绝、转人工量/率监控</p></li>
-<li><p>Vintage及滚动率监控</p></li>
-<li><p>各级逾期率监控</p></li>
-<li><p>模型特征花费监控</p></li>
-<li><p>业务达标率监控 ......</p></li>
-</ul>
-]]></content>
-      <categories>
-        <category>机器学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>第十四章</tag>
-        <tag>金融风控</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习与人工智能技术分享-第五章 深度神经网络</title>
     <url>/article/783e74f9.html</url>
     <content><![CDATA[<h1 id="深度神经网络">5. 深度神经网络</h1>
@@ -5406,6 +4743,669 @@ y=\frac{\gamma}{\sqrt{Var(x)+\epsilon}}\cdot x+(\beta-\frac{\gamma E(x)}{\sqrt{V
         <tag>CNN</tag>
         <tag>深度神经网络</tag>
         <tag>模型可视化</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习与人工智能技术分享-第一章 基本概念</title>
+    <url>/article/f082dc68.html</url>
+    <content><![CDATA[<h1 id="一些基本概念">1. 一些基本概念</h1>
+<h2 id="生成式模型与判别式模型">1.1 生成式模型与判别式模型</h2>
+<p>从概率分布的角度看待模型。 给个例子感觉一下: 如果我想知道一个人A说的是哪个国家的语言，我应该怎么办呢?</p>
+<ul>
+<li><p>生成式模型</p>
+<p>我把每个国家的语言都学一遍，这样我就能很容易知道A说的是哪国语言，并且C、D说的是哪国的我也可以知道，进一步我还能自己讲不同国家语言。</p></li>
+<li><p>判别式模型</p>
+<p>我只需要学习语言之间的差别是什么，学到了这个界限自然就能区分不同语言，我能说出不同语言的区别，但我可能不会讲。</p></li>
+</ul>
+<span id="more"></span>
+<p>如果我有输入数据<span class="math inline">\(x\)</span>，并且想通过标注<span class="math inline">\(y\)</span>去区分不同数据属于哪一类，生成式模型是在学习样本和标注的联合概率分布 <span class="math inline">\(p(x,y)\)</span> 而判别式模型是在学习条件概率 <span class="math inline">\(p(y|x)\)</span>。 生成式模型<span class="math inline">\(p(x,y)\)</span>可以通过贝叶斯公式转化为<span class="math inline">\(p(y|x)=\frac{p(x,y)}{p(x)}\)</span>，并用于分类，而联合概率分布<span class="math inline">\(p(x,y)\)</span>也可用于其他目的，比如用来生成样本对<span class="math inline">\((x,y)\)</span>。</p>
+<p>判别式模型的主要任务是找到一个或一系列超平面，利用它(们)划分给定样本<span class="math inline">\(x\)</span>到给定分类<span class="math inline">\(y\)</span>，这也能直白的体现出“判别”模型这个名称。</p>
+<p>最后给一个很简单的例子说明一下： 假如我有以下独立同分布的若干样本<span class="math inline">\((x,y)\)</span>，其中<span class="math inline">\(x\)</span>为特征，<span class="math inline">\(y\in\{0,1\}\)</span>为标注,<span class="math inline">\((x,y)\in\{(2,-1),(2,-1),(3,-1),(3,1),(3,1)\}\)</span>，则：</p>
+<ul>
+<li><p><span class="math inline">\(p(x,y)\)</span></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(p(x,y)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
+<th><span class="math inline">\(y=1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(2/5\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1/5\)</span></td>
+<td><span class="math inline">\(2/5\)</span></td>
+</tr>
+</tbody>
+</table></li>
+<li><p><span class="math inline">\(p(y|x)\)</span></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(p(y|x)\)</span></th>
+<th style="text-align: right;"><span class="math inline">\(y=-1\)</span></th>
+<th><span class="math inline">\(y=1\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(x=2\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1\)</span></td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(x=3\)</span></td>
+<td style="text-align: right;"><span class="math inline">\(1/3\)</span></td>
+<td><span class="math inline">\(2/3\)</span></td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<p>一些理论可看：<a href="http://papers.nips.cc/paper/2020-on-discriminative-vs-generative-classifiers-a-comparison-of-logistic-regression-and-naive-bayes.pdf">On Discriminative vs Generative classifiers: A comparison of logistic regression and naive Bayes</a>。</p>
+<ol type="1">
+<li><p>常见生成式模型</p>
+<ul>
+<li><p>Naive Bayes</p></li>
+<li><p>Gaussians</p></li>
+<li><p>Mixtures of Gaussians</p></li>
+<li><p>Mixtures of Experts</p></li>
+<li><p>Mixtures of Multinomials</p></li>
+<li><p>HMM</p></li>
+<li><p>Markov random fields</p></li>
+<li><p>Sigmoidal belief networks</p></li>
+<li><p>Bayesian networks</p></li>
+</ul></li>
+<li><p>常见判别式模型</p>
+<ul>
+<li><p>Linear regression</p></li>
+<li><p>Logistic regression</p></li>
+<li><p>SVM</p></li>
+<li><p>Perceptron</p></li>
+<li><p>Traditional Neural networks</p></li>
+<li><p>Nearest neighbor</p></li>
+<li><p>Conditional random fields</p></li>
+</ul></li>
+</ol>
+<h2 id="参数学习与非参学习">1.2 参数学习与非参学习</h2>
+<p>从参数与样本的关系角度看待模型。</p>
+<h3 id="参数学习">1.2.1 参数学习</h3>
+<p>参数学习的特点是：</p>
+<ol type="1">
+<li>选择某种形式的函数并通过机器学习用一系列固定个数的参数尽可能表征这些数据的某种模式；</li>
+<li>不管数据量有多大，函数参数的个数是固定的，即参数个数不随着样本量的增大而增加，从关系上说它们相互独立；</li>
+<li>往往对数据有较强的假设，如分布的假设，空间的假设等。</li>
+<li><p>常用参数学习的模型有：</p>
+<ul>
+<li><p>Logistic Regression</p></li>
+<li><p>Linear Regression</p></li>
+<li><p>Polynomial regression</p></li>
+<li><p>Linear Discriminant Analysis</p></li>
+<li><p>Perceptron</p></li>
+<li><p>Naive Bayes</p></li>
+<li><p>Simple Neural Networks</p></li>
+<li><p>使用线性核的SVM</p></li>
+<li><p>Mixture models</p></li>
+<li><p>K-means</p></li>
+<li><p>Hidden Markov models</p></li>
+<li><p>Factor analysis / pPCA / PMF</p></li>
+</ul></li>
+</ol>
+<h3 id="非参学习">1.2.2 非参学习</h3>
+<p>注意不要被名字误导，<strong>非参不等于无参</strong>。</p>
+<ol type="1">
+<li>数据决定了函数形式，函数参数个数不固定；</li>
+<li>随着数据量的增加，参数个数一般也会随之增长；</li>
+<li>对数据本身做较少的先验假设。</li>
+<li><p>一些常用的非参学习模型：</p>
+<ul>
+<li><p>k-Nearest Neighbors</p></li>
+<li><p>Decision Trees like CART and C4.5</p></li>
+<li><p>使用非线性核的SVM</p></li>
+<li><p>Gradient Boosted Decision Trees</p></li>
+<li><p>Gaussian processes for regression</p></li>
+<li><p>Dirichlet process mixtures</p></li>
+<li><p>infinite HMMs</p></li>
+<li><p>infinite latent factor models</p></li>
+</ul></li>
+</ol>
+<p>进一步知识可以看：<a href="http://mlss.tuebingen.mpg.de/2015/slides/ghahramani/gp-neural-nets15.pdf">Parametric vs Nonparametric Models</a>。</p>
+<h2 id="监督学习非监督学习与强化学习">1.3 监督学习、非监督学习与强化学习</h2>
+<h3 id="监督学习">1.3.1 监督学习</h3>
+<p>对于每一个样本都会提供一个明确的学习目标（标注），有自变量也有因变量，学习机接收样本进行学习并通过对该样本预测后的结果和事先给定的目标比较后修正学习过程，这里的每一个样本都是标注好的，所以好处是歧义较低，坏处是万一有一定量样本标错了或者没标会对最终应用效果影响较大。通常监督学习过程如下：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjqpcau16kj17d5iupnob1rco9.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
+</center>
+<h3 id="非监督学习">1.3.2 非监督学习</h3>
+对于每个样本不提供明确的学习目标（标注），有自变量但无因变量，学习机接收样本后会按事先指定的必要参数，依据某种相似度衡量方式自动学习样本内部的分布模式，好处是没有过多先验假设，能够体现数据内在模式并应用，坏处是有“盲目”性，并会混在噪声数据。比如：常用LDA做主题聚类，但如果使用场景不是降维而是想得到可输出的主题词，基本上没有人肉的干预无法直接使用（虽然整体上看感觉可能不错）。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjrioa912r21h0n1u571vh11go3m.png" width="500"/> picture from <a href="http://en.proft.me/2015/12/24/types-machine-learning-algorithms/">here</a>
+</center>
+<h3 id="强化学习">1.3.3 强化学习</h3>
+<p>我认为强化学习是最接近人类学习过程的，很多情况下我们无法直接表达什么是正确的什么是错误的（比如：我正在爬山，迈了一大步，又迈了一小步，那么没法儿说我迈了大步正确还是错误），但是可以通过惩罚不好的结果或者奖励好的结果来强化学习的效果（我迈了个大步，导致没有站稳，那么对迈大步做惩罚，然后接下来我会迈小一点）。所以强化学习是一个序列的决策过程，学习机的学习目标是通过在给定状态下选择某种动作，寻找合适动作的策略序列使得它可以获得某种最优结果的过程。 强化学习的几个要素，体现其序列、交互性：</p>
+<ul>
+<li>环境(environment)：强化学习所处的上下文；</li>
+<li>学习器(agent)：与环境的交互并学习的对象，具有主动性；</li>
+<li>动作(action)：处于环境下的可行动作集合；</li>
+<li>反馈(feedback)：对动作的回报或惩罚；</li>
+<li>策略(policy)：学习到的策略链。</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asjski0i16221ae2rdd1789l3n13.png" width="400"/> picture from <a href="http://www.cse.unsw.edu.au/~cs9417ml/RL1/followup.html">here</a>
+</center>
+经典的训练狗的实验就是一种强化学习的过程：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_1/image_1asju6357fv9q891abinifjkf2a.png" width="500" /> picture from <a href="http://www.krigolsonteaching.com/reinforcement-learning.html">here</a>
+</center>
+<p>强化学习的有趣应用例如：</p>
+<ul>
+<li><a href="https://deepmind.com/research/alphago/">AlphaGo</a> <a href="https://gogameguru.com/i/2016/03/deepmind-mastering-go.pdf">Mastering the Game of Go with Deep Neural Networks and Tree Search</a></li>
+<li>Atari 2600 games <a href="http://www.nature.com/nature/journal/v518/n7540/full/nature14236.html#ref12">Human-level control through deep reinforcement learning</a> <a href="https://arxiv.org/pdf/1507.04296.pdf">Massively Parallel Methods for Deep Reinforcement Learning</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>第一章</tag>
+        <tag>基本概念</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习与人工智能技术分享-第十四章 金融风控</title>
+    <url>/article/fb9cd06d.html</url>
+    <content><![CDATA[<h1 id="金融风控应用">14. 金融风控应用</h1>
+<h2 id="风控概述">14.1 风控概述</h2>
+<h3 id="风控在行业上的区别">14.1.1 风控在行业上的区别</h3>
+<p>不同行业的风控有不同的区别，大致区别如下图。其实大家也可以很直观的感觉到：比如，你去银行贷款，银行会让你提供各种材料，恨不得知道你祖宗八代的信息，而你去贷现金贷，恨不得提供个身份证号就给你放贷。不同业务场景下，面对的用户不同，风险不同，收益不同，在合适场景下做合适的事儿。 <span id="more"></span></p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0arhlbdsbvghdlvnl1p70m.png" width="800" />
+</center>
+<h3 id="风控审批流程逻辑框架">14.1.2 风控审批流程逻辑框架</h3>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0e8jr1fd2joe1gij0dad1g.png" width="800" />
+</center>
+风控是整个金融业务的核心之一，而贷前、贷中、贷后是风控切入的三个场景。风控很大的工作量就是在判断用户的还款能力（比如，授信流程）和还款意愿（比如，反欺诈流程），技术角度，目前纯基于模型去做的公司我认为没有，大部分都是规则辅以模型的方式，但这里面数据是重中之重，一般会借助于自有数据、第三方数据等。一般系统架构上会是这样：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1cf4ccn4i13sja8vj6iucb15q936.png" width="450" />
+</center>
+<ul>
+<li>业务对接系统 由于风控系统需要和所有业务系统对接，所以这个对接服务是必不可少的，一方面把接口变化控制在这里，另一方面可以做各种字段适配，以保证进入风控系统的业务数据是统一而纯粹的。</li>
+<li>规则配置平台 业务方用于配置风控规则的界面，一个好的风控系统，是可以让业务人员脱离开发而独立配置各种规则和实验的。</li>
+<li>冠军挑战者服务 这是AB test或者Bucket Test在金融行业的别名，由于风控涉及到风险控制指标（如逾期率）、第三方数据花费、订单通过率等诸多结果指标，现实往往是这三大类指标的tradeoff，所以需要有一个强大的效果测试服务，能让业务人员做实验。</li>
+<li>工作流程服务 这个是风控引擎的调度服务，用于发起各种内部流程，如：取数据、解析规则、返回结果等，一般情况下不需要人工介入及交互，所以这里不需要很重的工作框架，例如Activiti。</li>
+<li>规则引擎 用于解析和执行规则的核心服务，一般规则引擎都是基于RETE算法的产生式系统（大家如果学过离散数学会很熟悉这个概念），简单来说是如何高效定义和执行if-else，开源的框架最有名的是DRools，当然还有很多商用引擎。对于没有精力或者能力的团队可以直接用它，但有能力情况下建议还是自己做，毕竟像DRools这样的太通用、太重。</li>
+<li>数据服务 这里包括第三方数据和自有数据，前者主要是采购的市面上第三方数据源，一般良心点的是查得收费的，这部分数据是风控的成本，要做好缓存和花费规划；后者是业务自身的数据，可以是业务数据、统计数据、挖掘数据等，两者在逻辑上是分开的，一般能用自有数据解决的就不用第三方数据，能用免费数据解决的不用收费数据。</li>
+<li>反欺诈服务 这个是用来发现用户欺诈行为的，可以通过黑名单、类似广告中look alike用户发现、欺诈关系发现等方法和算法尽可能降低贷款风险，一般这类欺诈事件一旦发生，贷后催收就很被动了，资产会大概率减值。</li>
+<li>前端报表服务 方便业务看数，可以是定制报表或自助报表的形式。</li>
+<li>日志服务 日志在系统中是最核心的地位之一，决定了整个系统有多好用和合理，尤其冠军挑战者这样的服务和日志设计的好不好有及其紧密的关系。</li>
+<li>数据采集服务 用来采集业务数据、行为数据等，属于常规服务。</li>
+<li>模型服务 用于做模型inference，属于常规服务。</li>
+<li>数据仓库与集市 离线部分服务，用于建立离线数据支持部分，帮助生成线上使用数据和模型，决定数据质量、数据丰富度等，是整个风控的重中之重。</li>
+<li>离线挖掘服务 基于仓库或集市数据挖掘相关标签。</li>
+<li>爬虫平台 抓取免费的第三方数据，属于常规服务。</li>
+<li>机器学习平台 用于离线训练各种模型，属于常规服务。</li>
+<li>大数据平台 包括hadoop平台、kafka服务、flume服务、streaming服务等大数据服务。</li>
+</ul>
+<h3 id="风控是需要动态闭环的">14.1.3 风控是需要动态闭环的</h3>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0had6rvj1qun11crkfakqd30.png" width="300" />
+</center>
+<p>风控是数据、模型/策略和监控的动态闭环，通过三要素不断迭代运转。</p>
+<h3 id="数据是风控的核心">14.1.4 数据是风控的核心</h3>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0l9r33d01mg9s0aollj873m.png" width="800" />
+</center>
+<p>不同的数据刻画用户不同方面，好的数据事半功倍，差的数据事倍功半。</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb0nke613ijn112e41osgs7s4g.png" width="350" />
+</center>
+<p>其中：DPD：Days past due，M：month，C：cycle，从这个月还款日到下个月还款日中间的30天。 逾期相关指标是风控中非常核心的部分，直接决定了公司资产减值情况，好的风控能很好的拿捏逾期与收益之间的平衡。</p>
+<h3 id="融资租赁业务需要以风险为中心考虑收益和产品发展策略">14.1.5 融资租赁业务需要以风险为中心考虑收益和产品发展策略</h3>
+Risk Adjusted Return on Capital：将未来可预计的风险损失量化为当期成本。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2tj33bskjng1nl41nkt1kll3a.png" width="600" />
+</center>
+Economic Value Added：全面评价企业经营者有效使用资本和为股东创造价值的能力，是一种管理理念和企业文化。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2si3rln5ctqt223kn1bmt2t.png" width="600" />
+</center>
+<p>这两个公式意味着我们需要在风险控制大框架下最大化压榨资本的剩余价值。</p>
+<h3 id="风险政策是分层级联的">14.1.6 风险政策是分层级联的</h3>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb2v2julls1ht2aro1d3r109s3n.png" width="500" />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb309q0r43t0udlu16cm4c344.png" width="300" />
+</center>
+<p>风控政策（规则）是分场景分级级联的，不同场景下的策略打法不尽相同。政策制定会通过实验决定我们的投入产出比。</p>
+<h3 id="风控是以若干假设为前提的">14.1.7 风控是以若干假设为前提的</h3>
+<p>就像所有统计或机器学习的应用一样，规则和模型都是建立在一定的建设下才能成立的。</p>
+<p>1、空间假设——度量意义，例如，“距离”这个定义是在欧式空间下的长度、角度还是在希尔伯特空间下的长度、角度。</p>
+<p>2、样本量假设——统计意义，例如，达到什么样的样本量规模下，产生的实验结果才是有统计意义的。</p>
+<p>3、样本标注假设——“坏”的意义，例如，我可以假设所有到期未还款的用户为坏样本，也可以假设所有被拖车的用户为坏样本，这与具体使用场景也有关系。</p>
+<p>4、分布一致性假设——学习意义，例如，我们会假设近期历史数据的概率分布会和未来一段时间的数据分布一致。</p>
+<p>5、概率分布假设——函数意义，例如，我们常常会假设，数据服从高斯分布。</p>
+<p>6、极大似然假设——求解意义，例如，我们假设求得的参数能最大程度复现已有样本是我们想要的理想模型，那么使用极大似然即是合理方法。</p>
+<h3 id="风控是个最优化问题">14.1.8 风控是个最优化问题</h3>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb34ms5rcjtu0m8j168r12k96l.png" width="450" />
+</center>
+<p>毫无疑问，现实当中的大部分问题都可看做最优化问题，只是复杂度不同而已。风控可以看做是在权衡通过率、花费数据成本、产生的收益、逾期坏账、用户授信额度等等诸多要求的限制下的一个优化问题。</p>
+<h3 id="风控是在不停的做实验">14.1.9 风控是在不停的做实验</h3>
+在我看来风控是一门实验科学，金融行业里叫冠军者挑战赛，互联网行业叫AB Test、Bucket Test，一篇经典的论文如下：《Overlapping Experiment Infrastructure: More, Better, Faster Experimentation》，是源自Google的分层实验架构，它影响了整个互联网的AB Test工程架构。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb370rj1ams1up5valncu142v7s.png" width="800" />
+</center>
+<h3 id="保证风控实验的置信度在于正确分割流量">14.1.10 保证风控实验的置信度在于正确分割流量</h3>
+实验要保证结果的置信度，是需要正确分割流量的，一旦不合理则实验结果无效甚至误导，比如著名的Simpson's Paradox，就是违反了分布一致性假设的典型例子，明明单独看商学院和法学院，男生录取率都远高于女生，但从整体看女生录取率却远高于男生：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb390dqu291jn91d3dnmadf93.png" width="500" />
+</center>
+也有一些基于统计的方法估计流量切分置信度，例如下面这种方法：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3a10i126a32q42em79d889t.png" width="600" />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3aqn31jhok2mgdfrtp1rvuaq.png" width="500" />
+</center>
+<h3 id="评价指标在风控中是至关重要的">14.1.11 评价指标在风控中是至关重要的</h3>
+<p>风控规则和模型会涉及各种变量，例如：</p>
+<p>1、连续型变量——价格、时间等，值域在实数域，可进行加、减、乘、除、比较等算术运算；</p>
+<p>2、二元离散型变量——只有两种状态，如：0/1、真/假、正/负、逾期/正常、点击/未点击等；</p>
+<p>3、顺序离散型变量——逾期状态（M0、M1……）、年龄等，值域在整数域或自然数域，可进行比较运算；</p>
+<p>4、无序离散型变量——性别、颜色等，值域在整数域或自然数域，可完全枚举，但不能进行比较运算。</p>
+<p>但不管什么数据源、特征、策略、模型评价，都应该以业务需求为导向、能区分用户行为为目标。</p>
+各种评价指标体系如下，实际当中合理使用即可。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3cspl12vi129e1b241gnk1sl9c1.png" width="800" />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3e44g1n1j1t5q11nekco1h3fce.png" width="800" />
+</center>
+<h3 id="有效监控对风控业务保驾护航">14.1.12 有效监控对风控业务保驾护航</h3>
+<p>毫无疑问，各种维度的数据监控是风控业务的保镖。</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1ccb3fr2t1i1h1nr2hct57bkh0d8.png" width="800" />
+</center>
+<h2 id="风控平台架构">14.2 风控平台架构</h2>
+<p>实践中，我们自研风控系统的目标是以平台方式提供给公司内外业务人员做配置化风险政策制定、风控模型构建和实验、风控效果监测、风控能力输出、风险客户画像等等。 一般来说，了解一个公司风控能力的强弱有这么几点：</p>
+<p>1、对公司业务场景及一线业务的理解深度</p>
+<p>2、数据质量及由业务规模决定的<strong>标注</strong>数据规模</p>
+<p>3、风控系统针对业务人员的自助程度、配置快速性</p>
+<p>4、风控模型构建、实验及应用能力</p>
+<p>5、涉及人工审核的运营能力</p>
+<p>6、数据化监测及分析能力</p>
+从系统研发角度，市面上其实有很多做风控系统的公司，比如：大的有FECO，小的有各个创业公司，但坦白地讲，风控能力作为保证公司长治久安和业务稳步发展的核心能力之一，有一定业务量且有技术能力的公司一定会自研，这其实也是在国内做2B业务的一个难点，但凡有能力的公司，谁也不愿意核心被人卡着，此外国内企业对2B业务的付费意愿也不足，所以我真心佩服做2B业务还能做起来的公司。 ### 14.2.1 风控系统发展概述 一般公司的风控系统的发展可能会有这么几个阶段：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/%E5%8F%91%E5%B1%95%E6%AF%94%E8%BE%83.png" width="800" />
+</center>
+<p>1、采购现成系统显然是貌似最省事儿的，从短期来看，可以让公司业务快速展业，这个阶段抢占业务山头是最重要的，但长远来看，可能会遇到的问题不少，比如：和现有业务贴合度不够时，需要额外定制化开发，势必会产生一系列费用，此外数据使用、模型使用、系统咨询、系统培训等等都会产生费用，当业务量起来后，再想换系统那成本就很高了。</p>
+<p>2、当公司具有开发能力时，基于采购的系统做定制化封装也不失为一条路，但是从可维护性、成本角度来看，未来的性价比依然很低。</p>
+<p>3、开始就具有技术能力的公司，可能会选择基于开源框架做自研，好处是可控性和业务贴合度都比较好，但做技术的人都知道，当你基于一套开源框架想干好活儿时，你需要熟悉整个框架。举个例子，风控政策制定是业务强需求，那么系统必须支持规则配置和解析，于是很多公司会使用开源规则引擎，例如DRules，实际上你需要的可能只是它的一部分功能，但如果不对整个框架熟悉，未来出了线上问题你可能哭都没地儿去；更糟糕的是，不是每个团队成员都熟悉开源框架，当人员离职后可能带来系统上的风险。</p>
+<p>所以只要有能力，我们会选择全套纯自研，进而迈向云端平台化，未来还可能成为一个技术盈利点，比如我们的很多线下合作渠道没有技术人员又想做自己的风控，乐观情况下，我们可以开个账号做个配置就能实现风控能力输出。</p>
+<h3 id="风控系统架构">14.2.2 风控系统架构</h3>
+其实万事万物都有其相通性，尤其在系统架构上，在我看来，广告投放系统、推荐系统与风控系统具有极高相通性，比如，系统需要有够好的稳定性、容错性（包括防雪崩）、扩展性、并发性（包括服务降级）、对算法的支持性、标准化日志、权限控制、实时数据采集、数据可视化、数据统计、指标监控、自动化运维等等，由于我们之前恰好都做过，整体架构类似云原生，比如大体可以有以下架构：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/arch.png" width="800" />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/ts%281%29.png" width="800" />
+</center>
+<p>1、统一的日志格式及服务，这个是要放在首位设计的，这里的统一体现在几个方面：</p>
+<ul>
+<li><p>统一的日志格式规范，每一个字段、每一个嵌套关系、每一个扩展段等等都有严格的规范定义，技术选型方面采用ProtoBuf，这样将来对日志的解析可以采用一套方法，管理方便且不容易出错，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package pb_interface.fintech;</span><br><span class="line">import &quot;pb_interface/fintech/*/*.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/**/**.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/***/***.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/****/****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">import &quot;pb_interface/fintech/*****/*****.proto&quot;;</span><br><span class="line">message FinTechPbLog&#123;</span><br><span class="line">	required string pbLogId=1;		//log唯一标识</span><br><span class="line">	required string createTime=2;	//生成时间</span><br><span class="line">	required string serveName=3;	//服务名称</span><br><span class="line">	optional int32 errCode=4;		//返回码:0正常,非0异常</span><br><span class="line">	optional string errMsg=5;		//返回描述</span><br><span class="line">	optional pb_interface.fintech.*.* *=6; //主引擎服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=7;//规则引擎服务日志</span><br><span class="line">	optional pb_interface.fintech.***.*** ***=8; //数据处理服务日志</span><br><span class="line">	optional pb_interface.fintech.****.**** ****=9;//配置更新服务日志</span><br><span class="line">	optional pb_interface.fintech.***.*** ***=10; //引擎回调服务日志</span><br><span class="line">	optional pb_interface.fintech.*.** ***=11; //数据源指标字段日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=12;//指定名单服务日志</span><br><span class="line">	optional pb_interface.fintech.*.** **=13;//图像处理服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=14;//明细服务日志</span><br><span class="line">	optional pb_interface.fintech.**.** **=15;//inference服务日志</span><br><span class="line">	optional pb_interface.fintech.***.** ***=16;//异步交互服务日志</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>统一的采集、解析、分析、展示方案，包括提供给算法团队的特征字段，这样在使用层面极大地方便了自己和降低出问题的概率。</p></li>
+<li><p>统一的监控展示方案，对应用系统涉及的从前到后的一系列交互统一做监控，能够对每个请求的今生来世做到一通贯穿。</p></li>
+<li><p>统一的数据安全方案，包括脱敏方案、提取流程、加密方案、反显方案等，做到分层分级安全可控。</p></li>
+</ul>
+<p>2、统一的版本及权限控制，包括以下几个方面：</p>
+<ul>
+<li><p>代码版本需要有一套管理流程，代码提交前必须做交叉Code Review</p></li>
+<li><p>所有的风控模型也需要做类似的版本管理，任何一个模型的特征、权重、参数、分流情况等都需要控制到</p></li>
+<li><p>对接入风控的业务系统做统一的接口认证和鉴权控制</p></li>
+<li><p>对使用系统的用户做统一的分组权限控制</p></li>
+</ul>
+<p>3、风控对接系统 - 对接业务系统服务，采用标准化的RESTful接口对接所有业务系统，由于受限于数据源的获取速度，所以风控审批执行会同时支持同步模式和异步模式</p>
+<ul>
+<li>业务配置服务，除非新增数据源，否则所有风控政策制定都采用可视化配置方式实现，无需代码开发，且实时生效。对于风控模型使用也是类似的逻辑，只要基本的特征数据没有增加，都以配置方式实现模型应用。</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202020-02-15%20%E4%B8%8B%E5%8D%8812.09.38.png" width="800" />
+</center>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e13i9skc33dal1mkp1jrn3js1e.png" width="800" />
+</center>
+<p>4、AB Test服务 - 大的方面支持订单粒度和用户粒度随机或有策略AB，细的方面支持用户的灵活分组，例如：年龄、地区等以及这些条件的交叉</p>
+<ul>
+<li><p>每个分组的实验量必须具有统计意义，测试时间要足够，并明确每个实验的从前端到后端的全路径</p></li>
+<li><p>同一个用户在相同分流策略下可重入，不会出现一个用户一会儿审批通过一会儿审批拒绝，否则不仅用户体验差，还会招来用户投诉</p></li>
+<li><p>由于汽车的客单价比较高，实验表现期很长，所以每次实验要做到尽量降低实验成本，尽可能的利用历史数据</p></li>
+<li><p>所有实验都是可视化实时配置且有相应实验运营后台，展示每个实验的详细情况</p></li>
+<li><p>离线日志回放，每做一个新模型，能够将历史样本批量回放，一定程度模拟真实场景效率和效果表现</p></li>
+</ul>
+<p>5、风控主服务 - 初始化全局环境、串流程，调度和组合各个微服务的功能</p>
+<ul>
+<li>针对同步或异步场景对业务系统返回结果或做异步回调</li>
+</ul>
+<p>6、规则解析服务</p>
+<ul>
+<li><p>平台在设计时，业务流程和业务规则是完全分开不耦合的，所以规则解析服务只负责解析、检查和执行规则。在风控领域，政策规则的特点是：有大量规则（甚至规则的模式间有一定重复性），但变化并不那么多。而开源的类似Drools的框架，虽然基本能满足需求但一方面随着业务的复杂性越来越高，管理起来越来越费劲，另一方面它实在太重了，学习、维护成本高还不能从架构层面锻炼队伍。 所以我们干脆以RETE算法（论文见：Charles Forgy的 《Rete: A Fast Algorithm for the Many Pattern/Many Object Pattern Match Problem》.）及编译原理的语法分析树解析算法为蓝本自研。</p></li>
+<li><p>在操作符方面，针对风控业务，至少需要支持：</p>
+<ul>
+<li><p>&amp;&amp;</p></li>
+<li><p>||</p></li>
+<li><p>!</p></li>
+<li><p>null判断</p></li>
+<li><p>==/!=</p></li>
+<li><p>in/not in</p></li>
+<li><p>包含/不包含</p></li>
+<li><p>前/后缀等</p></li>
+</ul></li>
+<li><p>在管理模式方面，至少需要支持：</p>
+<ul>
+<li><p>规则集合管理</p></li>
+<li><p>规则优先级</p></li>
+<li><p>规则互斥</p></li>
+<li><p>规则依赖</p></li>
+<li><p>规则循环</p></li>
+<li><p>规则有效期</p></li>
+<li><p>规则缓存等</p></li>
+</ul></li>
+<li><p>在取值管理上，至少要支持：</p>
+<ul>
+<li><p>常量</p></li>
+<li><p>变量</p></li>
+<li>自定义公式</li>
+</ul></li>
+<li><p>在服务部署和响应上，服务横向扩展、解析可以并行执行；单规则解析响应时间在整个规则执行耗时上要做到占比小于99.9%，实际当中，特征取数占执行时间的大头，规则解析时间忽略不计</p></li>
+</ul>
+<p>7、Inference服务 一系列微服务，实现y=f(x)的特征取数和计算。需要支持：</p>
+<ul>
+<li><p>XGBoost/LightGBM（ATM类模型）</p></li>
+<li><p>Logistic Regression</p></li>
+<li><p>MLP及DeepFM类前向传播</p></li>
+<li><p>记录时点特征日志、inference日志和模型计算结果</p></li>
+</ul>
+<p>8、关联及反欺诈服务</p>
+<p>在风控场景下，用户的申请能否通过，主要衡量两方面：</p>
+<ul>
+<li><p>用户的还款能力 还款能力与国家经济情况、用户个人经济情况、家庭突发情况等有关系，可以围绕着用户的属性数据和消费行为数据做刻画</p></li>
+<li><p>用户的还款意愿 真正影响公司资产质量的是对用户还款意愿的预判及用户是否会发生欺诈。欺诈行为往往不是个体行为，对于像汽车这样的大宗消费品，如果发生团体欺诈，损失可想而知。</p></li>
+<li><p>关联反欺诈，根儿上主要还是依赖能够拿到的数据，做法上大致有两大类方法：</p></li>
+<li><p>想象每个用户是一个圆点，每个实体（如某4s店、某银行）是个方点，圆点和圆点或圆点和实体之间的边是关系或行为，利用图算法可以查找异常聚集、多度的多头借贷等</p></li>
+<li><p>类似广告的look-alike，分析已有的欺诈种子用户，找到和他最类似的用户等</p></li>
+</ul>
+<p>9、在线数据服务</p>
+<ul>
+<li><p>特征数据及实时数据服务，主要负责几个方面：</p>
+<ul>
+<li><p>离线生成的特征数据在线使用，风控模型中有一类特征是通过离线挖掘生成后导入线上的，这类特征大部分是T+1特征及月、季度、年时间范围特征</p></li>
+<li><p>反馈类特征数据在线使用，这类特征主要与用户行为有关，例如，某个渠道当天进件量，配合实时数据采集服务，这类特征需要伪实时或实时更新</p></li>
+<li><p>模型权重数据在线使用，包括离线模型权重和online learning模型权重。在机器学习相关工程应用中，特征的online更新（用的更多）和模型的online更新都可以起到捕捉实时数据概率分布的作用 ，可单独使用也可结合使用，但特征或权重监控必须做到位</p></li>
+<li><p>数据缓存服务，承担各类数据的缓存工作</p></li>
+</ul></li>
+<li><p>数据监控服务，主要监控以下几类：</p>
+<ul>
+<li><p>特征监控：监控特征分布是否有大波动、缺失特征是否有大波动等，例如，由于系统bug导致某个特征大量缺失，通过监控立刻报警并熔断</p></li>
+<li>权重监控：监控模型权重分布是否有大波动、权重重要性排序是否有大波动等，例如，在online learning（如：FTRL）中，本就使用类似SGD方式更新权重，虽然有L2正则在一定程度上帮助稳定权重更新，但依然无法避免权重可能学飞掉，所以有效的监控很重要，一旦波动过大就做一次批量样本的模型修正</li>
+<li>卡单监控：全流程描述一个单子从提报到生效的全链路，可视化的告诉运营和开发人员，单子到哪儿了，卡那儿了，由于全流程往往需要多个独立系统互相配合，所以开篇讲到的统一日志设计的重要性不言而喻</li>
+<li>运维监控：对系统做接口粒度监控，流量如何、响应时间如何等</li>
+<li><p>业务指标监控：监控核心业务指标，例如，实时自动审批率表现如何</p></li>
+</ul></li>
+</ul>
+<p>10、实时数据采集服务 - 外部合规数据接入服务，由于一家公司的数据积累毕竟有限，所以风控业务开展往往需要采购第三方数据： - 采购时首要考虑数据是否为一手数据、数据是否合规合法、获取时用户是否知晓且主动授权等 - 其次考虑数据的覆盖率如何，例如，人群覆盖率 - 然后考虑数据在风控政策或风控模型上的贡献度 - 最后是商务谈判，这一步一定要有技术参与，尽可能保证数据接入标准化，方便接入服务，以上完成后，外部数据的接入从时间和质量上都会可控</p>
+<ul>
+<li><p>提报业务数据，采集销售或用户在提报时录入的信息</p></li>
+<li><p>用户及渠道行为数据，采集用户或者渠道业务时点的行为，例如：某个用户在几个渠道下过单，某个渠道当前进件量是否异常等</p></li>
+</ul>
+<p>11、模型一键发布及数据导入服务，连接线上与线下的桥梁，导入效率要够高，对大数据量以mapreduce方式支持集群数据导入 - 模型一键发布服务，管理和发布离线训练好的模型，可将模型一键发布到测试、UAT、生产等环境</p>
+<ul>
+<li>数据导入服务，将离线特征数据及其他必要数据导入线上</li>
+</ul>
+<p>12、机器学习平台 - 广义来说，整个风控平台就是个机器学习平台，同时包括离线和在线服务</p>
+<ul>
+<li>狭义来说，包括离线日志处理、数据标注、特征分析与提取、模型Pipline离线训练、模型测试验证、日志回放模拟、模型剪枝和压缩等等。我们把以上步骤封装成各种机器学习组件，一定程度上，用户不需要写代码，而是采取可视化、拖拽方式建模。</li>
+</ul>
+<p>总的来说一套成熟的风控平台需要多年的技术打磨，以平台方式而不是软件方式打造，一方面要保证不被点状的需求带偏，另一方面重视业务通用性和使用体验、最后设计时要有一定高度，以适应未来未知的挑战。</p>
+<h2 id="风控建模方法">14.3 风控建模方法</h2>
+<p><strong>金融的本质是基于信用风险的生意</strong>，而金融天生又是厌恶风险的，不管是为有钱人理财还是为缺钱人融资。所以要做好这个生意，需要：</p>
+<ul>
+<li><p>尽量保证资产的安全，毫无疑问，这个是金融的基石但不是唯一目标</p></li>
+<li><p>尽量保证资源的最优化配置，不同机构最优化的目标不一样，比如，可以是企业利益最大化，或者兼顾社会责任等</p></li>
+</ul>
+<p>虽然现在互联网金融一地鸡毛，但是从互联网行业（计算广告、智能推荐等）继承而来的建模方法和系统思维，私认为是远领先于传统金融机构的。</p>
+<h3 id="建模概述">14.3.1 建模概述</h3>
+<p>风控建模的目的主要有：</p>
+<ul>
+<li><p>通过完备的理论将风险数据化，减少主观性，把过去依靠“经验”的授信变成数据化的授信，把判断过程中的物料全部数据化落地存储，做到有根有据、可查可追</p></li>
+<li><p>提高最优化资源配置能力，将风险考量放入到衡量公司每个项目的盈利能力中，风控一定不是一味地降低风险，而是tradeoff风险和收益</p></li>
+<li><p>提高运营效率、降低运营成本，显而易见，全自动的审核速度是秒级甚至毫秒级的，而人工审核是几分钟级、十几分钟甚至小时、跨天的。当然，现阶段受限于能够获取的数据规模和质量，人工审核依然必不可少，但风控建模依然可以很好的去辅助人工审核。</p></li>
+</ul>
+一般来说建模有以下几个步骤：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/step.png" width="350" />
+</center>
+<h3 id="需求分析与目标定义">14.3.2 需求分析与目标定义</h3>
+<ul>
+<li>需求分析</li>
+</ul>
+<p>明确了业务需求并准确做出分析，项目就成功了一半，这个很考验产品、研发同学的分析能力。我们强调不要过分建模，不是所有看似建模的需求需求都需要通过建模来完成，很多情况下if-else能搞定的事儿就不要用模型，大家容易犯的错误是拿着锤子看什么都像钉子。</p>
+<ul>
+<li>目标定义</li>
+</ul>
+<p>目标定义是需求分析里的一个阶段，我单独拿出来强调。明确将来应用的场景进而确定建模目标是什么，这一步决定了将来应用的成败。 例如：风控里最常做的事儿是预测用户的逾期概率，你需要进一步明确： - 是M1逾期率还是首期逾期率 - 什么样的用户被定义为“坏”用户 - 是融资租赁场景还是售后回租场景 - 新车还是二手车 - 白户做不做（明确白户的定义是什么）</p>
+<h3 id="数据准备">14.3.3 数据准备</h3>
+规范化对数据分层、分主题管理，确定建模需要什么数据，这些数据从哪儿来放在哪儿了，字段含义是什么，缺失情况如何，是否能够直接使用，能回溯多久等等一系列数据需求，数据需要以统一模式存储和管理，体系化做数据积累，不要来一个项目做一个。 一般采用数据仓库+数据集市方式管理，架构如下：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/tt.png" width="800" />
+</center>
+<p>其实这一步是贯穿公司数据管理整个过程的，建模只是受益方之一，机器学习领域成熟的模型足够多，但如果没有好的数据体系保证质量，往往事倍功半。 一般来说，风控数据来源主要有三部分：</p>
+<ul>
+<li><p>以订阅方式获取的业务数据，例如：用户进件时的用户信息、车辆信息、融资信息</p></li>
+<li><p>以采集方式获取的行为数据，例如：某个渠道、某些地域的进件行为、用户群申请行为</p></li>
+<li><p>以购买方式获取的合规数据，例如：中国人民银行征信数据</p></li>
+</ul>
+<p>1、Stage层，所有数据通过数据总线以既定的规范分主题接入，这一层是最原始的数据，原则上不对外提供服务。</p>
+<p>2、ODS层，对Stage层数据做不带业务逻辑的加工和清洗，为将来抽象到上一层做准备，同样原则上不对外提供服务。</p>
+<p>3、MDS层，原则上所有业务需求涉及的数据都应该能得到满足，这一层会分层、分主题的做数据加工，数据要尽可能复用。</p>
+<p>4、公共主题，所有经过业务逻辑处理的、定义明确的、口径一致的可公共使用的数据会放在这一层，例如，用户的基本信息，年龄、性别、唯一标识等。</p>
+<p>5、垂直集市，基于MDS数据，加工并抽象出来的某个垂直业务主题的数据，这层可认为是此业务主题下的标准数据，例如：名为dm_risk_secondhand_nobehavior_features_116_v1 的宽表为风控二手车业务场景下针对白户的v1.0含有116个特征的数据集合</p>
+<h3 id="数据标注">14.3.4 数据标注</h3>
+<p>数据标注是数据准备里的一部分，这里单独拿出来做强调，它是风控建模里的一个难点和重点。目前工业应用里最多的还是监督学习supervised learning，需要对数据做样本标注，对分类问题，标注样本的目标类别，对回归问题，标注样本的目标值。 一般来说，对于正常业务量的汽车金融公司，以36期为主要产品的话，早期模型应用会较少（从已经有大量数据积累的场景transfer过来的模型除外），因为数据量级和数据表现都不充足，公司展业三年后开启模型应用之旅。 先介绍几个风控常用的指标和数据标注方法，会影响到样本选取和数据标注，进而影响风控建模质量或基于IFRS9的预期损失准备金拨备：</p>
+<ul>
+<li><p><strong>账龄(Month on Book，MOB)</strong></p>
+<p>指合同生效并放款后的月份，其最大值与金融产品期限有关。 以汽车金融主流的36期产品参照，MOB最大值为36，其中： MOB0 = 合同生效放款的日期到当月月底 MOB1 = 放款后第2个月（1号到月底的整月） ...... MOB36 = 放款后第36个月（1号到月底的整月） <strong>例如：</strong> 2020年2月17日合同生效并放款的订单： MOB0 = 2020年2月 MOB1 = 2020年3月 ...... MOB36 = 2023年2月</p></li>
+<li><p><strong>逾期天数(Days Past Due，DPD)</strong></p>
+<p>1、逾期天数 = 用户实际还款日 - 合同约定应还款日 <strong>例如：</strong> 假设合同约定每月还款日为6号，用户9号还款，那么逾期天数为3天</p>
+<p>2、把上面的逾期天数按照某种规则划分区间后定义<strong>逾期期数(M)</strong> <strong>例如：</strong> M0 = 未逾期 M1 = 逾期1-30天，每家公司根据各自的催收策略不同，会细分该档，另外涉及到逾期征信上报的，各家容忍度也不一样，M1数据是目前风控建模用的最多的。 M2 = 逾期31-60天 M3 = 逾期61-90天 M4 = 逾期91-120天 M5 = 逾期121-150天 M6 = 逾期151-180天 M7 = 逾期超过180天，此时资产大概率回收无望，一般会采取核销。</p></li>
+<li><p><strong>逾期率(Overdue Rate)</strong></p>
+<p>1、订单粒度逾期率 = 逾期订单数 / 合同生效订单总数</p>
+<p>2、金额粒度逾期率 = 逾期金额 / 合同生效订单总金额 它是一个时点指标且会和逾期期数相关，比如：2020.2.19日的M1逾期率</p></li>
+<li><strong>账龄分析(Vintage Analysis)</strong> 通过看逾期率，可以知道某个时点的资产情况，但无法知道变化趋势，所以需要做账龄分析，一般方法是：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/vintage.png" width="800" />
+</center>
+<p><strong>例1：</strong></p>
+假设针对新车消费贷场景的12期产品(数据为编造)
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1gu26h62uaq13l27sm19d39.png" width="800" />
+</center>
+<p>其中，Vintage曲线的横坐标为账龄(MOB)，纵坐标为资产质量(如：逾期率)，每条曲线代表一个放款周期(如：月)。 账龄分析可以帮助我们得到以下信息：</p></li>
+<li><p><strong>确定资产质量好坏情况</strong> Vintage曲线平缓稳定后(随着MOB增加，切线斜率接近0)的逾期率最能代表当期资产质量，如果曲线不能收敛，需要要做进一步分析。 <strong>如例1：</strong></p>
+<p>3月份生效的订单逾期率在1.3%左右稳定，可以认为此时这部分资产质量基本稳定。</p></li>
+<li><p><strong>分析资产质量变化规律</strong></p>
+<p>1、如果发现逾期率一直上升(随着MOB增加，切线斜率平稳增加或下降很小)，需要检查是不是逾期数据取数逻辑或质量有问题，如果确定系统没问题，那么需要尽快分析原因、做风控政策调整。</p>
+<p>2、 如果逾期率超过某个阈值(比如：2%)有失控趋势，则需要调整风控尺度，收口业务规模。</p>
+<p>3、 如果发现前期逾期率上升很快(随着MOB增加，切线斜率迅速增加)甚至具有一定特性（如：地域性），那么很大可能是发生团体欺诈了。</p>
+<p>4、 如果逾期率上升后很快下降，则很可能是计算方法或数据质量有问题了。</p>
+<p><strong>如例1：</strong></p>
+<p>1月份控制的还行，最终逾期率1.5%左右，跑完了所有账期，在2月份出现逾期率明显上升，说明控制的不好或者是为了某种销售策略（如，想做做春节前冲量），在分析原因后修正了3月份的风控策略，使得逾期率下来并稳定在1.3%左右。</p>
+<ul>
+<li><strong>时点质量界定</strong></li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/dur.png" width="600" />
+</center>
+<p>风控建模或分析，选取基准时点很重要，时点选的太晚（如，所有账期走完），则之前的数据分布和未来数据分布很可能差异过大，导致出来的模型泛化性较差；时点选的太早，则风险暴露不充分，同样会导致泛化性较差，所以通过分析Vintage曲线看资产质量变化，可以帮助定义基准时点，提高未来模型的质量，ps：这点是与计算广告、推荐和搜索相比差别最大的难点，它们的数据标注不存在滞后性，比如：对广告的一次曝光，用户看到后想点就点了，不想就关了，从概率建模角度，这是典型的Bernoulli Distribution。此外这个滞后性也决定了风控做E&amp;E(Explore and Exploit)的成本远高于前三类，所以在数据标注和实验设计上都有很大不同。</p>
+<p><strong>如例1：</strong> 对每个月生效合同观察发现经过6个MOB逾期率上升趋缓，说明可以以基准时点往前推半年为训练数据，基准之后的数据为测试数据且至少需要1年的数据。</p></li>
+<li><p><strong>滚动率分析(Roll Rate Analysis)</strong></p>
+<p>业务目标决定了哪些不是目标用户，例如，可以是欺诈用户，也可以是曾经发生M2+逾期的用户。目标也与大环境有关系，例如，因为贷后催收行业整顿，导致用户M1后大概率会迁移到M2，那就需要改变目标用户标注。</p>
+<p>所以前面几个指标能帮我们确定逾期率变化趋势和基准时点前后怎么选取，但不能帮着定义什么样的用户是“坏”用户，因此我们需要借助滚动率分析工具。假设：</p>
+<p>1、基准时点前推6个月为训练数据，后探12个月为测试数据；</p>
+<p>2、定义训练数据的6个月期间：没有逾期的用户为好用户trG，最长曾经逾期期数为M3及以上的用户为trM3+，最长曾经逾期期数为M2的用户为trM2，最长曾经逾期期数为M1的用户为trM1；</p>
+<p>3、定义测试数据的6个月期间：没有逾期的用户为好用户teG，最长曾经逾期期数为M3及以上的用户为teM3+，最长曾经逾期期数为M2的用户为teM2，最长曾经逾期期数为M1的用户为teM1；</p>
+<p>4、基准时点采样5次，以消除随机点影响</p>
+<p>5、保证两段时间的样本数要有统计意义</p>
+分别统计这两段时间的用户表现，可以得到tr到te用户状态的笛卡尔积：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/dika%281%29.png" width="400" />
+</center>
+<p>例如(数据为编造)：</p>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1ld3j0914gqou11iov8ph1f7g3e.png" width="450" />
+</center>
+<p>1、训练数据中的正常客户，在测试数据中98%会继续正常还款，1.5%会转化为M1，0.5%会转化为M2，没有客户转化到M3；</p>
+<p>2、训练数据中M1的客户，在测试数据中2%会转化为正常还款，4%会保持M1，80%会转化为M2，14%会转化为M3及以上；</p>
+<p>3、训练数据中M2的客户，在测试数据中0.5%会转化为正常还款，1%会转化为M1，10%会保持为M2，88.5%会转化为M3及以上；</p>
+<p>4、训练数据中M3及上的客户，在测试数据中0.1%会转化为正常还款，1%会转化为M1，3%会转化为M2，95.9%会保持M3及以上。</p>
+<p>基于以上分析，我们发现用户一旦发生M1逾期，有80%会转化为M2，而M2逾期有88.5%会转化为M3，最终M3逾期有95.9%会保持M3或更差，这意味着：用户一旦发生M1逾期，最终会以较大概率转化到M3逾期，进而就“坏”透了，所以，坏用户=某个时间内曾经出现过M1及以上逾期的用户，数据样本中除了有明确定义的坏样本外，有些样本由于表现期的问题会被排除，总的来说，坏用户定义是由业务目标决定的，滚动率分析是帮助定义坏用户的工具。</p></li>
+<li><p>总结</p>
+<p>综上所述，利用Vintage分析和滚动率分析，可以帮助确定：以某时点为基准的训练及测试数据范围和定义坏用户。</p></li>
+</ul>
+<h3 id="拒绝推断">14.3.5 拒绝推断</h3>
+风控与广告、推荐搜索有一个类似的问题，即幸存者偏差（Survivorship Bias），以广告CTR预估为例：影响其预估准确性的因素是AUC(Ads、User、Context)，建模中能被使用的样本是由有机会曝光的广告产生的，显然数据必然会有偏；此外不同的广告位产生的样本也会有位置偏差，在顶通栏的广告一定比在底通栏的更有机会被用户看到，从而被点击。所以最无偏的情况是每个广告对每个用户在每个上下文环境(如：位置、时段)下都曝光一次，之后看用户反应，但从经济成本、可行性等方面看显然不现实，所以广告会采用E&amp;E的方式，边给曝光机会边探索，通过实时流采集投放效果(感知)并动态评价(决策)，总之是以一定成本尽可能让平台利益最大化(如：最大化eCPM)。 但<strong>对风控来说，最大的问题是用户逾期的滞后性及客单价</strong>。对现金贷场景可能还好些，可以先通过放款小额度贷款去试用户，但对汽车金融等大额消费贷场景就不行了，只能折中使用拒绝推断，尽可能的利用已有数据。
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/jujuetuiduan.png" width="600" />
+</center>
+拒绝推断有很多种方法，不过实践当中我们认为最有效的还是Parceling，它有很多变体，举一个常用的方法：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/pac.png" width="600" />
+</center>
+例如：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/image_1e1m1rapkmeb12mg1p411ogb1a056j.png" width="600" />
+</center>
+<p>1、利用”通过样本“训练”模型1“</p>
+<p>2、按照置信度对”通过样本“做9个分组，置信度越高逾期率越低；</p>
+<p>2、对每个分组统计”实际逾期率“及相应样本总数</p>
+<p>3、利用”模型1“对”拒绝样本“做inference，同样按照置信度从高到低分9组</p>
+<p>4、对每个分组统计样本总数，根据该组的逾期率，抽样得到”推断坏样本“，剩余的为”推断好样本“</p>
+<p>5、合并”通过样本“和”推断好、坏样本“</p>
+<p>6、训练”模型2“</p>
+<p>总的来说，使用拒绝推断方法一方面可以部分修正训练数据的数据分布，让模型表现的更加稳定，泛化性更强；另一方面充分利用了历史数据，节省未来线上实验的成本。</p>
+<h3 id="风控建模">14.3.6 风控建模</h3>
+<p><strong>1、基本框架</strong> 风控建模的方法和广告、推荐及搜索的建模方法没区别，只是整体会更加保守些，因为风控这个业务很注重可解释性，表现在以下两个方面：</p>
+<ul>
+<li><p>对风控业务可解释 找到影响风险水平的原因，可以有的放矢的调整业务走向，例如，发现地区+车型组合特征对逾期率模型贡献高，则可进一步看哪个地区哪个车型，然后做业务判断。</p></li>
+<li><p>对销售业务可解释 例如，在前端业务发生拒单时，帮助销售向客户解释原因；销售利用可解释的模型变量，有的放矢的和用户面聊，帮助控风险。</p></li>
+</ul>
+一般的建模框架如下：
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/ml.png" width="800" />
+</center>
+<p>与传统机器学习类似，数据及特征准备耗费80%以上建模时间(即使使用AutoML框架辅助特征发现)，而模型方面，由于对可解释性的强烈需求及实际建模效果，早期的baseline是Logistic Regression，现在的baseline是Additive Tree Models(如，各种版本GBDT模型、RF模型，详情可见《<a href="https://www.zybuluo.com/vivounicorn/note/798611#25-additive-tree-%E6%A8%A1%E5%9E%8B">建模方法回顾-Additive Tree Models</a>》)。</p>
+<p>需要说明的是，深度学习模型，诸如：</p>
+<ul>
+<li><p><a href="http://ir.ia.ac.cn/bitstream/173211/12337/1/A%20Convolutional%20Click%20Prediction%20Model.pdf">Convolutional Click Prediction Model</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1601.02376.pdf">Factorization-supported Neural Network</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1611.00144.pdf">Product-based Neural Network</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1606.07792.pdf">Wide &amp; Deep</a></p></li>
+<li><p><a href="http://www.ijcai.org/proceedings/2017/0239.pdf">DeepFM</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1704.05194.pdf">Piece-wise Linear Model</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1708.05123.pdf">Deep &amp; Cross Network</a></p></li>
+<li><p><a href="https://www.ijcai.org/Proceedings/2017/0435.pdf">Attentional Factorization Machine</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1708.05027.pdf">Neural Factorization Machine</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1803.05170.pdf">xDeepFM</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1706.06978.pdf">Deep Interest Network</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1809.03672.pdf">Deep Interest Evolution Network</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1810.11921.pdf">AutoInt</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1902.09096.pdf">NFFM</a></p></li>
+<li><p><a href="https://arxiv.org/pdf/1904.04447">FGCNN</a></p></li>
+<li><p><a href="https://arxiv.org/abs/1905.06482">Deep Session Interest Network</a></p></li>
+</ul>
+<p>虽然在风控特征自动发现方面可以起到一定作用，但并不那么适合风控建模，一方面是金融领域并没有那么大的标注数据，而深度学习模型在数据量足够大时才有明显优势，另一方面就是可解释性太差了。</p>
+<p><strong>2、效果评价指标</strong> 风控建模本质上也是个排序问题，是更智能的狗熊掰棒子，同样也容易出现正负样本分布很不平衡问题(尤其是欺诈问题)，类似广告、推荐和搜索。</p>
+<ul>
+<li><p>K-S值</p>
+<p>风控行业大家喜欢使用K-S值来评价模型好坏，值越大代表正负样本分的越开，一个可用的模型K-S值至少0.5，但是，假设正样本都被预测成了负样本，负样本都被预测成了正样本，猜猜这个指标会如何？</p></li>
+<li><p>AUC值</p>
+<p>个人更喜欢用AUC指标，它是个概率值，AUC=0.5代表你的模型和随机分类一个效果，AUC=0.8左右模型就可用了，AUC超过0.9了，赶紧查是不过拟合了。其数学含义更直接，假设负样本是多数派，那么AUC值表示：当线上随机来一个正样本和一个负样本时，当前模型将这个正样本排在负样本前面的概率。</p></li>
+</ul>
+<p><strong>3、阈值选择</strong> 在风控审批场景中，大体会有三种处理方法：</p>
+<ul>
+<li><p>自动通过</p>
+<p>模型或策略规则，输出很高的通过置信度时，则认为用户大概率不会逾期，此时一般会让进件直接通过，这样前端的时效性和用户体验会很好。</p></li>
+<li><p>自动拒绝</p>
+<p>当模型或策略规则，输出很高的拒绝置信度时，则认为用户大概率会逾期，此时进件一般会被直接拒绝，尤其是触碰红线的用户，则一票否决且不允许召回。</p></li>
+<li><p>转人工审核</p>
+<p>介于通过与否的置信度不那么高的用户，会依据人力情况被转到人工审核岗，之后通过电话、面聊等方式决定是否准予通过。</p></li>
+</ul>
+<p>但由于风控模型输出的置信度是个概率值或连续值，所以需要通过做阈值截取得到以上三种结果。 例如，我们做自动拒绝判定(自动通过的逻辑与下面方法类似，不再赘述)，除了考虑业务量、人力情况等因素外，还需要考虑经济收益，即：我们希望被自动拒绝的订单尽可能多的是”坏“客户，尽可能少的是”好“客户，每拒绝一个”坏“客户，会挽回一单经济损失，而每拒绝一个”好“客户，会丢失一单经济收益，所以确定自动拒绝置信度的阈值要通过算法方式合理设定。 假设：</p>
+<ul>
+<li><p>训练了一个某场景下预测M1逾期率的模型，每一个订单的NPV值(或IRR值)已知，需要确定阈值以尽可能拒绝”坏“用户，让整体收益最大化；</p></li>
+<li><p>有一条曲线是描述拒绝”坏“客户后挽回的经济损失，另一条曲线是拒绝一个”好“客户后丢失的经济收益；</p></li>
+<li><p>横坐标是拒绝用户占总用户的比例，纵坐标是累积的平均NPV(IRR)值</p></li>
+</ul>
+<p>那么：</p>
+<ul>
+<li>如果模型特别差，所有好样本置信分都低于坏样本置信分，意味着下图：</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/worst.png" width="800" />
+</center>
+<ul>
+<li>如果模型特别好，所有好样本置信分都高于坏样本置信分，意味着下图，最优拒绝阈值是让两条曲线间距最大的点(有点类似KS值)：</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/best.png" width="800" />
+</center>
+<ul>
+<li>正常应用的模型，例如AUC达到0.8以上，大部分好样本置信分都高于坏样本置信分，意味着下图，同样，最优拒绝阈值是让两条曲线间距最大的点(有点类似KS值)：</li>
+</ul>
+<center>
+<img src="https://vivounicorn.github.io/images/ai_chapter_14/normal.png" width="800" />
+</center>
+<p>最终确定的拒绝阈值会根据业务量、风险敞口大小、人力情况等因素，在这个最优点附近调整。</p>
+<h2 id="风控模型监控">14.4 风控模型监控</h2>
+<p>模型监控大概包括几部分：监控模型训练和测试指标、监控模型在线应用时的指标、监控业务关心的指标。</p>
+<h3 id="离线模型监控">14.4.1 离线模型监控</h3>
+<p>监控多次训练和测试模型本身的指标，包括不限于：</p>
+<ul>
+<li><p>标注数据分布稳定性 正常情况下，每个建模周期（如，每天、每月）的正负样本标注数据应该是稳定的，例如，某个周期同样量级且表现充分的样本中突然多出大量负样本。</p></li>
+<li><p>特征稳定性 包括每个特征的缺失率、样本覆盖率、权重PSI值、特征重要性排序等。</p></li>
+<li><p>置信分稳定性 置信度分数变化趋势、每个置信度范围覆盖的人群和模型指标都应该是稳定的。</p></li>
+<li><p>人群分布稳定性 每个决策区间（如，拒绝、通过、转人工）下的人群数应该是稳定的。</p></li>
+<li><p>模型指标稳定性 模型训练及测试集中的：AUC、ACC、Recall、F1、Precision、决策点置信度分值等都应该是稳定的。</p></li>
+</ul>
+<h3 id="在线模型监控">14.4.2 在线模型监控</h3>
+<ul>
+<li><p>在线特征稳定性 监控模型线上用到的特征实时分布是否与离线没有大的差距。</p></li>
+<li><p>在线评分稳定性 置信分输出趋势是否稳定，各个决策区间下的人群是否稳定等。</p></li>
+</ul>
+<h3 id="业务监控">14.4.3 业务监控</h3>
+<ul>
+<li><p>每个模型AB后的进件量、自动通过、拒绝、转人工量/率监控</p></li>
+<li><p>Vintage及滚动率监控</p></li>
+<li><p>各级逾期率监控</p></li>
+<li><p>模型特征花费监控</p></li>
+<li><p>业务达标率监控 ......</p></li>
+</ul>
+]]></content>
+      <categories>
+        <category>机器学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>第十四章</tag>
+        <tag>金融风控</tag>
       </tags>
   </entry>
   <entry>
