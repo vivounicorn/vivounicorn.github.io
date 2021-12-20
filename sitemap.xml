@@ -9,6 +9,20 @@
   </url>
   
   <url>
+    <loc>https://vivounicorn.github.io/article/c0a9d987.html</loc>
+    
+    <lastmod>2021-12-20</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/article/fb9cd06d.html</loc>
+    
+    <lastmod>2021-12-20</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://vivounicorn.github.io/article/301f2134.html</loc>
     
     <lastmod>2021-12-20</lastmod>
@@ -17,13 +31,6 @@
   
   <url>
     <loc>https://vivounicorn.github.io/article/783e74f9.html</loc>
-    
-    <lastmod>2021-12-20</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://vivounicorn.github.io/article/fb9cd06d.html</loc>
     
     <lastmod>2021-12-20</lastmod>
     
@@ -221,20 +228,6 @@
   </url>
   
   <url>
-    <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E4%B8%83%E7%AB%A0/</loc>
-    <lastmod>2021-12-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://vivounicorn.github.io/tags/%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/</loc>
-    <lastmod>2021-12-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E4%B9%9D%E7%AB%A0/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
@@ -256,6 +249,20 @@
   </url>
   
   <url>
+    <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E4%B8%83%E7%AB%A0/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/%E9%87%91%E8%9E%8D%E9%A3%8E%E6%8E%A7/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E5%8D%81%E4%B8%80%E7%AB%A0/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
@@ -264,6 +271,48 @@
   
   <url>
     <loc>https://vivounicorn.github.io/tags/OCR/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/transformer/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/Vit/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/vision-transformers/</loc>
+    <lastmod>2021-12-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E5%8D%81%E7%AB%A0/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -291,14 +340,14 @@
   </url>
   
   <url>
-    <loc>https://vivounicorn.github.io/tags/%E7%AC%AC%E5%8D%81%E4%BA%8C%E7%AB%A0/</loc>
+    <loc>https://vivounicorn.github.io/tags/%E6%95%B0%E5%AD%A6/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://vivounicorn.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6/</loc>
+    <loc>https://vivounicorn.github.io/tags/%E5%BE%AE%E7%A7%AF%E5%88%86/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -341,27 +390,6 @@
   
   <url>
     <loc>https://vivounicorn.github.io/tags/%E6%A8%A1%E5%9E%8B%E5%8F%AF%E8%A7%86%E5%8C%96/</loc>
-    <lastmod>2021-12-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://vivounicorn.github.io/tags/%E6%95%B0%E5%AD%A6/</loc>
-    <lastmod>2021-12-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://vivounicorn.github.io/tags/%E5%BE%AE%E7%A7%AF%E5%88%86/</loc>
-    <lastmod>2021-12-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://vivounicorn.github.io/tags/transformer/</loc>
     <lastmod>2021-12-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
