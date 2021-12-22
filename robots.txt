@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /tags/
+Allow: /categories/
+Allow: /about/
+
+Disallow: /vendors/
+Disallow: /js/
+Disallow: /css/
+Disallow: /fonts/
+Disallow: /vendors/
+Disallow: /fancybox/
+
+Sitemap: https://vivounicorn.github.io/sitemap.xml
+Sitemap: https://vivounicorn-github-io.vercel.app/sitemap.xml
+Sitemap: https://vivounicorn.github.io/baidusitemap.xml
+Sitemap: https://vivounicorn-github-io.vercel.app/baidusitemap.xml
