@@ -12,7 +12,7 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: https://vivounicorn.github.io/sitemap.xml
+Sitemap: www.vivounicorn.xyz/sitemap.xml
 Sitemap: https://vivounicorn-github-io.vercel.app/sitemap.xml
-Sitemap: https://vivounicorn.github.io/baidusitemap.xml
+Sitemap: www.vivounicorn.xyz/baidusitemap.xml
 Sitemap: https://vivounicorn-github-io.vercel.app/baidusitemap.xml
